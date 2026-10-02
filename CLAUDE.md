@@ -43,3 +43,10 @@ Referral links only (never scrape): islamqa.info, binbaz.org.sa, binothaimeen.ne
 
 ## Conventions
 Keep original text for display; normalized text (no tashkeel/tatweel, أإآ->ا, ى->ي, ة->ه) for matching only. Ingest scripts are idempotent. Tests in `tests/`.
+
+## API findings (Phase 0, verified)
+- HadeethEnc (docs: documenter.getpostman.com/view/5211979/TVev3j7q): endpoints `/hadeeths/list/` (per_page=1000 works), `/one/`, `/multiple/?ids=a,b`, `/search/?phrase=`. `multiple` with language=en returns full records INCLUDING Arabic fields (`hadeeth_ar, grade_ar, explanation_ar, hints_ar, attribution_ar`), so one English pass gives both languages. License: NO modification/addition/deletion of content, and must clearly credit HadeethEnc.com in the UI. Grades are in `grade` / `grade_ar`.
+- Dorar (docs: dorar.net/article/389): only documented param is `skey`; response `{"ahadith":{"result":"<html>"}}`; undocumented `page` seems to work. No documented rate limit; needs browser User-Agent. Parse `div.hadith` + `div.hadith-info` (الراوي, المحدث, المصدر, الصفحة أو الرقم, خلاصة حكم المحدث). No hadith ID.
+- icadb: public GET, OpenAPI at `/api/docs/?format=openapi`. Q&A encyclopedias: id 2 (Muslims), 11 (non-Muslims); terminology: id 5.
+- Bayyinat PDF text extraction is garbled (swapped letters/lost lam-alef); clean up or fall back to icadb Q&A.
+- Python needs `truststore` for HTTPS on this machine.
