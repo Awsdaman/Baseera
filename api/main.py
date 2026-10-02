@@ -60,4 +60,9 @@ def index():
     return FileResponse(ROOT / "web" / "index.html")
 
 
+@app.get("/retrieval")
+def retrieval_page():
+    return FileResponse(ROOT / "web" / "retrieval.html")
+
+
 app.mount("/static", StaticFiles(directory=ROOT / "web"), name="static")

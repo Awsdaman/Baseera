@@ -32,8 +32,10 @@ def fake_llm():
 
 
 @pytest.fixture(autouse=True)
-def no_vectors(monkeypatch):
-    """Unit tests use keyword retrieval only (no embedding model load)."""
+def no_vectors(monkeypatch, request):
+    """Unit tests use keyword retrieval only (no embedding model load); mark a test @pytest.mark.vectors to use the real index."""
+    if request.node.get_closest_marker("vectors"):
+        return
     from core import retrieve as R
     orig = R.retrieve
     monkeypatch.setattr(R, "retrieve", lambda q, per_type=None, vectors=False, dorar=False: orig(q, per_type=per_type, vectors=False, dorar=dorar))

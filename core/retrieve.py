@@ -90,9 +90,16 @@ def verse_ref_lookup(query: str) -> list[dict]:
 def retrieve(query: str, per_type: dict | None = None, vectors: bool = True, dorar: bool = False) -> list[dict]:
     per_type = per_type or DEFAULT_PER_TYPE
     results, seen = [], set()
+    from core.aliases import named_refs
     for p in verse_ref_lookup(query):
         results.append(p)
         seen.add(p["id"])
+    for pid in named_refs(query):  # "آية الكرسي", "سورة الإخلاص"
+        p = get_passage(pid)
+        if p and pid not in seen:
+            p["score"] = 1.0
+            results.append(p)
+            seen.add(pid)
     for ptype in TYPES:
         n = per_type.get(ptype, 0)
         if not n:

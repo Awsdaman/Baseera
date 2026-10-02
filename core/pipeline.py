@@ -15,6 +15,7 @@ REFERRALS = [
     {"name": "موقع الشيخ ابن باز", "url": "https://binbaz.org.sa"},
     {"name": "موقع الشيخ ابن عثيمين", "url": "https://binothaimeen.net"},
 ]
+MIN_GENERAL_SCORE = 0.026  # general-info cards must be found by BOTH keyword and vector search (RRF of two top-10 ranks)
 PER_TYPE_ASK = {"quran": 4, "hadith": 4, "qa": 4, "tafsir": 2, "term": 2}
 
 TEXT = {
@@ -69,16 +70,17 @@ def term_response(info, lang):
     idx = next(i for i, x in enumerate(GLOSSARY, 1) if x["ar"] == g["ar"])
     src = {"n": 1, "id": f"term:glossary:{idx}", "type": "term", "source": "glossary", "title": g["ar"],
            "reference_url": "docs/data.pdf#page=7", "grade": None}
-    blocks = [{"kind": "explanation", "text": msg + " [1]"},
+    blocks = [{"kind": "notice", "text": msg + " [1]"},
               {"kind": "glossary", "term_ar": g["ar"], "term_en": g["en"], "usage_note_ar": note}]
     return _resp("answered", info, lang, blocks=blocks, sources=[src], answer_text=msg + "\n" + note)
 
 
 def personal_response(question, info, lang):
     t = TEXT["personal"]
-    general = [p for p in R.retrieve(question, per_type={"qa": 3, "term": 1, "hadith": 1}) if p["type"] in ("qa", "term", "hadith")][:2]
+    general = [p for p in R.retrieve(question, per_type={"qa": 3, "term": 1, "hadith": 1})
+               if p["type"] in ("qa", "term", "hadith") and p["score"] >= MIN_GENERAL_SCORE][:2]
     cards = [_card(p, i + 1) for i, p in enumerate(general)]
-    blocks = [{"kind": "explanation", "text": t["en"] if lang == "en" else t["ar"]}]
+    blocks = [{"kind": "notice", "text": t["en"] if lang == "en" else t["ar"]}]
     if cards:
         blocks.append({"kind": "general_info", "label": t["general"]["en" if lang == "en" else "ar"], "cards": cards})
     return _resp("referral", info, lang, blocks=blocks, sources=cards, referrals=REFERRALS,
@@ -87,7 +89,7 @@ def personal_response(question, info, lang):
 
 def abstain_response(info, lang, reason="insufficient_evidence", sources=None, errors=None):
     msg = TEXT["abstain"]["en" if lang == "en" else "ar"]
-    return _resp("abstained", info, lang, blocks=[{"kind": "explanation", "text": msg}], referrals=REFERRALS,
+    return _resp("abstained", info, lang, blocks=[{"kind": "notice", "text": msg}], referrals=REFERRALS,
                  answer_text=msg, abstain_reason=reason, verification_errors=errors or [], sources=sources or [])
 
 
@@ -160,7 +162,7 @@ def _answer(question, info, lang, passages):
     if not L.llm_available():
         cards = [_card(p, i + 1) for i, p in enumerate(passages[:8])]
         msg = TEXT["unavailable"]["en" if lang == "en" else "ar"]
-        return _resp("retrieval_only", info, lang, blocks=[{"kind": "explanation", "text": msg}], sources=cards, answer_text=msg)
+        return _resp("retrieval_only", info, lang, blocks=[{"kind": "notice", "text": msg}], sources=cards, answer_text=msg)
 
     errors, attempts, last = None, 0, None
     for attempts in (1, 2):

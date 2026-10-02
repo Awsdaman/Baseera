@@ -59,6 +59,8 @@ def heuristic_extract(text: str) -> list[dict]:
         add("verse", m.group(1), m.start(1), m.end(1))
     for m in re.finditer(r"(?:قال|يقول|عن)\s+(?:رسول الله|النبي|نبينا|الرسول)[^:：\n«\"“]{0,30}[:：]\s*[«\"“]?([^\n«»\"”]{8,500})", text):
         add("hadith", m.group(1), m.start(1), m.end(1))
+    for m in re.finditer(r"(?:وقال|قال|ويقول|يقول)\s*(?:ﷺ|صلى الله عليه وسلم)\s*[:：]\s*[«\"“]?([^\n«»\"”]{8,500})", text):
+        add("hadith", m.group(1), m.start(1), m.end(1))
     for m in re.finditer(r"(?:حديث|الحديث)\s*[:：]\s*[«\"“]?([^\n«»\"”]{8,500})", text):
         add("hadith", m.group(1), m.start(1), m.end(1))
     for m in re.finditer(r"[«“\"]([^»”\"\n]{12,500})[»”\"]", text):
@@ -168,10 +170,11 @@ def check_verse(claim_text: str, claimed_ref: str | None = None) -> dict:
                 continue
             norm_words = " ".join(g["text_norm"] for g in grp).split()
             sim, a, b = _word_sim(words, norm_words)
-            if best is None or sim > best[0]:
-                best = (sim, grp, a, b, norm_words)
+            gap = abs(len(norm_words) - len(words))  # on equal similarity prefer the verse closest in length
+            if best is None or (sim, -gap) > (best[0], best[5]):
+                best = (sim, grp, a, b, norm_words, -gap)
     if best and best[0] >= VERSE_MISQUOTE_MIN:
-        sim, grp, a, b, norm_words = best
+        sim, grp, a, b, norm_words, _ = best
         show_words = " ".join(g["text_emlaey"] for g in grp).split()
         if len(show_words) != len(norm_words):
             show_words = norm_words

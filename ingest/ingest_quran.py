@@ -76,7 +76,8 @@ def main():
         en_clean = re.sub(r"^\(\d+\)\s*", "", en or "").strip()
         pq.append({"id": f"quran:{s}:{a}", "type": "quran", "source": "kfgqpc", "title": f"{v['sura_name_ar'].strip()} {a}",
                    "text_ar": uth, "text_en": en_clean,
-                   "search_text": search_form(emla) + " " + normalize_ar(re.sub(r"\[\d+\]", "", en_clean)),
+                   "search_text": " ".join([search_form(emla), normalize_ar(re.sub(r"\[\d+\]", "", en_clean)),
+                                            "سوره " + search_form(v["sura_name_ar"]), normalize_ar(v["sura_name_en"])]),
                    "reference_url": quran_url(s, a),
                    "meta": {"surah": s, "ayah": a, "page": v["page"], "juz": v["jozz"],
                             "surah_name_ar": v["sura_name_ar"].strip(), "surah_name_en": v["sura_name_en"],
