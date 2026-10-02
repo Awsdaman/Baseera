@@ -1,0 +1,209 @@
+[
+ {
+  "name": "hadeethenc.languages",
+  "url": "https://hadeethenc.com/api/v1/languages",
+  "status": 200,
+  "type": "application/json; charset=utf-8",
+  "bytes": 3436,
+  "secs": 0.41,
+  "ratelimit": {}
+ },
+ {
+  "name": "hadeethenc.categories",
+  "url": "https://hadeethenc.com/api/v1/categories/list/?language=en",
+  "status": 200,
+  "type": "application/json; charset=utf-8",
+  "bytes": 39978,
+  "secs": 0.21,
+  "ratelimit": {}
+ },
+ {
+  "name": "hadeethenc.list",
+  "url": "https://hadeethenc.com/api/v1/hadeeths/list/?language=en&category_id=1&page=1&per_page=5",
+  "status": 200,
+  "type": "application/json; charset=utf-8",
+  "bytes": 2494,
+  "secs": 0.2,
+  "ratelimit": {}
+ },
+ {
+  "name": "hadeethenc.one.ar",
+  "url": "https://hadeethenc.com/api/v1/hadeeths/one/?language=ar&id=2962",
+  "status": 200,
+  "type": "application/json; charset=utf-8",
+  "bytes": 4745,
+  "secs": 0.24,
+  "ratelimit": {}
+ },
+ {
+  "name": "hadeethenc.one.en",
+  "url": "https://hadeethenc.com/api/v1/hadeeths/one/?language=en&id=2962",
+  "status": 200,
+  "type": "application/json; charset=utf-8",
+  "bytes": 4868,
+  "secs": 0.21,
+  "ratelimit": {}
+ },
+ {
+  "name": "quranenc.list",
+  "url": "https://quranenc.com/api/v1/translations/list",
+  "status": 200,
+  "type": "application/json; charset=utf-8",
+  "bytes": 65890,
+  "secs": 0.71,
+  "ratelimit": {}
+ },
+ {
+  "name": "quranenc.english_saheeh.1",
+  "url": "https://quranenc.com/api/v1/translation/sura/english_saheeh/1",
+  "status": 200,
+  "type": "application/json; charset=utf-8",
+  "bytes": 4322,
+  "secs": 0.26,
+  "ratelimit": {}
+ },
+ {
+  "name": "quranenc.arabic_moyassar.1",
+  "url": "https://quranenc.com/api/v1/translation/sura/arabic_moyassar/1",
+  "status": 200,
+  "type": "application/json; charset=utf-8",
+  "bytes": 12446,
+  "secs": 0.24,
+  "ratelimit": {}
+ },
+ {
+  "name": "quranenc.aya",
+  "url": "https://quranenc.com/api/v1/translation/aya/english_saheeh/2/255",
+  "status": 200,
+  "type": "application/json; charset=utf-8",
+  "bytes": 3567,
+  "secs": 0.23,
+  "ratelimit": {}
+ },
+ {
+  "name": "dorar.search",
+  "url": "https://dorar.net/dorar_api.json?skey=%D8%A5%D9%86%D9%85%D8%A7+%D8%A7%D9%84%D8%A3%D8%B9%D9%85%D8%A7%D9%84+%D8%A8%D8%A7%D9%84%D9%86%D9%8A%D8%A7%D8%AA",
+  "status": 200,
+  "type": "application/json",
+  "bytes": 13348,
+  "secs": 0.6,
+  "ratelimit": {}
+ },
+ {
+  "name": "dorar.search.page2",
+  "url": "https://dorar.net/dorar_api.json?skey=%D8%A5%D9%86%D9%85%D8%A7+%D8%A7%D9%84%D8%A3%D8%B9%D9%85%D8%A7%D9%84+%D8%A8%D8%A7%D9%84%D9%86%D9%8A%D8%A7%D8%AA&page=2",
+  "status": 200,
+  "type": "application/json",
+  "bytes": 17259,
+  "secs": 0.56,
+  "ratelimit": {}
+ },
+ {
+  "name": "mp3quran.reciters",
+  "url": "https://www.mp3quran.net/api/v3/reciters?language=ar",
+  "status": 200,
+  "type": "application/json",
+  "bytes": 191024,
+  "secs": 0.28,
+  "ratelimit": {}
+ },
+ {
+  "name": "mp3quran.suwar",
+  "url": "https://www.mp3quran.net/api/v3/suwar?language=ar",
+  "status": 200,
+  "type": "application/json",
+  "bytes": 12158,
+  "secs": 0.09,
+  "ratelimit": {}
+ },
+ {
+  "name": "icadb.openapi",
+  "url": "https://icadb.com/api/docs/?format=openapi",
+  "status": 406,
+  "type": "text/html; charset=utf-8",
+  "bytes": 18,
+  "secs": 1.27,
+  "ratelimit": {}
+ },
+ {
+  "name": "icadb.languages",
+  "url": "https://icadb.com/api/languages/list/",
+  "status": 200,
+  "type": "application/json",
+  "bytes": 45114,
+  "secs": 1.15,
+  "ratelimit": {}
+ },
+ {
+  "name": "icadb.encyclopedias",
+  "url": "https://icadb.com/api/encyclopedias/list/",
+  "status": 200,
+  "type": "application/json",
+  "bytes": 3283,
+  "secs": 0.76,
+  "ratelimit": {}
+ },
+ {
+  "name": "icadb.quran.surahs",
+  "url": "https://icadb.com/quran/api/quran/surahs/",
+  "status": 200,
+  "type": "application/json",
+  "bytes": 9927,
+  "secs": 0.55,
+  "ratelimit": {}
+ },
+ {
+  "name": "icadb.quran.translation-keys",
+  "url": "https://icadb.com/quran/api/quran/translation-keys/",
+  "status": 200,
+  "type": "application/json",
+  "bytes": 13838,
+  "secs": 0.56,
+  "ratelimit": {}
+ },
+ {
+  "name": "icadb.books",
+  "url": "https://icadb.com/api/books/list/",
+  "status": 200,
+  "type": "application/json",
+  "bytes": 164695,
+  "secs": 1.01,
+  "ratelimit": {}
+ },
+ {
+  "name": "icadb.lookup-tables",
+  "url": "https://icadb.com/api/lookup-tables/",
+  "status": 200,
+  "type": "application/json",
+  "bytes": 8614,
+  "secs": 0.57,
+  "ratelimit": {}
+ },
+ {
+  "name": "qurancomplex.quran-dev",
+  "url": "https://qurancomplex.gov.sa/quran-dev/",
+  "status": 200,
+  "type": "text/html; charset=UTF-8",
+  "bytes": 502950,
+  "secs": 0.93,
+  "ratelimit": {}
+ },
+ {
+  "name": "dawa.center.file7937",
+  "url": "https://dawa.center/file/7937",
+  "status": 200,
+  "type": "text/html; charset=UTF-8",
+  "bytes": 97171,
+  "secs": 1.14,
+  "ratelimit": {}
+ },
+ {
+  "name": "mcp.islamiccontent.org",
+  "url": "https://mcp.islamiccontent.org",
+  "status": 200,
+  "type": "text/html; charset=utf-8",
+  "bytes": 35091,
+  "secs": 0.44,
+  "ratelimit": {}
+ }
+]

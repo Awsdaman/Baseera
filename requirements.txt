@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+anthropic
+python-dotenv
+httpx
+beautifulsoup4
+rapidfuzz
+chromadb
+sentence-transformers
+pymupdf
+python-docx
+pytest
+truststore
