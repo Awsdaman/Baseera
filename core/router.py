@@ -1,0 +1,98 @@
+"""Router (Haiku): {level, intent, language, term}. Code-level safety escalation always wins over the model.
+
+level  أ basic sourced facts | ب explanation/concepts/doubts | ج disputed/sensitive | د personal ruling/case
+intent ask | verify | translate_term
+"""
+import re
+
+from core import llm as L
+from core.glossary import GLOSSARY, lookup
+from core.normalize import normalize_ar
+
+LEVELS = ("أ", "ب", "ج", "د")
+INTENTS = ("ask", "verify", "translate_term")
+
+SYSTEM = """You are the routing component of Baseera, an Islamic Q&A assistant. Classify the user message.
+Return ONLY a JSON object: {"level": "أ|ب|ج|د", "intent": "ask|verify|translate_term", "language": "ar|en|other", "term": "<term or null>"}
+
+Levels (content sensitivity):
+- أ: stable basics: Quran, authentic hadith, pillars of Islam/faith, basic seerah, basic ethics, definitions.
+- ب: explaining concepts, comparisons, objectives of Sharia (maqasid), general questions and common doubts/objections about Islam.
+- ج: fiqh disagreements between schools, detailed aqeedah disputes, contested historical issues, questions that need specialist scholarly treatment, "do all Muslims agree on this?".
+- د: a personal situation or ruling request about a specific person's case: validity of a particular contract/worship/marriage, family disputes, legal or medical matters with religious impact, "am I allowed to ... in my marriage / in my country".
+Intents:
+- verify: the user pastes a message/verse/hadith and wants it checked or asks for proof of a claim.
+- translate_term: asks to translate or explain the English equivalent of an Islamic term (set "term").
+- ask: everything else.
+A hostile or accusatory question about Islam is still level ب (answer wisely), not د.
+Language is the language of the message itself."""
+
+_PERSONAL = re.compile(
+    r"(هل يجوز لي|هل يحق لي|هل يصح لي|ما حكم (?:زواجي|طلاقي|عقدي)|في زواجي|زوجتي|زوجي|طلقت|طلاقي|عقد(?:ي| العمل| الايجار)|"
+    r"انا في دوله|أنا في دولة|حالتي|مشكلتي|ابي|أبي يرفض|اختلفت مع)")
+_PERSONAL_EN = re.compile(
+    r"\b(am i allowed|can i|should i|my (?:wife|husband|marriage|divorce|contract|landlord|boss|father|mother|case)|"
+    r"i live in|i am in (?:the )?[a-z]+ and|is my (?:marriage|contract|prayer|fast) valid)\b", re.I)
+_DISPUTE = re.compile(r"(اختلاف(?: العلماء| الفقهاء)?|ترجيح|المذاهب|اصح الاقوال|هل كل المسلمين|do all muslims agree|differ(?:ence|ent)? (?:between|among) (?:the )?(?:scholars|schools))", re.I)
+_VERIFY = re.compile(r"(تحقق|هل هذا الحديث صحيح|هل هذه الايه|صحيح ام|fact.?check|is this (?:hadith|verse)|verify|authentic\?|ارسل لي|وصلني)", re.I)
+_TRANSLATE = re.compile(r"(ترجم|ترجمه|ما معنى كلمه .* بالانجليزيه|translate|how (?:do you|to) say|english (?:word|equivalent|for))", re.I)
+
+
+def detect_language(text: str) -> str:
+    ar = len(re.findall(r"[؀-ۿ]", text))
+    la = len(re.findall(r"[A-Za-z]", text))
+    if ar == 0 and la == 0:
+        return "other"
+    return "ar" if ar >= la else "en"
+
+
+def find_term(text: str):
+    t = normalize_ar(text)
+    for g in GLOSSARY:
+        if normalize_ar(g["ar"]) in t.split() or normalize_ar(g["ar"]) in t:
+            return g["ar"]
+    for tok in re.findall(r"[a-zA-Z'’‘]+", text):
+        g = lookup(tok.lower())
+        if g:
+            return g["ar"]
+    return None
+
+
+def heuristic_route(text: str) -> dict:
+    t = normalize_ar(text)
+    lang = detect_language(text)
+    level, intent, term = "ب", "ask", None
+    if _PERSONAL.search(text) or _PERSONAL_EN.search(text):
+        level = "د"
+    elif _DISPUTE.search(text):
+        level = "ج"
+    elif re.search(r"(اركان|ما هو|ما هي|من هو|كم عدد|what is|what are|who is|pillars)", text, re.I) and len(text) < 90:
+        level = "أ"
+    if _TRANSLATE.search(t) or _TRANSLATE.search(text):
+        intent, term = "translate_term", find_term(text)
+        level = "أ"
+    elif _VERIFY.search(text) or ("﴿" in text and not re.search("[؟?]", text)) or len(text) > 400:
+        intent = "verify"
+    return {"level": level, "intent": intent, "language": lang, "term": term, "source": "heuristic"}
+
+
+def route(text: str) -> dict:
+    h = heuristic_route(text)
+    if not L.llm_available():
+        return h
+    try:
+        raw = L.get_llm().complete(L.ROUTER_MODEL, SYSTEM, text, max_tokens=120)
+        j = L.extract_json(raw)
+        level = j.get("level") if j.get("level") in LEVELS else h["level"]
+        intent = j.get("intent") if j.get("intent") in INTENTS else h["intent"]
+        out = {"level": level, "intent": intent, "language": j.get("language") or h["language"],
+               "term": j.get("term") if j.get("term") not in (None, "null", "") else h["term"], "source": "llm"}
+    except Exception as e:  # never fail the request because routing failed
+        h["router_error"] = str(e)[:200]
+        return h
+    # Safety: personal-case detection by code can only escalate (never relax) the model's level.
+    if h["level"] == "د":
+        out["level"] = "د"
+    if h["intent"] == "translate_term" and out["intent"] == "ask" and h["term"]:
+        out["intent"], out["term"] = "translate_term", h["term"]
+    return out

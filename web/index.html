@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بصيرة | Baseera</title>
+<style>
+  :root { --navy:#1B2D45; --teal:#1F7872; --gold:#C9A04A; --bg:#f6f4ef; --card:#fff; --ink:#1c2430; --mute:#6b7280; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family: "Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif; line-height:1.8; }
+  header { background:var(--navy); color:#fff; padding:18px 16px; border-bottom:4px solid var(--gold); }
+  header h1 { margin:0; font-size:1.6rem; } header p { margin:2px 0 0; color:#cfd6df; font-size:.95rem; }
+  main { max-width:860px; margin:0 auto; padding:16px; }
+  form { display:flex; gap:8px; margin:12px 0; flex-wrap:wrap; }
+  input[type=text] { flex:1; min-width:200px; padding:12px; font-size:1.05rem; border:1px solid #cbd2db; border-radius:8px; font-family:inherit; }
+  button { background:var(--teal); color:#fff; border:0; padding:12px 22px; border-radius:8px; font-size:1rem; cursor:pointer; font-family:inherit; }
+  button:hover { filter:brightness(1.1); }
+  label.opt { font-size:.9rem; color:var(--mute); display:flex; align-items:center; gap:4px; }
+  .card { background:var(--card); border:1px solid #e3e0d6; border-right:5px solid var(--teal); border-radius:8px; padding:12px 14px; margin:10px 0; }
+  .card.quran { border-right-color:var(--teal); } .card.hadith { border-right-color:var(--gold); }
+  .card.tafsir { border-right-color:#7a8aa0; } .card.qa { border-right-color:var(--navy); } .card.term { border-right-color:#9b6b9e; }
+  .tag { display:inline-block; font-size:.78rem; padding:0 8px; border-radius:10px; background:#eef3f3; color:var(--teal); margin-left:6px; }
+  .grade { background:#fbf3df; color:#7a5b10; }
+  .text { font-size:1.2rem; margin:6px 0; white-space:pre-wrap; }
+  .en { direction:ltr; text-align:left; color:#374151; font-size:.95rem; }
+  .meta { font-size:.82rem; color:var(--mute); } a { color:var(--teal); }
+  footer { max-width:860px; margin:24px auto; padding:0 16px 30px; color:var(--mute); font-size:.85rem; }
+  .ai { background:#fff8e6; border:1px solid var(--gold); border-radius:8px; padding:8px 12px; font-size:.9rem; }
+</style>
+</head>
+<body>
+<header><h1>بصيرة <span style="font-weight:400;font-size:1rem">Baseera</span></h1><p>نتائج الاسترجاع من المصادر المعتمدة (المرحلة الأولى)</p></header>
+<main>
+  <div class="ai">⚠️ بصيرة أداة مدعومة بالذكاء الاصطناعي وليست مفتيًا ولا مختصًا شرعيًا. / Baseera is an AI-powered tool, not a scholar or mufti.</div>
+  <form id="f">
+    <input type="text" id="q" placeholder="اكتب سؤالك بالعربية أو English …" autofocus>
+    <button>بحث</button>
+    <label class="opt"><input type="checkbox" id="dorar"> Dorar (live)</label>
+  </form>
+  <div id="out"></div>
+</main>
+<footer>
+  المصادر: مجمع الملك فهد (المصحف والتفسير الميسر) · QuranEnc (Noor International) · HadeethEnc.com · بينات (dawa.center) · icadb · الدرر السنية.
+  <br>Sources: King Fahd Complex, QuranEnc, <a href="https://hadeethenc.com">HadeethEnc.com</a>, Bayyinat, icadb, Dorar.
+</footer>
+<script>
+const LABEL = {quran:'قرآن', hadith:'حديث', tafsir:'تفسير', qa:'سؤال وجواب', term:'مصطلح'};
+const esc = s => (s||'').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+document.getElementById('f').addEventListener('submit', async e => {
+  e.preventDefault();
+  const q = document.getElementById('q').value.trim(); if (!q) return;
+  const out = document.getElementById('out'); out.textContent = '… جارٍ البحث';
+  const r = await fetch('/api/retrieve?q=' + encodeURIComponent(q) + (document.getElementById('dorar').checked ? '&dorar=true' : ''));
+  const d = await r.json();
+  out.innerHTML = d.results.map(x => `
+    <div class="card ${x.type}">
+      <span class="tag">${LABEL[x.type]||x.type}</span><span class="tag">${esc(x.source)}</span>
+      ${x.grade ? `<span class="tag grade">الحكم: ${esc(x.grade).slice(0,80)}</span>` : ''}
+      <strong>${esc(x.title||'')}</strong>
+      <div class="text">${esc((x.text||'').slice(0,700))}${(x.text||'').length>700?'…':''}</div>
+      ${x.text_en ? `<div class="en">${esc(x.text_en.slice(0,400))}</div>` : ''}
+      <div class="meta">${esc(x.id)} · score ${x.score} · <a href="${esc(x.reference_url)}" target="_blank" rel="noopener">المصدر</a></div>
+    </div>`).join('') || 'لا نتائج';
+});
+</script>
+</body>
+</html>
