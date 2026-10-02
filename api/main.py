@@ -1,4 +1,5 @@
 """Phase 1 API: raw retrieval results. (Phase 2 adds /api/ask, Phase 3 /api/verify.)"""
+import logging
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
@@ -12,6 +13,18 @@ from core import verifier_mode
 from core.db import connect
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+class _ScrubQuery(logging.Filter):
+    """Privacy: never write users' questions to logs (GET /api/retrieve?q=... would otherwise be logged)."""
+
+    def filter(self, record):
+        if isinstance(record.args, tuple):
+            record.args = tuple(a.split("?", 1)[0] if isinstance(a, str) and "?" in a else a for a in record.args)
+        return True
+
+
+logging.getLogger("uvicorn.access").addFilter(_ScrubQuery())
 app = FastAPI(title="Baseera")
 
 

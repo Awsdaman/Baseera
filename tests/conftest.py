@@ -11,7 +11,7 @@ class FakeLLM:
         self.extract = extract
         self.calls = []
 
-    def complete(self, model, system, user, max_tokens=1000, temperature=0.0):
+    def complete(self, model, system, user, max_tokens=1000, temperature=None, effort=None):
         self.calls.append((model, system, user))
         if self.extract is not None and "Extract every checkable" in system:
             return self.extract

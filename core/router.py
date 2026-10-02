@@ -34,6 +34,9 @@ _PERSONAL_EN = re.compile(
     r"\b(am i allowed|can i|should i|my (?:wife|husband|marriage|divorce|contract|landlord|boss|father|mother|case)|"
     r"i live in|i am in (?:the )?[a-z]+ and|is my (?:marriage|contract|prayer|fast) valid)\b", re.I)
 _DISPUTE = re.compile(r"(اختلاف(?: العلماء| الفقهاء)?|ترجيح|المذاهب|اصح الاقوال|هل كل المسلمين|do all muslims agree|differ(?:ence|ent)? (?:between|among) (?:the )?(?:scholars|schools))", re.I)
+_CONTESTED = re.compile(r"(الراجح|ايهما علي حق|الشيعه|معاويه|صفين|وقعه الجمل|المولد النبوي|الموسيقي|المعازف|الغناء|تصوير ذوات|تكفير|الخلاف بين)")
+_BASIC = re.compile(r"(ما معني (?:ايه|اية|سوره|حديث|قوله تعالي|لا اله)|ما فضل|ما هي (?:سوره|اركان|الصلوات)|كم عدد|من هو النبي|اركان|ما هي سوره)")
+_CONCEPT = re.compile(r"(مقاصد|الحكمه|لماذا|هل الاسلام|هل يتعارض|هل يظلم|ارهاب|عنف|do muslims|why do|is islam)")
 _VERIFY = re.compile(r"(تحقق|هل هذا الحديث صحيح|هل هذه الايه|صحيح ام|fact.?check|is this (?:hadith|verse)|verify|authentic\?|ارسل لي|وصلني)", re.I)
 _TRANSLATE = re.compile(r"(ترجم|ترجمه|ما معنى كلمه .* بالانجليزيه|translate|how (?:do you|to) say|english (?:word|equivalent|for))", re.I)
 
@@ -64,15 +67,18 @@ def heuristic_route(text: str) -> dict:
     level, intent, term = "ب", "ask", None
     if _PERSONAL.search(text) or _PERSONAL_EN.search(text):
         level = "د"
-    elif _DISPUTE.search(text):
+    elif _DISPUTE.search(text) or _CONTESTED.search(t):
         level = "ج"
-    elif re.search(r"(اركان|ما هو|ما هي|من هو|كم عدد|what is|what are|who is|pillars)", text, re.I) and len(text) < 90:
+    elif _CONCEPT.search(t) or _CONCEPT.search(text.lower()):
+        level = "ب"
+    elif _BASIC.search(t) or (re.search(r"(ما هو|ما هي|من هو|what is|what are|who is|pillars)", text, re.I) and len(text) < 90):
         level = "أ"
     if _TRANSLATE.search(t) or _TRANSLATE.search(text):
         intent, term = "translate_term", find_term(text)
         level = "أ"
-    elif _VERIFY.search(text) or ("﴿" in text and not re.search("[؟?]", text)) or len(text) > 400:
-        intent = "verify"
+    elif (_VERIFY.search(text) or ("﴿" in text and not re.search("[؟?]", text)) or len(text) > 400
+          or (re.search(r"(قال رسول الله|قال النبي|عن النبي|قال تعالى)", text) and re.search("[«\"“﴿]", text) and not re.search("[؟?]", text))):
+        intent, level = "verify", "ب"
     return {"level": level, "intent": intent, "language": lang, "term": term, "source": "heuristic"}
 
 

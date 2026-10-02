@@ -26,9 +26,20 @@ class AnthropicLLM:
         import anthropic
         self.client = anthropic.Anthropic(api_key=key)
 
-    def complete(self, model: str, system: str, user: str, max_tokens: int = 1500, temperature: float = 0.0) -> str:
-        msg = self.client.messages.create(model=model, max_tokens=max_tokens, temperature=temperature,
-                                          system=system, messages=[{"role": "user", "content": user}])
+    def complete(self, model: str, system: str, user: str, max_tokens: int = 1500, temperature: float | None = None,
+                 effort: str | None = None) -> str:
+        """Sonnet 5.5 rejects non-default temperature (400) and runs adaptive thinking by default, so only Haiku gets
+        `temperature`; other models get an `effort` level and a max_tokens large enough to cover thinking."""
+        kw = {}
+        if model.startswith("claude-haiku"):
+            if temperature is not None:
+                kw["temperature"] = temperature
+        elif effort:
+            kw["output_config"] = {"effort": effort}
+        msg = self.client.messages.create(model=model, max_tokens=max_tokens, system=system,
+                                          messages=[{"role": "user", "content": user}], **kw)
+        if msg.stop_reason == "refusal":
+            raise RuntimeError("model refused (safety classifier); failing closed")
         return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text")
 
 

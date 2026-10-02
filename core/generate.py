@@ -60,4 +60,4 @@ def build_prompts(question: str, level: str, lang: str, passages: list[dict], er
 
 def generate(question: str, level: str, lang: str, passages: list[dict], error: str | None = None) -> str:
     system, user = build_prompts(question, level, lang, passages, error)
-    return L.get_llm().complete(L.GENERATE_MODEL, system, user, max_tokens=1400, temperature=0.2)
+    return L.get_llm().complete(L.GENERATE_MODEL, system, user, max_tokens=6000, effort="medium")

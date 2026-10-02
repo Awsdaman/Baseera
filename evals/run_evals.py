@@ -123,7 +123,7 @@ def judge(question, resp):
     user = (f"QUESTION:\n{question}\n\nSTATUS: {resp['status']} (level {resp.get('level')})\n\nRESPONSE SHOWN TO USER:\n{text[:3500]}\n\n"
             f"SOURCES CITED: {[s['id'] for s in resp.get('sources', [])]}\nAI-DISCLOSURE SHOWN: {bool(resp.get('ai_disclosure'))}")
     try:
-        j = L.extract_json(L.get_llm().complete(L.JUDGE_MODEL, JUDGE_SYSTEM, user, max_tokens=500))
+        j = L.extract_json(L.get_llm().complete(L.JUDGE_MODEL, JUDGE_SYSTEM, user, max_tokens=3000, effort="low"))
         sc = {k: v for k, v in j["scores"].items() if isinstance(v, (int, float))}
         return {"scores": sc, "overall": round(sum(sc.values()) / len(sc), 2) if sc else None, "issues": j.get("issues", [])}
     except Exception as e:

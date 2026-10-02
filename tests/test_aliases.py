@@ -33,3 +33,14 @@ def test_retrieve_resolves_names_first_without_vectors():
 
 def test_explicit_reference():
     assert [r["id"] for r in R.retrieve("tafsir of 2:255-256", vectors=False)][:2] == ["quran:2:255", "quran:2:256"]
+
+
+def test_access_log_never_contains_user_questions():
+    import logging
+
+    import api.main  # noqa: F401  (installs the filter)
+    rec = logging.LogRecord("uvicorn.access", 20, "", 0, '%s - "%s %s HTTP/%s" %d',
+                            ("127.0.0.1", "GET", "/api/retrieve?q=personal+question", "1.1", 200), None)
+    for f in logging.getLogger("uvicorn.access").filters:
+        f.filter(rec)
+    assert "personal" not in rec.getMessage()

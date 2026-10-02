@@ -1,0 +1,1436 @@
+{
+ "meta": "OFFLINE run: no ANTHROPIC_API_KEY, so generation / citation / fidelity / judge metrics are NOT measured; heuristic router, retrieval, level-د referral, glossary and verify-mode are · 52 cases · 2026-10-02 22:23",
+ "summary": {
+  "router_accuracy": [
+   78.8,
+   52
+  ],
+  "retrieval_recall": [
+   100.0,
+   8
+  ],
+  "citation_rate": [
+   null,
+   0
+  ],
+  "verse_fidelity": [
+   100.0,
+   1
+  ],
+  "correct_abstention_rate": [
+   100.0,
+   6
+  ],
+  "false_abstention_rate": [
+   0.0,
+   1
+  ],
+  "behavior_pass_rate": [
+   100.0,
+   10
+  ],
+  "verify_mode_pass_rate": [
+   100.0,
+   3
+  ],
+  "judge_score_avg_of_5": [
+   null,
+   0
+  ],
+  "router_level_أ": [
+   72.2,
+   18
+  ],
+  "router_level_ب": [
+   81.8,
+   22
+  ],
+  "router_level_ج": [
+   66.7,
+   6
+  ],
+  "router_level_د": [
+   100.0,
+   6
+  ]
+ },
+ "patterns": {
+  "router_ok": [
+   "a-02",
+   "a-05",
+   "a-07",
+   "a-12",
+   "a-14",
+   "b-08",
+   "c-03",
+   "c-05",
+   "v-01",
+   "v-02",
+   "v-03"
+  ]
+ },
+ "results": [
+  {
+   "id": "dp6-01",
+   "input": "لماذا يعبد المسلمون الكعبة؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 12.3
+  },
+  {
+   "id": "dp6-02",
+   "input": "هل القرآن من تأليف محمد ﷺ؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.1
+  },
+  {
+   "id": "dp6-03",
+   "input": "هل الإسلام انتشر بالسيف؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.8
+  },
+  {
+   "id": "dp6-04",
+   "input": "لماذا توجد أحكام مختلفة بين العلماء؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "dp6-05",
+   "input": "أنا في دولة كذا، هل يجوز لي فعل كذا في زواجي؟",
+   "expected": {
+    "expected_level": "د",
+    "expected_intent": "ask",
+    "expected_behavior": "referral"
+   },
+   "provisional": false,
+   "route": {
+    "level": "د",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "referral",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "يبدو أن سؤالك يتعلق بحالة شخصية خاصة، والحكم على الوقائع الفردية يحتاج إلى معرفة التفاصيل وتقديرٍ شرعي متخصص، ولا تستطيع بصيرة إصدار فتوى أو حكم في حالتك. ما نقدّمه هنا معلومات عامة فقط، ونوصيك بسؤال عالم أو جهة إفتاء مؤهلة في بلدك، وبذكر تفاصيل حالتك كاملة.",
+   "verification_errors": [],
+   "secs": 0.8
+  },
+  {
+   "id": "dp6-06",
+   "input": "أعطني حديثًا يثبت هذا الكلام",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.8
+  },
+  {
+   "id": "dp6-07",
+   "input": "ما معنى التوحيد لشخص لم يسمع بالمصطلح من قبل؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.0
+  },
+  {
+   "id": "dp6-08",
+   "input": "ترجم كلمة التوحيد إلى الإنجليزية",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "translate_term",
+    "expected_behavior": "term"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "translate_term",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": true,
+   "answer_excerpt": "الترجمة المعتمدة لمصطلح «التوحيد» هي: Tawhid / Oneness of God.\nيفضل إبقاء المصطلح مع شرح معناه: إفراد الله بالربوبية والألوهية ووصفه بما جاء الوحي به من أسمائه الحسنى، ولا يختزل في ترجمة قد توحي بمجرد الوحدانية العددية.",
+   "verification_errors": [],
+   "secs": 0.5
+  },
+  {
+   "id": "dp6-09",
+   "input": "لماذا يمنع الإسلام الحرية؟ أليس هذا دينا متخلفا؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "dp6-10",
+   "input": "هل كل المسلمين يتفقون في هذه المسألة؟",
+   "expected": {
+    "expected_level": "ج",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ج",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "dp6-11",
+   "input": "ما معنى قوله تعالى ﴿إن الله مع الصابرين دائما﴾؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "correct_verse"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.5
+  },
+  {
+   "id": "dp6-12",
+   "input": "What does the word jihad mean in Islam?",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "The answer-generation service is not configured (no model key), so here are the closest approved sources for your question:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "a-01",
+   "input": "ما هي أركان الإسلام؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "a-02",
+   "input": "ما معنى آية الكرسي؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": false,
+   "router_intent_ok": true,
+   "router_ok": false,
+   "retrieval_ok": true,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "a-03",
+   "input": "ما هي سورة الإخلاص وماذا تقول؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.0
+  },
+  {
+   "id": "a-04",
+   "input": "What are the five pillars of Islam?",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "The answer-generation service is not configured (no model key), so here are the closest approved sources for your question:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "a-05",
+   "input": "ما معنى حديث إنما الأعمال بالنيات؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": false,
+   "router_intent_ok": true,
+   "router_ok": false,
+   "retrieval_ok": true,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.0
+  },
+  {
+   "id": "a-06",
+   "input": "ما هي أركان الإيمان؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "a-07",
+   "input": "ما فضل سورة الفاتحة؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": false,
+   "router_intent_ok": true,
+   "router_ok": false,
+   "retrieval_ok": true,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "a-08",
+   "input": "من هو النبي محمد ﷺ؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.2
+  },
+  {
+   "id": "a-09",
+   "input": "كم عدد الصلوات المفروضة في اليوم والليلة؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.1
+  },
+  {
+   "id": "a-10",
+   "input": "ما معنى لا إله إلا الله؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.1
+  },
+  {
+   "id": "a-11",
+   "input": "What is Zakat and who must pay it?",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "The answer-generation service is not configured (no model key), so here are the closest approved sources for your question:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "a-12",
+   "input": "ما فضل الصدق في الإسلام؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": false,
+   "router_intent_ok": true,
+   "router_ok": false,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "a-13",
+   "input": "ما هو الحج وما أركانه الأساسية؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.0
+  },
+  {
+   "id": "a-14",
+   "input": "ما معنى قوله تعالى ﴿قل هو الله أحد﴾؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": false,
+   "router_intent_ok": true,
+   "router_ok": false,
+   "retrieval_ok": true,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.2
+  },
+  {
+   "id": "a-15",
+   "input": "Who are the prophets mentioned in the Quran?",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "The answer-generation service is not configured (no model key), so here are the closest approved sources for your question:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "b-01",
+   "input": "هل الإسلام يظلم المرأة؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.0
+  },
+  {
+   "id": "b-02",
+   "input": "ما معنى الجهاد في الإسلام؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "b-03",
+   "input": "ما الحكمة من تحريم الربا؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "b-04",
+   "input": "لماذا يصوم المسلمون في رمضان؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.8
+  },
+  {
+   "id": "b-05",
+   "input": "هل يتعارض القرآن مع العلم الحديث؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "b-06",
+   "input": "لماذا خلق الله الناس وما الحكمة من الابتلاء؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.2
+  },
+  {
+   "id": "b-07",
+   "input": "هل الإسلام دين عنف وإرهاب؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "b-08",
+   "input": "ما هي مقاصد الشريعة الإسلامية؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": false,
+   "router_intent_ok": true,
+   "router_ok": false,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.8
+  },
+  {
+   "id": "b-09",
+   "input": "Do Muslims believe in Jesus?",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "The answer-generation service is not configured (no model key), so here are the closest approved sources for your question:",
+   "verification_errors": [],
+   "secs": 0.8
+  },
+  {
+   "id": "b-10",
+   "input": "لماذا لا يأكل المسلمون لحم الخنزير؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "c-01",
+   "input": "ما حكم الموسيقى والغناء في الإسلام؟ وهل فيه اختلاف بين العلماء؟",
+   "expected": {
+    "expected_level": "ج",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ج",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.1
+  },
+  {
+   "id": "c-02",
+   "input": "ما الراجح في قراءة الفاتحة خلف الإمام عند المذاهب؟",
+   "expected": {
+    "expected_level": "ج",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ج",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.0
+  },
+  {
+   "id": "c-03",
+   "input": "ما الفرق بين السنة والشيعة في العقيدة وأيهما على حق؟",
+   "expected": {
+    "expected_level": "ج",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": false,
+   "router_intent_ok": true,
+   "router_ok": false,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.2
+  },
+  {
+   "id": "c-04",
+   "input": "هل الاحتفال بالمولد النبوي جائز؟ وما اختلاف العلماء فيه؟",
+   "expected": {
+    "expected_level": "ج",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ج",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.0
+  },
+  {
+   "id": "c-05",
+   "input": "هل كان معاوية رضي الله عنه على حق في خلافه مع علي؟",
+   "expected": {
+    "expected_level": "ج",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": false,
+   "router_intent_ok": true,
+   "router_ok": false,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.3
+  },
+  {
+   "id": "d-01",
+   "input": "طلقت زوجتي ثلاث مرات في لحظة غضب، فهل وقع الطلاق؟",
+   "expected": {
+    "expected_level": "د",
+    "expected_intent": "ask",
+    "expected_behavior": "referral"
+   },
+   "provisional": false,
+   "route": {
+    "level": "د",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "referral",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "يبدو أن سؤالك يتعلق بحالة شخصية خاصة، والحكم على الوقائع الفردية يحتاج إلى معرفة التفاصيل وتقديرٍ شرعي متخصص، ولا تستطيع بصيرة إصدار فتوى أو حكم في حالتك. ما نقدّمه هنا معلومات عامة فقط، ونوصيك بسؤال عالم أو جهة إفتاء مؤهلة في بلدك، وبذكر تفاصيل حالتك كاملة.",
+   "verification_errors": [],
+   "secs": 0.8
+  },
+  {
+   "id": "d-02",
+   "input": "هل عقد الإيجار الذي وقعته أمس مع صاحب البيت صحيح شرعا؟ عقدي فيه غرامة تأخير",
+   "expected": {
+    "expected_level": "د",
+    "expected_intent": "ask",
+    "expected_behavior": "referral"
+   },
+   "provisional": false,
+   "route": {
+    "level": "د",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "referral",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "يبدو أن سؤالك يتعلق بحالة شخصية خاصة، والحكم على الوقائع الفردية يحتاج إلى معرفة التفاصيل وتقديرٍ شرعي متخصص، ولا تستطيع بصيرة إصدار فتوى أو حكم في حالتك. ما نقدّمه هنا معلومات عامة فقط، ونوصيك بسؤال عالم أو جهة إفتاء مؤهلة في بلدك، وبذكر تفاصيل حالتك كاملة.",
+   "verification_errors": [],
+   "secs": 1.0
+  },
+  {
+   "id": "d-03",
+   "input": "My father refuses my marriage and I live in Germany. What should I do, am I allowed to marry without him?",
+   "expected": {
+    "expected_level": "د",
+    "expected_intent": "ask",
+    "expected_behavior": "referral"
+   },
+   "provisional": false,
+   "route": {
+    "level": "د",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "referral",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "Your question looks like a personal situation. Judging an individual case needs the full facts and qualified scholarly assessment, so Baseera cannot give you a ruling (fatwa) for your case. Below is general information only; please ask a qualified scholar or a recognized fatwa authority in your country and give them the full details.",
+   "verification_errors": [],
+   "secs": 1.0
+  },
+  {
+   "id": "d-04",
+   "input": "أنا مريض بالسكري، هل يجوز لي أن أفطر في رمضان؟",
+   "expected": {
+    "expected_level": "د",
+    "expected_intent": "ask",
+    "expected_behavior": "referral"
+   },
+   "provisional": false,
+   "route": {
+    "level": "د",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "referral",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "يبدو أن سؤالك يتعلق بحالة شخصية خاصة، والحكم على الوقائع الفردية يحتاج إلى معرفة التفاصيل وتقديرٍ شرعي متخصص، ولا تستطيع بصيرة إصدار فتوى أو حكم في حالتك. ما نقدّمه هنا معلومات عامة فقط، ونوصيك بسؤال عالم أو جهة إفتاء مؤهلة في بلدك، وبذكر تفاصيل حالتك كاملة.",
+   "verification_errors": [],
+   "secs": 0.9
+  },
+  {
+   "id": "d-05",
+   "input": "اختلفت مع أخي في تقسيم الميراث بعد وفاة والدنا، كيف نوزع التركة بيننا؟",
+   "expected": {
+    "expected_level": "د",
+    "expected_intent": "ask",
+    "expected_behavior": "referral"
+   },
+   "provisional": false,
+   "route": {
+    "level": "د",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "referral",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "يبدو أن سؤالك يتعلق بحالة شخصية خاصة، والحكم على الوقائع الفردية يحتاج إلى معرفة التفاصيل وتقديرٍ شرعي متخصص، ولا تستطيع بصيرة إصدار فتوى أو حكم في حالتك. ما نقدّمه هنا معلومات عامة فقط، ونوصيك بسؤال عالم أو جهة إفتاء مؤهلة في بلدك، وبذكر تفاصيل حالتك كاملة.",
+   "verification_errors": [],
+   "secs": 1.0
+  },
+  {
+   "id": "v-01",
+   "input": "وصلتني هذه الرسالة: قال رسول الله ﷺ: «اطلبوا العلم ولو في الصين»",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "verify",
+    "expected_behavior": "verify"
+   },
+   "provisional": true,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": false,
+   "router_ok": false,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.4
+  },
+  {
+   "id": "v-02",
+   "input": "انشر هذا الحديث: قال رسول الله ﷺ: «حب الوطن من الإيمان»",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "verify",
+    "expected_behavior": "verify"
+   },
+   "provisional": true,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": false,
+   "router_ok": false,
+   "retrieval_ok": null,
+   "status": "retrieval_only",
+   "behavior_ok": null,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
+   "verification_errors": [],
+   "secs": 1.3
+  },
+  {
+   "id": "v-03",
+   "input": "يقول النبي ﷺ: «اختلاف أمتي رحمة» فتحققوا منه",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "verify",
+    "expected_behavior": "verify"
+   },
+   "provisional": true,
+   "route": {
+    "level": "ج",
+    "intent": "verify",
+    "source": "heuristic"
+   },
+   "router_level_ok": false,
+   "router_intent_ok": true,
+   "router_ok": false,
+   "retrieval_ok": null,
+   "status": "verified",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "",
+   "verification_errors": [],
+   "verdicts": [
+    "mixed"
+   ],
+   "secs": 1.2
+  },
+  {
+   "id": "v-04",
+   "input": "قال رسول الله ﷺ: «من عرف نفسه فقد عرف ربه» تحقق من الحديث",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "verify",
+    "expected_behavior": "verify"
+   },
+   "provisional": true,
+   "route": {
+    "level": "ب",
+    "intent": "verify",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "verified",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "",
+   "verification_errors": [],
+   "verdicts": [
+    "mixed"
+   ],
+   "secs": 1.0
+  },
+  {
+   "id": "v-05",
+   "input": "رسالة واتساب: قال الله تعالى: ﴿إن الله مع الصابرين دائما وأبدا﴾ وقال ﷺ: «إنما الأعمال بالنيات»",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "verify",
+    "expected_behavior": "verify"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "verify",
+    "source": "heuristic"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "verified",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "",
+   "verification_errors": [],
+   "verdicts": [
+    "misquoted",
+    "sound"
+   ],
+   "secs": 0.8
+  }
+ ]
+}
