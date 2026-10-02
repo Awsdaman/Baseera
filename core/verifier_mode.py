@@ -26,6 +26,7 @@ Return ONLY a JSON array. Each item: {"type": "verse"|"hadith"|"quote", "text": 
 - quote: any other quotation attributed to a person (a companion, scholar, imam).
 Copy the text verbatim (including any mistakes); never correct, translate or complete it. If there are no claims return []."""
 
+_INTRO_ONLY = re.compile(r"(?:و?قال|و?يقول|عن)?\s*(?:رسول الله|النبي|نبينا|الرسول|الله تعالي|الله|تعالي)(?:\s+(?:تعالي|عنه|عليه))?")
 _quran_rows = None
 
 
@@ -49,6 +50,8 @@ def heuristic_extract(text: str) -> list[dict]:
 
     def add(kind, t, start, end, ref=None):
         t = _strip_marks(t)
+        if _INTRO_ONLY.fullmatch(normalize_ar(t)):  # just "قال رسول الله" etc., not a claim
+            return
         if len(t.split()) >= 2 and not any(s <= start < e for s, e in used):
             claims.append({"type": kind, "text": t, "claimed_ref": ref, "attributed_to": None})
             used.append((start, end))

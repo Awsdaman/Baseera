@@ -113,3 +113,8 @@ def test_verify_text_end_to_end(dorar_empty):
 def test_no_claims_message():
     out = V.verify_text("مرحبا كيف حالكم اليوم")
     assert out["claims"] == [] and out["message"]
+
+
+def test_introducer_phrase_is_not_a_claim():
+    cl = V.heuristic_extract("انشر هذا الحديث: قال رسول الله ﷺ: «حب الوطن من الإيمان»")
+    assert [c["text"] for c in cl] == ["حب الوطن من الإيمان"]

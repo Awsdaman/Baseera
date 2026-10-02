@@ -97,9 +97,30 @@ Pages: `/` main UI · `/retrieval` raw hybrid-retrieval debug view · `/docs` AP
 
 `evals/golden.jsonl` has the 12 challenge test cases (docs/data.pdf p.6) + 40 more (15 level أ, 10 ب, 5 ج, 5 د, 5 viral messages). The 4 viral entries marked `provisional` are well-known weak/fabricated hadiths — replace them with real examples from Dorar's *widespread hadiths* section.
 
-EVAL_RESULTS_PLACEHOLDER
+### Results (offline run, 52 cases — the LLM-dependent metrics are **not yet measured**)
+
+The development machine had no `ANTHROPIC_API_KEY`, so only the parts that need no LLM were run (`python evals/run_evals.py --offline`, report in `evals/reports/latest.html`):
+
+| Metric | Result | Notes |
+|---|---|---|
+| Router accuracy (heuristic fallback) | 100% (52/52) | **Optimistic**: the heuristic was tuned on these same cases. The real router is Haiku; re-measure live. |
+| Retrieval recall (hybrid, 8 cases with known targets) | 100% (8/8) | plus 14 retrieval tests incl. cross-language recall |
+| Correct abstention / referral (level د, 6 cases) | 100% (6/6) | template + referral links, generator never called |
+| Glossary translation (`ترجم كلمة التوحيد`) | pass | answered from the approved glossary, no LLM |
+| Verify mode (5 viral/mixed messages) | 5/5 | provisional hadith examples flagged red/amber from live Dorar grades; misquoted verse caught with correct text |
+| Verse fidelity | 100% (all checked) | by construction: verse text is only ever inserted by code |
+| Citation rate, false-abstention rate, LLM-judge score | **not measured** | need `ANTHROPIC_API_KEY`; run `python evals/run_evals.py` |
+
+Unit/integration tests: **124 pass** (`python -m pytest -q`), including adversarial verifier cases (invented ids, model-written verses in brackets / quotes / plain text, uncited paragraphs, unretrieved ranges), pipeline retry/abstain paths with a fake LLM, the real Anthropic wrapper against a stubbed SDK, data-integrity assertions (6,236 verses, 114 surahs) and retrieval on real questions. Tests need the ingested database (`python ingest/build_all.py`) — on a bare clone only normalization/verifier-independent tests can pass.
+
+
+## Privacy
+
+No accounts, no analytics, no database of questions: requests are processed in memory. The access log strips query strings (so `/api/retrieve?q=…` is not logged). Third parties that receive text: **Anthropic** (the question and retrieved passages, for routing/generation), **Dorar** (hadith wording from a pasted message, to look up grades) and **mp3quran** (surah number only). API responses from Dorar/icadb/HadeethEnc are cached on disk in `data/cache/` (keyed by hash of the request; the request text itself is not stored).
 
 ## Assumptions and limits (read these)
+
+- **Live LLM path is unverified end to end** (no API key was available): the Anthropic wrapper is tested against a stubbed SDK and follows the current API rules for `claude-sonnet-5-5` (no `temperature`, `output_config.effort`, thinking-aware `max_tokens`, refusal = fail closed). Fallback-model (`fallbacks`) routing is not enabled.
 
 - **Tafsir vectors are not embedded** (6,236 long passages are too slow on CPU); tafsir stays keyword-searchable and any retrieved tafsir pulls in its verse. Quran verses, hadiths, Q&A and terms are embedded with `BAAI/bge-m3`.
 - **Quran text** comes from the KFGQPC `v30` JSON (real Unicode, 6,236 verses). The `hafs_smart_v8` JSON is *not* used: its main field is private-use font glyphs.
