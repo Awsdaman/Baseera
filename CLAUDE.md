@@ -13,6 +13,7 @@ Arabic-first grounded Islamic Q&A and verification assistant for the "AI Challen
 
 ## Non-negotiable rules (enforce in code, not only prompts)
 1. The LLM NEVER writes Quran or hadith text. It emits placeholders `{{quran:SURAH:AYAH}}`, `{{quran:SURAH:AYAH-AYAH}}`, `{{hadith:SOURCE:ID}}`; code substitutes exact text from the local DB.
+   Also `{{tafsir:S:A}}` and code-owned scope notes `{{note:partial|refer|disputed}}` (fixed text we wrote; a note never counts as a citation). Citations are `[[passage-id]]` (or `[[id1, id2]]`); every 8+ word stretch of explanation needs its own, a placeholder does not cover the text around it. The model must never write 'not exhaustive / ask a scholar' sentences itself (they cannot be cited): it uses a note.
 2. Every claim cites a source ID actually retrieved for this question. Unretrieved/nonexistent IDs fail verification.
 3. Hadith grades come ONLY from Dorar / HadeethEnc data, never the model.
 4. Insufficient evidence -> abstain with a warm, useful message suggesting where to look. Never fabricate.
@@ -50,3 +51,9 @@ Keep original text for display; normalized text (no tashkeel/tatweel, أإآ->ا
 - icadb: public GET, OpenAPI at `/api/docs/?format=openapi`. Q&A encyclopedias: id 2 (Muslims), 11 (non-Muslims); terminology: id 5.
 - Bayyinat PDF text extraction is garbled (swapped letters/lost lam-alef); clean up or fall back to icadb Q&A.
 - Python needs `truststore` for HTTPS on this machine.
+
+## LLM providers and evals (added later)
+- `core/llm.py`: `LLM_PROVIDER=anthropic|openai|local` (see `.env.example`); `JUDGE_PROVIDER` can differ; `LLM_CACHE=1` caches identical requests (dev/evals); token usage is counted in `llm.USAGE`. Tests never touch a real provider (autouse fixture scrubs env).
+- `pipeline.ask(q, debug=True)` returns the full trace (raw outputs, verifier errors, retrieved ids). The API never exposes it nor `verification_errors`.
+- Evals: `python evals/run_evals.py [--offline|--only ids|--no-judge|--rejudge f|--reverify f]`. `--reverify` re-runs the verifier on saved raw outputs for free. Target: verifier-forced abstention rate 0.
+- See HANDOFF.md for the latest status. Secrets (`.env`, `*API*.txt`, `env-folder-original/`) are git-ignored; never commit them.

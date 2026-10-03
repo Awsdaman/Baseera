@@ -115,12 +115,18 @@ def _check_quotes(text: str, retrieved: dict, errors: list[str]):
             if not _AR.search(seg) or _arabic_words(seg) < MIN_QUOTE_WORDS:
                 continue
             n = normalize_ar(seg)
-            if any(n in q[2] or n in q[3] for q in _quran()) or \
-                    process.extractOne(n, _long_verses(), scorer=fuzz.partial_ratio, score_cutoff=LEAK_CUTOFF):
+            words = len(n.split())
+            # Typed scripture = a long run, or a quote that covers most of a verse. A short formula inside a longer verse
+            # (the shahada «لا إله إلا الله», «بسم الله») is a stock phrase, not a recitation.
+            leak = any(_is_leak(n, words, q[2] if n in q[2] else q[3]) for q in _quran() if n in q[2] or n in q[3])
+            if not leak:
+                hit = process.extractOne(n, _long_verses(), scorer=fuzz.partial_ratio, score_cutoff=LEAK_CUTOFF)
+                leak = bool(hit and _is_leak(n, words, hit[0]))
+            if leak:
                 errors.append(f"Quran text written by the model inside quotation marks (use a {{{{quran:S:A}}}} placeholder): {seg[:60]}")
                 continue
             hadith = [p for p in retrieved.values() if p["type"] == "hadith"]
-            if any(n in normalize_ar(p["text"] or "") for p in hadith):
+            if any(n in normalize_ar(p["text"] or "") and _is_leak(n, words, normalize_ar(p["text"] or "")) for p in hadith):
                 errors.append(f"Hadith text written by the model (use a {{{{hadith:...}}}} placeholder): {seg[:60]}")
                 continue
             tail = text[m.end(): m.end() + 80]

@@ -1,5 +1,6 @@
 """Adversarial tests for core/verify.py: the model must never get unretrieved ids or self-written sacred text through."""
 from core import retrieve as R
+from core.normalize import normalize_ar
 from core.verify import verify_answer
 
 
@@ -216,3 +217,19 @@ def test_citation_error_carries_a_fix_recipe_and_the_rejected_text():
     r = verify_answer("هذه فقرة طويلة بلا أي مصدر ولا إحالة على الإطلاق في هذا الكلام كله [[term:glossary:2]]\n\nوهذه فقرة ثانية طويلة جدا بلا إحالة على أي مصدر من المصادر", P("term:glossary:2"))
     msg = next(e for e in r.errors if "without an explicit" in e)
     assert "Fix:" in msg and "{{note:partial}}" in msg and "وهذه فقرة ثانية" in msg
+
+
+def test_quoting_the_shahada_as_a_cited_stock_phrase_is_allowed():
+    """Live regression (dp6-07): «لا إله إلا الله» occurs inside several verses but is a formula, not typed scripture."""
+    ps = P("qa:icadb:26014")
+    assert "لا اله الا الله" in normalize_ar(ps[0]["text"])
+    text = "وكلمة التوحيد هي «لا إله إلا الله» وهي أصل الإسلام عند أهل العلم جميعا [[qa:icadb:26014]]"
+    r = verify_answer(text, ps)
+    assert r.ok, r.errors
+
+
+def test_quoting_a_whole_short_verse_is_still_rejected():
+    ps = P("quran:112:1", "qa:icadb:26014")
+    for q in ("«قل هو الله أحد»", "«بسم الله الرحمن الرحيم»"):
+        r = verify_answer(f"وقد جاء في القرآن {q} وهو واضح في معناه عند أهل العلم [[qa:icadb:26014]]", ps)
+        assert not r.ok, q

@@ -1,0 +1,1709 @@
+{
+ "meta": "LIVE run on openai: router=gpt-5.4-mini, generator=gpt-5.6-sol, judge=gpt-5.5 · 10 cases · 2026-10-03 18:31",
+ "summary": {
+  "router_accuracy": [
+   100.0,
+   10
+  ],
+  "retrieval_recall": [
+   100.0,
+   5
+  ],
+  "citation_rate": [
+   100.0,
+   10
+  ],
+  "verse_fidelity": [
+   100.0,
+   10
+  ],
+  "correct_abstention_rate": [
+   null,
+   0
+  ],
+  "false_abstention_rate": [
+   0.0,
+   6
+  ],
+  "verifier_forced_abstention_rate": [
+   0.0,
+   10
+  ],
+  "behavior_pass_rate": [
+   100.0,
+   10
+  ],
+  "verify_mode_pass_rate": [
+   null,
+   0
+  ],
+  "judge_score_avg_of_5": [
+   null,
+   0
+  ],
+  "router_level_أ": [
+   100.0,
+   1
+  ],
+  "router_level_ب": [
+   100.0,
+   5
+  ],
+  "router_level_ج": [
+   100.0,
+   4
+  ],
+  "router_level_د": [
+   null,
+   0
+  ]
+ },
+ "patterns": {},
+ "results": [
+  {
+   "id": "dp6-01",
+   "input": "لماذا يعبد المسلمون الكعبة؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "المسلمون لا يعبدون الكعبة، بل يعبدون الله وحده. فالتوجّه نحو الكعبة في الصلاة ليس عبادةً لها؛ وإنما هي القبلة التي أمر الله المسلمين باستقبالها، أما المحبة والخوف والرجاء والسجود وسائر أنواع العبادة فتصرف لله وحده. [1][2]\n\n﴿فَإِلَّمۡ يَسۡتَجِيبُواْ لَكُمۡ فَٱعۡلَمُوٓاْ أَنَّمَآ أُنزِلَ بِعِلۡمِ ٱللَّهِ وَأَن لَّآ إِلَٰهَ إِلَّا هُوَۖ فَهَلۡ أَنتُم مُّسۡلِمُونَ﴾ [هُودٍ: 14]\n\nوقد أمر الله نبيَّه و",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:5:97",
+     "quran:11:109",
+     "quran:7:70",
+     "quran:9:18",
+     "hadith:hadeethenc:65425",
+     "hadith:hadeethenc:65683",
+     "hadith:hadeethenc:3023",
+     "hadith:hadeethenc:4440",
+     "qa:bayyinat:9",
+     "qa:icadb:36240",
+     "qa:icadb:36130",
+     "qa:icadb:36241",
+     "tafsir:muyassar:11:14",
+     "tafsir:muyassar:2:144",
+     "term:icadb:1676",
+     "term:icadb:1688",
+     "quran:11:14",
+     "quran:2:144"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "المسلمون لا يعبدون الكعبة، بل يعبدون الله وحده. فالتوجّه نحو الكعبة في الصلاة ليس عبادةً لها؛ وإنما هي القبلة التي أمر الله المسلمين باستقبالها، أما المحبة والخوف والرجاء والسجود وسائر أنواع العبادة فتصرف لله وحده. [[qa:bayyinat:9, tafsir:muyassar:11:14]]\n\n{{quran:11:14}}\n\nوقد أمر الله نبيَّه والمسلمين بالتوجّه في الصلاة نحو المسجد الحرام: [[quran:2:144]]\n\n{{quran:2:144}}\n\nلذلك فالمسلم يسجد نحو الكعبة امتثالًا لأمر الله، ولا يسجد للكعبة نفسها. وكذلك الطواف حولها عبادةٌ لله تُؤدَّى عند بيته الحرام، وليس عبادةً للحجارة أو للحجر الأسود. [[qa:bayyinat:9, term:icadb:1676]]\n\nوقد جعل الله الكعبة بيتًا حرامًا ذا مكانة عظيمة ومصلحة للناس. [[quran:5:97]]\n\n{{quran:5:97}}",
+      "errors": [],
+      "ok": true
+     }
+    ],
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm"
+    },
+    "abstain_reason": null
+   },
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 335,
+     "output": 20
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 6266,
+     "output": 328
+    }
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "المسلمون لا يعبدون الكعبة، بل يعبدون الله وحده. فالتوجّه نحو الكعبة في الصلاة ليس عبادةً لها؛ وإنما هي القبلة التي أمر الله المسلمين باستقبالها، أما المحبة والخوف والرجاء والسجود وسائر أنواع العبادة فتصرف لله وحده. [1][2]\n\n﴿فَإِلَّمۡ يَسۡتَجِيبُواْ لَكُمۡ فَٱعۡلَمُوٓاْ أَنَّمَآ أُنزِلَ بِعِلۡمِ ٱللَّهِ وَأَن لَّآ إِلَٰهَ إِلَّا هُوَۖ فَهَلۡ أَنتُم مُّسۡلِمُونَ﴾ [هُودٍ: 14]\n\nوقد أمر الله نبيَّه والمسلمين بالتوجّه في الصلاة نحو المسجد الحرام: [4]\n\n﴿قَدۡ نَرَىٰ تَقَلُّبَ وَجۡهِكَ فِي ٱلسَّمَآءِۖ فَلَنُوَلِّيَنَّكَ قِبۡلَةࣰ تَرۡضَىٰهَاۚ فَوَلِّ وَجۡهَكَ شَطۡرَ ٱلۡمَسۡجِدِ ٱلۡحَرَامِۚ وَحَيۡثُ مَا كُنتُمۡ فَوَلُّواْ وُجُوهَكُمۡ شَطۡرَهُۥۗ وَإِنَّ ٱلَّذِينَ أُوتُواْ ٱلۡكِتَٰبَ لَيَعۡلَمُونَ أَنَّهُ ٱلۡحَقُّ مِن رَّبِّهِمۡۗ وَمَا ٱللَّهُ بِغَٰفِلٍ عَمَّا يَعۡمَلُونَ﴾ [البَقَرَةِ: 144]\n\nلذلك فالمسلم يسجد نحو الكعبة امتثالًا لأمر الله، ولا يسجد للكعبة نفسها. وكذلك الطواف حولها عبادةٌ لله تُؤدَّى عند بيته الحرام، وليس عبادةً للحجارة أو للحجر الأسود. [1][5]\n\nوقد جعل الله الكعبة بيتًا حرامًا ذا مكانة عظيمة ومصلحة للناس. [6]\n\n﴿۞ جَعَلَ ٱللَّهُ ٱلۡكَعۡبَةَ ٱلۡبَيۡتَ ٱلۡحَرَامَ قِيَٰمࣰا لِّلنَّاسِ وَٱلشَّهۡرَ ٱلۡحَرَامَ وَٱلۡهَدۡيَ وَٱلۡقَلَٰٓئِدَۚ ذَٰلِكَ لِتَعۡلَمُوٓاْ أَنَّ ٱللَّهَ يَعۡلَمُ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِ وَأَنَّ ٱللَّهَ بِكُلِّ شَيۡءٍ عَلِيمٌ﴾ [المَائـِدَةِ: 97]",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "المسلمون لا يعبدون الكعبة، بل يعبدون الله وحده. فالتوجّه نحو الكعبة في الصلاة ليس عبادةً لها؛ وإنما هي القبلة التي أمر الله المسلمين باستقبالها، أما المحبة والخوف والرجاء والسجود وسائر أنواع العبادة فتصرف لله وحده. [1][2]"
+     },
+     {
+      "kind": "quran",
+      "ref": "11:14",
+      "surah_name_ar": "هُودٍ",
+      "text_ar": "فَإِلَّمۡ يَسۡتَجِيبُواْ لَكُمۡ فَٱعۡلَمُوٓاْ أَنَّمَآ أُنزِلَ بِعِلۡمِ ٱللَّهِ وَأَن لَّآ إِلَٰهَ إِلَّا هُوَۖ فَهَلۡ أَنتُم مُّسۡلِمُونَ",
+      "text_en": "And if they do not respond to you - then know that it [i.e., the Qur’ān] was revealed with the knowledge of Allāh[551] and that there is no deity except Him. Then,[552] would you [not] be Muslims?",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:11:14"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/11#14"
+     },
+     {
+      "kind": "explanation",
+      "text": "وقد أمر الله نبيَّه والمسلمين بالتوجّه في الصلاة نحو المسجد الحرام: [4]"
+     },
+     {
+      "kind": "quran",
+      "ref": "2:144",
+      "surah_name_ar": "البَقَرَةِ",
+      "text_ar": "قَدۡ نَرَىٰ تَقَلُّبَ وَجۡهِكَ فِي ٱلسَّمَآءِۖ فَلَنُوَلِّيَنَّكَ قِبۡلَةࣰ تَرۡضَىٰهَاۚ فَوَلِّ وَجۡهَكَ شَطۡرَ ٱلۡمَسۡجِدِ ٱلۡحَرَامِۚ وَحَيۡثُ مَا كُنتُمۡ فَوَلُّواْ وُجُوهَكُمۡ شَطۡرَهُۥۗ وَإِنَّ ٱلَّذِينَ أُوتُواْ ٱلۡكِتَٰبَ لَيَعۡلَمُونَ أَنَّهُ ٱلۡحَقُّ مِن رَّبِّهِمۡۗ وَمَا ٱللَّهُ بِغَٰفِلٍ عَمَّا يَعۡمَلُونَ",
+      "text_en": "We have certainly seen the turning of your face, [O Muḥammad], toward the heaven, and We will surely turn you to a qiblah with which you will be pleased. So turn your face [i.e., yourself] toward al-Masjid al-Ḥarām.[53] And wherever you [believers] are, turn your faces [i.e., yourselves] toward it [in prayer]. Indeed, those who have been given the Scripture [i.e., the Jews and the Christians] well know that it is the truth from their Lord. And Allāh is not unaware of what they do.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:2:144"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/2#144"
+     },
+     {
+      "kind": "explanation",
+      "text": "لذلك فالمسلم يسجد نحو الكعبة امتثالًا لأمر الله، ولا يسجد للكعبة نفسها. وكذلك الطواف حولها عبادةٌ لله تُؤدَّى عند بيته الحرام، وليس عبادةً للحجارة أو للحجر الأسود. [1][5]\n\nوقد جعل الله الكعبة بيتًا حرامًا ذا مكانة عظيمة ومصلحة للناس. [6]"
+     },
+     {
+      "kind": "quran",
+      "ref": "5:97",
+      "surah_name_ar": "المَائـِدَةِ",
+      "text_ar": "۞ جَعَلَ ٱللَّهُ ٱلۡكَعۡبَةَ ٱلۡبَيۡتَ ٱلۡحَرَامَ قِيَٰمࣰا لِّلنَّاسِ وَٱلشَّهۡرَ ٱلۡحَرَامَ وَٱلۡهَدۡيَ وَٱلۡقَلَٰٓئِدَۚ ذَٰلِكَ لِتَعۡلَمُوٓاْ أَنَّ ٱللَّهَ يَعۡلَمُ مَا فِي ٱلسَّمَٰوَٰتِ وَمَا فِي ٱلۡأَرۡضِ وَأَنَّ ٱللَّهَ بِكُلِّ شَيۡءٍ عَلِيمٌ",
+      "text_en": "Allāh has made the Kaʿbah, the Sacred House, standing[286] for the people and [has sanctified] the sacred months and the sacrificial animals and the garlands [by which they are identified]. That is so you may know that Allāh knows what is in the heavens and what is in the earth and that Allāh is Knowing of all things.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:5:97"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/5#97"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:bayyinat:9",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "لماذا يعبُدُ المسلِمون الكعبةَ، والحجَرَ الأسوَدَ؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "tafsir:muyassar:11:14",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 11:14",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/11#14",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:11:14",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "هُودٍ 14",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/11#14",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "quran:2:144",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "البَقَرَةِ 144",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/2#144",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "term:icadb:1676",
+      "type": "term",
+      "source": "icadb-terms",
+      "title": "طَوافٌ",
+      "reference_url": "https://terminologyenc.com",
+      "grade": null
+     },
+     {
+      "n": 6,
+      "id": "quran:5:97",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "المَائـِدَةِ 97",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/5#97",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "secs": 25.8
+  },
+  {
+   "id": "dp6-07",
+   "input": "ما معنى التوحيد لشخص لم يسمع بالمصطلح من قبل؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "**التوحيد** ببساطة هو إفراد الله بما يختص به، وليس مجرد الاعتقاد بأنه واحد من جهة العدد؛ بل الإيمان بأنه وحده الخالق والمالك والمدبّر، وأنه وحده المستحق للعبادة، وإثبات أسمائه وصفاته كما جاءت في الوحي. [1][2]\n\nويمكن فهمه في ثلاثة جوانب مترابطة:\n\n1. **توحيد الربوبية:** الإيمان بأن الله وحده الخالق والرازق والمالك والمدبّر.  \n2. **توحيد الألوهية:** إفراد الله بجميع العبادة، فلا يُعبد بحق إلا هو.  \n3",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:9:6",
+     "quran:21:45",
+     "quran:90:7",
+     "quran:35:22",
+     "hadith:hadeethenc:3272",
+     "hadith:hadeethenc:65072",
+     "hadith:hadeethenc:5486",
+     "hadith:hadeethenc:10109",
+     "qa:icadb:26020",
+     "qa:icadb:26014",
+     "qa:icadb:26285",
+     "qa:icadb:36144",
+     "tafsir:muyassar:22:24",
+     "tafsir:muyassar:45:8",
+     "term:glossary:2",
+     "term:glossary:1",
+     "quran:22:24",
+     "quran:45:8"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "**التوحيد** ببساطة هو إفراد الله بما يختص به، وليس مجرد الاعتقاد بأنه واحد من جهة العدد؛ بل الإيمان بأنه وحده الخالق والمالك والمدبّر، وأنه وحده المستحق للعبادة، وإثبات أسمائه وصفاته كما جاءت في الوحي. [[term:glossary:2, qa:icadb:26020]]\n\nويمكن فهمه في ثلاثة جوانب مترابطة:\n\n1. **توحيد الربوبية:** الإيمان بأن الله وحده الخالق والرازق والمالك والمدبّر.  \n2. **توحيد الألوهية:** إفراد الله بجميع العبادة، فلا يُعبد بحق إلا هو.  \n3. **توحيد الأسماء والصفات:** الإيمان بما ورد لله من الأسماء والصفات في الكتاب والسنة، من غير تشبيه ولا تمثيل ولا تعطيل ولا تكييف. [[qa:icadb:26020]]\n\nومعنى كلمة التوحيد أن الله وحده هو المعبود بحق. [[qa:icadb:26014]]\n\n{{hadith:hadeethenc:5486}}\n\nويُظهر الحديث الإقرار بوحدانية الله وكماله، والتوجّه إليه وحده بالدعاء. [[hadith:hadeethenc:5486]]",
+      "errors": [],
+      "ok": true
+     }
+    ],
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm"
+    },
+    "abstain_reason": null
+   },
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 343,
+     "output": 20
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 3685,
+     "output": 596
+    }
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "**التوحيد** ببساطة هو إفراد الله بما يختص به، وليس مجرد الاعتقاد بأنه واحد من جهة العدد؛ بل الإيمان بأنه وحده الخالق والمالك والمدبّر، وأنه وحده المستحق للعبادة، وإثبات أسمائه وصفاته كما جاءت في الوحي. [1][2]\n\nويمكن فهمه في ثلاثة جوانب مترابطة:\n\n1. **توحيد الربوبية:** الإيمان بأن الله وحده الخالق والرازق والمالك والمدبّر.  \n2. **توحيد الألوهية:** إفراد الله بجميع العبادة، فلا يُعبد بحق إلا هو.  \n3. **توحيد الأسماء والصفات:** الإيمان بما ورد لله من الأسماء والصفات في الكتاب والسنة، من غير تشبيه ولا تمثيل ولا تعطيل ولا تكييف. [2]\n\nومعنى كلمة التوحيد أن الله وحده هو المعبود بحق. [3]\n\n«عن بريدة رضي الله عنه قال: سمع النبي صلى الله عليه وسلم رجلاً يقول: اللهم إني أسألك بأني أشهد أنك أنت الله لا إله إلا أنت، الأحد الصمد، الذي لم يلد، ولم يولد، ولم يكن له كفوًا أحد.\n فقال: «لقد سأل الله باسمه الذي إذا سُئِلَ به أعطى، وإذا دُعِيَ به أجاب»» (رواه أبو داود والترمذي والنسائي وابن ماجه — الدرجة: صحيح)\n\nويُظهر الحديث الإقرار بوحدانية الله وكماله، والتوجّه إليه وحده بالدعاء. [4]",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "**التوحيد** ببساطة هو إفراد الله بما يختص به، وليس مجرد الاعتقاد بأنه واحد من جهة العدد؛ بل الإيمان بأنه وحده الخالق والمالك والمدبّر، وأنه وحده المستحق للعبادة، وإثبات أسمائه وصفاته كما جاءت في الوحي. [1][2]\n\nويمكن فهمه في ثلاثة جوانب مترابطة:\n\n1. **توحيد الربوبية:** الإيمان بأن الله وحده الخالق والرازق والمالك والمدبّر.  \n2. **توحيد الألوهية:** إفراد الله بجميع العبادة، فلا يُعبد بحق إلا هو.  \n3. **توحيد الأسماء والصفات:** الإيمان بما ورد لله من الأسماء والصفات في الكتاب والسنة، من غير تشبيه ولا تمثيل ولا تعطيل ولا تكييف. [2]\n\nومعنى كلمة التوحيد أن الله وحده هو المعبود بحق. [3]"
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:5486",
+      "text_ar": "عن بريدة رضي الله عنه قال: سمع النبي صلى الله عليه وسلم رجلاً يقول: اللهم إني أسألك بأني أشهد أنك أنت الله لا إله إلا أنت، الأحد الصمد، الذي لم يلد، ولم يولد، ولم يكن له كفوًا أحد.\n فقال: «لقد سأل الله باسمه الذي إذا سُئِلَ به أعطى، وإذا دُعِيَ به أجاب»",
+      "text_en": "Buraydah (may Allah be pleased with him) reported: The Prophet (may Allah's peace and blessings be upon him) once heard a man saying: \"O Allah, I ask You by virtue of my testimony that You are Allah, there is no God but You, the One, the Eternal Refuge, Who did not beget, and was not begotten, and to Whom no one is equal.\" Thereupon, he: \"Verily, he has asked Allah by His Name by which He gives when asked, and by which He answers when supplicated.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه أبو داود والترمذي والنسائي وابن ماجه",
+      "reference": "سنن أبي داود، لسليمان بن الأشعث السِّجِسْتاني، تحقيق: محمد محيي الدين عبد الحميد: المكتبة العصرية، صيدا - بيروت.\nسنن الترمذي، لمحمد بن عيسى الترمذي، تحقيق وتعليق:أحمد محمد شاكر ومحمد فؤاد عبد الباقي وإبراهيم عطوة عوض، شركة مكتبة ومطبعة مصطفى البابي الحلبي -مصر- الطبعة الثانية، 1395 هـ - 1975م.\nمسند الإمام أحمد بن حنبل، المحقق: شعيب الأرنؤوط - عادل مرشد، وآخرون إشراف: د عبد الله بن عبد المحسن التركي - مؤسسة الرسالة - الطبعة الأولى، 1421 هـ - 2001 م.\nالسنن الكبرى للنسائي، حققه وخرج أحاديثه: حسن عبد المنعم شلبي، أشرف عليه: شعيب الأرناءوط مؤسسة الرسالة  -بيروت- الطبعة الأولى، 1421 هـ - 2001 م.\nمنحة العلام في شرح بلوغ المرام، تأليف: عبد الله الفوزان، طبعة دار ابن  الجوزي-الطبعة الأولى 1428\nتوضيح الأحكام شرح بلوغ المرام، تأليف عبد الله البسام، مكتبة الأسدي -مكة المكرمة - الطبعة الخامِسَة، 1423 هـ - 2003 م.\nتسهيل الإلمام بفقه الأحاديث من بلوغ المرام، تأليف الشيخ صالح الفوزان، مؤسسة الرسالة.\nفتح ذي الجلال والإكرام بشرح بلوغ المرام، للشيخ ابن عثيمين- المكتبة الإسلامية القاهرة، تحقيق صبحي رمضان وأم إسراء بيومي- الطبعة الأولى 1427هـ.",
+      "ids": [
+       "hadith:hadeethenc:5486"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/5486"
+     },
+     {
+      "kind": "explanation",
+      "text": "ويُظهر الحديث الإقرار بوحدانية الله وكماله، والتوجّه إليه وحده بالدعاء. [4]"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "term:glossary:2",
+      "type": "term",
+      "source": "glossary",
+      "title": "التوحيد",
+      "reference_url": "docs/data.pdf#page=7",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:icadb:26020",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما أنواع التوحيد؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26020/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "qa:icadb:26014",
+      "type": "qa",
+      "source": "icadb",
+      "title": "اذكر كلمة التوحيد، وما معناها؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26014/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "hadith:hadeethenc:5486",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "لقد سأل الله باسمه الذي إذا سُئِلَ به أعطى، وإذا دُعِيَ به أجاب",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/5486",
+      "grade": "صحيح"
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "secs": 16.3
+  },
+  {
+   "id": "dp6-12",
+   "input": "What does the word jihad mean in Islam?",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "In Islam, **jihad** broadly means striving and exerting one’s effort for God. It includes resisting sin, persevering in Worship, fulfilling demanding responsibilities, speaking justly, and defending one’s faith, life, family, or property. It is therefore not simply a synonym for warfare. [1][2]\n\n﴿وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِن",
+   "lang": "en",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:36:58",
+     "quran:9:29",
+     "quran:73:5",
+     "quran:22:78",
+     "hadith:hadeethenc:3045",
+     "hadith:hadeethenc:64598",
+     "hadith:hadeethenc:4193",
+     "hadith:hadeethenc:2759",
+     "qa:icadb:36140",
+     "qa:icadb:36193",
+     "qa:icadb:26100",
+     "qa:icadb:36099",
+     "term:glossary:10",
+     "term:glossary:1"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "In Islam, **jihad** broadly means striving and exerting one’s effort for God. It includes resisting sin, persevering in Worship, fulfilling demanding responsibilities, speaking justly, and defending one’s faith, life, family, or property. It is therefore not simply a synonym for warfare. [[qa:icadb:36193, qa:icadb:26100]]\n\n{{quran:22:78}}\n\nThis verse uses jihad in the broad sense of striving sincerely for God, alongside prayer, charity, and holding firmly to Him. [[quran:22:78]]\n\nThe Hadith also applies the term to speaking a just word before an unjust ruler and to an accepted pilgrimage. [[hadith:hadeethenc:3045, hadith:hadeethenc:2759]]\n\n{{hadith:hadeethenc:3045}}\n\n{{hadith:hadeethenc:2759}}\n\nIn a military context, the cited explanations include defending Islam and its people, but they explicitly reject interpreting jihad as killing peaceful non-Muslims or civilians and state that women, children, and property must be protected during war. [[qa:icadb:26100, qa:icadb:36193]]\n\n{{note:disputed}}\n\n{{note:refer}}\n\n{{note:partial}}",
+      "errors": [],
+      "ok": true
+     }
+    ],
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "en",
+     "term": null,
+     "source": "llm"
+    },
+    "abstain_reason": null
+   },
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 335,
+     "output": 20
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 4170,
+     "output": 474
+    }
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "In Islam, **jihad** broadly means striving and exerting one’s effort for God. It includes resisting sin, persevering in Worship, fulfilling demanding responsibilities, speaking justly, and defending one’s faith, life, family, or property. It is therefore not simply a synonym for warfare. [1][2]\n\n﴿وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰهِيمَۚ هُوَ سَمَّىٰكُمُ ٱلۡمُسۡلِمِينَ مِن قَبۡلُ وَفِي هَٰذَا لِيَكُونَ ٱلرَّسُولُ شَهِيدًا عَلَيۡكُمۡ وَتَكُونُواْ شُهَدَآءَ عَلَى ٱلنَّاسِۚ فَأَقِيمُواْ ٱلصَّلَوٰةَ وَءَاتُواْ ٱلزَّكَوٰةَ وَٱعۡتَصِمُواْ بِٱللَّهِ هُوَ مَوۡلَىٰكُمۡۖ فَنِعۡمَ ٱلۡمَوۡلَىٰ وَنِعۡمَ ٱلنَّصِيرُ﴾ [الحَجِّ: 78]\n\nThis verse uses jihad in the broad sense of striving sincerely for God, alongside prayer, charity, and holding firmly to Him. [3]\n\nThe Hadith also applies the term to speaking a just word before an unjust ruler and to an accepted pilgrimage. [4][5]\n\n«عَنْ أَبِي سَعِيدٍ الخُدْرِيِّ رضي الله عنه أَنَّ النَّبِيَّ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ قَالَ: «إِنَّ مِنْ أَعْظَمِ الجِهَادِ كَلِمَةَ عَدْلٍ عِنْدَ سُلْطَانٍ جَائِرٍ».» (رواه أبو داود والترمذي وابن ماجه وأحمد — الدرجة: حسن لغيره)\n\n«عَنْ عَائِشَةَ أُمِّ المُؤْمِنِينَ رَضِيَ اللَّهُ عَنْهَا أَنَّهَا قَالَتْ: يَا رَسُولَ اللَّهِ، نَرَى الجِهَادَ أَفْضَلَ العَمَلِ، أَفَلاَ نُجَاهِدُ؟ قَالَ: «لَا، لَكُنَّ أَفْضَلُ الجِهَادِ: حَجٌّ مَبْرُورٌ».» (رواه البخاري — الدرجة: صحيح)\n\nIn a military context, the cited explanations include defending Islam and its people, but they explicitly reject interpreting jihad as killing peaceful non-Muslims or civilians and state that women, children, and property must be protected during war. [2][1]\n\nScholars differ on this matter; the above presents what the available sources say, without choosing between the views.\n\nFor the detailed rulings on this matter, please consult a qualified scholar or fatwa authority.\n\nNote: this answer covers only what Baseera's approved sources provide; it is not exhaustive.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "In Islam, **jihad** broadly means striving and exerting one’s effort for God. It includes resisting sin, persevering in Worship, fulfilling demanding responsibilities, speaking justly, and defending one’s faith, life, family, or property. It is therefore not simply a synonym for warfare. [1][2]"
+     },
+     {
+      "kind": "quran",
+      "ref": "22:78",
+      "surah_name_ar": "الحَجِّ",
+      "text_ar": "وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰهِيمَۚ هُوَ سَمَّىٰكُمُ ٱلۡمُسۡلِمِينَ مِن قَبۡلُ وَفِي هَٰذَا لِيَكُونَ ٱلرَّسُولُ شَهِيدًا عَلَيۡكُمۡ وَتَكُونُواْ شُهَدَآءَ عَلَى ٱلنَّاسِۚ فَأَقِيمُواْ ٱلصَّلَوٰةَ وَءَاتُواْ ٱلزَّكَوٰةَ وَٱعۡتَصِمُواْ بِٱللَّهِ هُوَ مَوۡلَىٰكُمۡۖ فَنِعۡمَ ٱلۡمَوۡلَىٰ وَنِعۡمَ ٱلنَّصِيرُ",
+      "text_en": "And strive for Allāh with the striving due to Him. He has chosen you and has not placed upon you in the religion any difficulty. [It is] the religion of your father, Abraham. He [i.e., Allāh] named you \"Muslims\" before [in former scriptures] and in this [revelation] that the Messenger may be a witness over you and you may be witnesses over the people. So establish prayer and give zakāh and hold fast to Allāh. He is your protector; and excellent is the protector, and excellent is the helper.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:22:78"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/22#78"
+     },
+     {
+      "kind": "explanation",
+      "text": "This verse uses jihad in the broad sense of striving sincerely for God, alongside prayer, charity, and holding firmly to Him. [3]\n\nThe Hadith also applies the term to speaking a just word before an unjust ruler and to an accepted pilgrimage. [4][5]"
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:3045",
+      "text_ar": "عَنْ أَبِي سَعِيدٍ الخُدْرِيِّ رضي الله عنه أَنَّ النَّبِيَّ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ قَالَ: «إِنَّ مِنْ أَعْظَمِ الجِهَادِ كَلِمَةَ عَدْلٍ عِنْدَ سُلْطَانٍ جَائِرٍ».",
+      "text_en": "Abu Sa‘īd al-Khudri (may Allah be pleased with him) reported: The Prophet (may Allah's peace and blessings be upon him) said: \"Among the best of Jihad is to speak a word of justice to an oppressive ruler.\"",
+      "grade": "حسن لغيره",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه أبو داود والترمذي وابن ماجه وأحمد",
+      "reference": "سنن الترمذي (4/ 45) (2174).\nسنن أبي داود (6/ 400) (4344).\nسنن ابن ماجه (5/ 144) (4011).\nمسند أحمد (17/ 227) (11143).\nبهجة الناظرين شرح رياض الصالحين، لسليم الهلالي (1/ 283).\nشرح رياض الصالحين، لابن عثيمين (2/ 453).\nنزهة المتقين شرح رياض الصالحين، لمجموعة من الباحثين (1/ 216).",
+      "ids": [
+       "hadith:hadeethenc:3045"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/3045"
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:2759",
+      "text_ar": "عَنْ عَائِشَةَ أُمِّ المُؤْمِنِينَ رَضِيَ اللَّهُ عَنْهَا أَنَّهَا قَالَتْ: يَا رَسُولَ اللَّهِ، نَرَى الجِهَادَ أَفْضَلَ العَمَلِ، أَفَلاَ نُجَاهِدُ؟ قَالَ: «لَا، لَكُنَّ أَفْضَلُ الجِهَادِ: حَجٌّ مَبْرُورٌ».",
+      "text_en": "‘Ā’ishah, Mother of the Believers, (may Allah be pleased with her) reported saying: O Messenger of Allah, we consider Jihad the best deed; should we not perform Jihad? He said, \"No; rather, the best Jihad is Mabrūr (accepted) Hajj.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه البخاري",
+      "reference": "صحيح البخاري (2/ 133) (1520).\nبهجة الناظرين شرح رياض الصالحين، لسليم الهلالي (2/ 402).\nنزهة المتقين شرح رياض الصالحين، لمصطفى الخِن وغيره (2/ 902).\nشرح رياض الصالحين، لابن عثيمين (5/ 321).",
+      "ids": [
+       "hadith:hadeethenc:2759"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/2759"
+     },
+     {
+      "kind": "explanation",
+      "text": "In a military context, the cited explanations include defending Islam and its people, but they explicitly reject interpreting jihad as killing peaceful non-Muslims or civilians and state that women, children, and property must be protected during war. [2][1]"
+     },
+     {
+      "kind": "notice",
+      "text": "Scholars differ on this matter; the above presents what the available sources say, without choosing between the views.",
+      "note": "disputed"
+     },
+     {
+      "kind": "notice",
+      "text": "For the detailed rulings on this matter, please consult a qualified scholar or fatwa authority.",
+      "note": "refer"
+     },
+     {
+      "kind": "notice",
+      "text": "Note: this answer covers only what Baseera's approved sources provide; it is not exhaustive.",
+      "note": "partial"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:36193",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو الجهاد؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36193/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:icadb:26100",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو الجهاد في سبيل الله؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26100/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:22:78",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الحَجِّ 78",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/22#78",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "hadith:hadeethenc:3045",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "إن من أعظم الجهاد كلمة عدل عند سلطان جائر",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/3045",
+      "grade": "حسن لغيره"
+     },
+     {
+      "n": 5,
+      "id": "hadith:hadeethenc:2759",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "يا رسول الله، نرى الجهاد أفضل العمل، أفلا نجاهد؟ قال: لا، لكن أفضل الجهاد: حج مبرور",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/2759",
+      "grade": "صحيح"
+     }
+    ],
+    "ai_disclosure": "Baseera is an AI-powered tool, not a scholar or mufti. It answers only from approved sources and shows its references. No personal data is stored.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "en"
+   },
+   "verification_errors": [],
+   "secs": 10.3
+  },
+  {
+   "id": "a-15",
+   "input": "Who are the prophets mentioned in the Quran?",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "The Quran teaches Muslims to believe in all God’s prophets without rejecting any of them. [1][2]\n\nIn the provided passages, the prophets named are: Muhammad, Noah, Abraham, Ishmael, Isaac, Jacob, Moses, Jesus son of Mary, Job, Jonah, Aaron, Solomon, and David. The Descendants of Jacob are also mentioned collectively. [3][4]\n\n﴿۞ إِنَّآ أَوۡحَيۡنَآ إِلَيۡكَ كَمَآ أَوۡحَيۡنَآ إِلَىٰ نُوحࣲ وَٱلنَّ",
+   "lang": "en",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:33:7",
+     "quran:4:163",
+     "quran:2:136",
+     "quran:3:84",
+     "hadith:hadeethenc:3508",
+     "hadith:hadeethenc:11161",
+     "hadith:hadeethenc:8401",
+     "hadith:hadeethenc:66523",
+     "qa:icadb:36095",
+     "qa:icadb:26013",
+     "qa:bayyinat:43",
+     "qa:bayyinat:16",
+     "term:glossary:4",
+     "term:glossary:5"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "The Quran teaches Muslims to believe in all God’s prophets without rejecting any of them. [[quran:2:136, quran:3:84]]\n\nIn the provided passages, the prophets named are: Muhammad, Noah, Abraham, Ishmael, Isaac, Jacob, Moses, Jesus son of Mary, Job, Jonah, Aaron, Solomon, and David. The Descendants of Jacob are also mentioned collectively. [[quran:33:7, quran:4:163]]\n\n{{quran:4:163}}\n\nMuhammad, Noah, Abraham, Moses, and Jesus are specifically mentioned together as prophets from whom God took a solemn covenant. [[quran:33:7]]\n\n{{quran:33:7}}\n\n{{note:partial}}",
+      "errors": [],
+      "ok": true
+     }
+    ],
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "en",
+     "term": null,
+     "source": "llm"
+    },
+    "abstain_reason": null
+   },
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 335,
+     "output": 20
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 3901,
+     "output": 468
+    }
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "The Quran teaches Muslims to believe in all God’s prophets without rejecting any of them. [1][2]\n\nIn the provided passages, the prophets named are: Muhammad, Noah, Abraham, Ishmael, Isaac, Jacob, Moses, Jesus son of Mary, Job, Jonah, Aaron, Solomon, and David. The Descendants of Jacob are also mentioned collectively. [3][4]\n\n﴿۞ إِنَّآ أَوۡحَيۡنَآ إِلَيۡكَ كَمَآ أَوۡحَيۡنَآ إِلَىٰ نُوحࣲ وَٱلنَّبِيِّـۧنَ مِنۢ بَعۡدِهِۦۚ وَأَوۡحَيۡنَآ إِلَىٰٓ إِبۡرَٰهِيمَ وَإِسۡمَٰعِيلَ وَإِسۡحَٰقَ وَيَعۡقُوبَ وَٱلۡأَسۡبَاطِ وَعِيسَىٰ وَأَيُّوبَ وَيُونُسَ وَهَٰرُونَ وَسُلَيۡمَٰنَۚ وَءَاتَيۡنَا دَاوُۥدَ زَبُورࣰا﴾ [النِّسَاءِ: 163]\n\nMuhammad, Noah, Abraham, Moses, and Jesus are specifically mentioned together as prophets from whom God took a solemn covenant. [3]\n\n﴿وَإِذۡ أَخَذۡنَا مِنَ ٱلنَّبِيِّـۧنَ مِيثَٰقَهُمۡ وَمِنكَ وَمِن نُّوحࣲ وَإِبۡرَٰهِيمَ وَمُوسَىٰ وَعِيسَى ٱبۡنِ مَرۡيَمَۖ وَأَخَذۡنَا مِنۡهُم مِّيثَٰقًا غَلِيظࣰا﴾ [الأَحۡزَابِ: 7]\n\nNote: this answer covers only what Baseera's approved sources provide; it is not exhaustive.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "The Quran teaches Muslims to believe in all God’s prophets without rejecting any of them. [1][2]\n\nIn the provided passages, the prophets named are: Muhammad, Noah, Abraham, Ishmael, Isaac, Jacob, Moses, Jesus son of Mary, Job, Jonah, Aaron, Solomon, and David. The Descendants of Jacob are also mentioned collectively. [3][4]"
+     },
+     {
+      "kind": "quran",
+      "ref": "4:163",
+      "surah_name_ar": "النِّسَاءِ",
+      "text_ar": "۞ إِنَّآ أَوۡحَيۡنَآ إِلَيۡكَ كَمَآ أَوۡحَيۡنَآ إِلَىٰ نُوحࣲ وَٱلنَّبِيِّـۧنَ مِنۢ بَعۡدِهِۦۚ وَأَوۡحَيۡنَآ إِلَىٰٓ إِبۡرَٰهِيمَ وَإِسۡمَٰعِيلَ وَإِسۡحَٰقَ وَيَعۡقُوبَ وَٱلۡأَسۡبَاطِ وَعِيسَىٰ وَأَيُّوبَ وَيُونُسَ وَهَٰرُونَ وَسُلَيۡمَٰنَۚ وَءَاتَيۡنَا دَاوُۥدَ زَبُورࣰا",
+      "text_en": "Indeed, We have revealed to you, [O Muḥammad], as We revealed to Noah and the prophets after him. And We revealed to Abraham, Ishmael, Isaac, Jacob, the Descendants,[235] Jesus, Job, Jonah, Aaron, and Solomon; and to David We gave the book [of Psalms].",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:4:163"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/4#163"
+     },
+     {
+      "kind": "explanation",
+      "text": "Muhammad, Noah, Abraham, Moses, and Jesus are specifically mentioned together as prophets from whom God took a solemn covenant. [3]"
+     },
+     {
+      "kind": "quran",
+      "ref": "33:7",
+      "surah_name_ar": "الأَحۡزَابِ",
+      "text_ar": "وَإِذۡ أَخَذۡنَا مِنَ ٱلنَّبِيِّـۧنَ مِيثَٰقَهُمۡ وَمِنكَ وَمِن نُّوحࣲ وَإِبۡرَٰهِيمَ وَمُوسَىٰ وَعِيسَى ٱبۡنِ مَرۡيَمَۖ وَأَخَذۡنَا مِنۡهُم مِّيثَٰقًا غَلِيظࣰا",
+      "text_en": "And [mention, O Muḥammad], when We took from the prophets their covenant and from you and from Noah and Abraham and Moses and Jesus, the son of Mary; and We took from them a solemn covenant",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:33:7"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/33#7"
+     },
+     {
+      "kind": "notice",
+      "text": "Note: this answer covers only what Baseera's approved sources provide; it is not exhaustive.",
+      "note": "partial"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "quran:2:136",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "البَقَرَةِ 136",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/2#136",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "quran:3:84",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "آلِ عِمۡرَانَ 84",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/3#84",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:33:7",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الأَحۡزَابِ 7",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/33#7",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "quran:4:163",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "النِّسَاءِ 163",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/4#163",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "Baseera is an AI-powered tool, not a scholar or mufti. It answers only from approved sources and shows its references. No personal data is stored.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "en"
+   },
+   "verification_errors": [],
+   "secs": 9.7
+  },
+  {
+   "id": "b-02",
+   "input": "ما معنى الجهاد في الإسلام؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "الجهاد في الإسلام معناه العام بذل الجهد والوسع في سبيل الله، ويشمل السعي في طاعة الله، ومجاهدة النفس عن المعاصي، والمثابرة على العبادات، كما يُستعمل في نشر الإسلام والدفاع عنه وعن أهله. لذلك لا يصح اختزاله في القتال وحده. [1][2]\n\n﴿وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰهِيمَۚ هُوَ سَمَّىٰكُمُ ٱلۡمُسۡ",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:3:85",
+     "quran:22:78",
+     "quran:61:7",
+     "quran:2:217",
+     "hadith:hadeethenc:5033",
+     "hadith:hadeethenc:3722",
+     "hadith:hadeethenc:3917",
+     "hadith:hadeethenc:2759",
+     "qa:icadb:26100",
+     "qa:icadb:36193",
+     "qa:bayyinat:230",
+     "qa:icadb:36099",
+     "tafsir:muyassar:9:20",
+     "tafsir:muyassar:9:45",
+     "term:glossary:1",
+     "term:glossary:10",
+     "quran:9:20",
+     "quran:9:45"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "الجهاد في الإسلام معناه العام بذل الجهد والوسع في سبيل الله، ويشمل السعي في طاعة الله، ومجاهدة النفس عن المعاصي، والمثابرة على العبادات، كما يُستعمل في نشر الإسلام والدفاع عنه وعن أهله. لذلك لا يصح اختزاله في القتال وحده. [[qa:icadb:26100, qa:icadb:36193]]\n\n{{quran:22:78}}\n\nوتذكر المصادر صورًا متعددة للجهاد، مثل تحمّل المشقة في الطاعة، والمحافظة على الصلاة والصوم، والاجتهاد في الدراسة، والدفاع عن الدين والمال والعِرض. كما ورد إطلاق الجهاد على الحج المبرور في خطاب النبي ﷺ لعائشة رضي الله عنها. [[qa:icadb:36193, hadith:hadeethenc:2759]]\n\n{{hadith:hadeethenc:2759}}\n\nأما القتال فهو صورة مخصوصة مرتبطة في المصادر بالدفاع وردّ العدوان ودفع الظلم، وليس معناه قتل غير المسلمين المسالمين أو الاعتداء على الأبرياء والمدنيين؛ بل تقرر المادة حرمة الاعتداء عليهم وحماية الأطفال والنساء والممتلكات أثناء الحرب. [[qa:bayyinat:230, qa:icadb:36193]]\n\n{{note:disputed}}\n\n{{note:refer}}",
+      "errors": [],
+      "ok": true
+     }
+    ],
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm"
+    },
+    "abstain_reason": null
+   },
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 333,
+     "output": 20
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 5041,
+     "output": 619
+    }
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "الجهاد في الإسلام معناه العام بذل الجهد والوسع في سبيل الله، ويشمل السعي في طاعة الله، ومجاهدة النفس عن المعاصي، والمثابرة على العبادات، كما يُستعمل في نشر الإسلام والدفاع عنه وعن أهله. لذلك لا يصح اختزاله في القتال وحده. [1][2]\n\n﴿وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰهِيمَۚ هُوَ سَمَّىٰكُمُ ٱلۡمُسۡلِمِينَ مِن قَبۡلُ وَفِي هَٰذَا لِيَكُونَ ٱلرَّسُولُ شَهِيدًا عَلَيۡكُمۡ وَتَكُونُواْ شُهَدَآءَ عَلَى ٱلنَّاسِۚ فَأَقِيمُواْ ٱلصَّلَوٰةَ وَءَاتُواْ ٱلزَّكَوٰةَ وَٱعۡتَصِمُواْ بِٱللَّهِ هُوَ مَوۡلَىٰكُمۡۖ فَنِعۡمَ ٱلۡمَوۡلَىٰ وَنِعۡمَ ٱلنَّصِيرُ﴾ [الحَجِّ: 78]\n\nوتذكر المصادر صورًا متعددة للجهاد، مثل تحمّل المشقة في الطاعة، والمحافظة على الصلاة والصوم، والاجتهاد في الدراسة، والدفاع عن الدين والمال والعِرض. كما ورد إطلاق الجهاد على الحج المبرور في خطاب النبي ﷺ لعائشة رضي الله عنها. [2][4]\n\n«عَنْ عَائِشَةَ أُمِّ المُؤْمِنِينَ رَضِيَ اللَّهُ عَنْهَا أَنَّهَا قَالَتْ: يَا رَسُولَ اللَّهِ، نَرَى الجِهَادَ أَفْضَلَ العَمَلِ، أَفَلاَ نُجَاهِدُ؟ قَالَ: «لَا، لَكُنَّ أَفْضَلُ الجِهَادِ: حَجٌّ مَبْرُورٌ».» (رواه البخاري — الدرجة: صحيح)\n\nأما القتال فهو صورة مخصوصة مرتبطة في المصادر بالدفاع وردّ العدوان ودفع الظلم، وليس معناه قتل غير المسلمين المسالمين أو الاعتداء على الأبرياء والمدنيين؛ بل تقرر المادة حرمة الاعتداء عليهم وحماية الأطفال والنساء والممتلكات أثناء الحرب. [5][2]\n\nهذه مسألة اختلف فيها أهل العلم؛ وما سبق عرضٌ لما ورد في المصادر المتاحة دون ترجيح بينها.\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "الجهاد في الإسلام معناه العام بذل الجهد والوسع في سبيل الله، ويشمل السعي في طاعة الله، ومجاهدة النفس عن المعاصي، والمثابرة على العبادات، كما يُستعمل في نشر الإسلام والدفاع عنه وعن أهله. لذلك لا يصح اختزاله في القتال وحده. [1][2]"
+     },
+     {
+      "kind": "quran",
+      "ref": "22:78",
+      "surah_name_ar": "الحَجِّ",
+      "text_ar": "وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰهِيمَۚ هُوَ سَمَّىٰكُمُ ٱلۡمُسۡلِمِينَ مِن قَبۡلُ وَفِي هَٰذَا لِيَكُونَ ٱلرَّسُولُ شَهِيدًا عَلَيۡكُمۡ وَتَكُونُواْ شُهَدَآءَ عَلَى ٱلنَّاسِۚ فَأَقِيمُواْ ٱلصَّلَوٰةَ وَءَاتُواْ ٱلزَّكَوٰةَ وَٱعۡتَصِمُواْ بِٱللَّهِ هُوَ مَوۡلَىٰكُمۡۖ فَنِعۡمَ ٱلۡمَوۡلَىٰ وَنِعۡمَ ٱلنَّصِيرُ",
+      "text_en": "And strive for Allāh with the striving due to Him. He has chosen you and has not placed upon you in the religion any difficulty. [It is] the religion of your father, Abraham. He [i.e., Allāh] named you \"Muslims\" before [in former scriptures] and in this [revelation] that the Messenger may be a witness over you and you may be witnesses over the people. So establish prayer and give zakāh and hold fast to Allāh. He is your protector; and excellent is the protector, and excellent is the helper.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:22:78"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/22#78"
+     },
+     {
+      "kind": "explanation",
+      "text": "وتذكر المصادر صورًا متعددة للجهاد، مثل تحمّل المشقة في الطاعة، والمحافظة على الصلاة والصوم، والاجتهاد في الدراسة، والدفاع عن الدين والمال والعِرض. كما ورد إطلاق الجهاد على الحج المبرور في خطاب النبي ﷺ لعائشة رضي الله عنها. [2][4]"
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:2759",
+      "text_ar": "عَنْ عَائِشَةَ أُمِّ المُؤْمِنِينَ رَضِيَ اللَّهُ عَنْهَا أَنَّهَا قَالَتْ: يَا رَسُولَ اللَّهِ، نَرَى الجِهَادَ أَفْضَلَ العَمَلِ، أَفَلاَ نُجَاهِدُ؟ قَالَ: «لَا، لَكُنَّ أَفْضَلُ الجِهَادِ: حَجٌّ مَبْرُورٌ».",
+      "text_en": "‘Ā’ishah, Mother of the Believers, (may Allah be pleased with her) reported saying: O Messenger of Allah, we consider Jihad the best deed; should we not perform Jihad? He said, \"No; rather, the best Jihad is Mabrūr (accepted) Hajj.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه البخاري",
+      "reference": "صحيح البخاري (2/ 133) (1520).\nبهجة الناظرين شرح رياض الصالحين، لسليم الهلالي (2/ 402).\nنزهة المتقين شرح رياض الصالحين، لمصطفى الخِن وغيره (2/ 902).\nشرح رياض الصالحين، لابن عثيمين (5/ 321).",
+      "ids": [
+       "hadith:hadeethenc:2759"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/2759"
+     },
+     {
+      "kind": "explanation",
+      "text": "أما القتال فهو صورة مخصوصة مرتبطة في المصادر بالدفاع وردّ العدوان ودفع الظلم، وليس معناه قتل غير المسلمين المسالمين أو الاعتداء على الأبرياء والمدنيين؛ بل تقرر المادة حرمة الاعتداء عليهم وحماية الأطفال والنساء والممتلكات أثناء الحرب. [5][2]"
+     },
+     {
+      "kind": "notice",
+      "text": "هذه مسألة اختلف فيها أهل العلم؛ وما سبق عرضٌ لما ورد في المصادر المتاحة دون ترجيح بينها.",
+      "note": "disputed"
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:26100",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو الجهاد في سبيل الله؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26100/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:icadb:36193",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو الجهاد؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36193/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:22:78",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الحَجِّ 78",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/22#78",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "hadith:hadeethenc:2759",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "يا رسول الله، نرى الجهاد أفضل العمل، أفلا نجاهد؟ قال: لا، لكن أفضل الجهاد: حج مبرور",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/2759",
+      "grade": "صحيح"
+     },
+     {
+      "n": 5,
+      "id": "qa:bayyinat:230",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "أليس الإسلامُ هو الذي يشجِّعُ على العُنْف؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "secs": 15.1
+  },
+  {
+   "id": "b-09",
+   "input": "Do Muslims believe in Jesus?",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "Yes. Belief in Jesus, son of Mary, is essential in Islam. Muslims honor and love him as one of God’s greatest prophets and messengers; a person’s faith is not valid without believing in him and the other prophets. [1][2]\n\n﴿قُلۡ ءَامَنَّا بِٱللَّهِ وَمَآ أُنزِلَ عَلَيۡنَا وَمَآ أُنزِلَ عَلَىٰٓ إِبۡرَٰهِيمَ وَإِسۡمَٰعِيلَ وَإِسۡحَٰقَ وَيَعۡقُوبَ وَٱلۡأَسۡبَاطِ وَمَآ أُوتِيَ مُوسَىٰ وَعِيسَىٰ وَٱل",
+   "lang": "en",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:3:84",
+     "quran:3:52",
+     "quran:5:111",
+     "quran:2:136",
+     "hadith:hadeethenc:10101",
+     "hadith:hadeethenc:65018",
+     "hadith:hadeethenc:66524",
+     "hadith:hadeethenc:65046",
+     "qa:icadb:36093",
+     "qa:icadb:36087",
+     "qa:icadb:36090",
+     "qa:icadb:36077",
+     "term:glossary:1",
+     "term:glossary:10"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "Yes. Belief in Jesus, son of Mary, is essential in Islam. Muslims honor and love him as one of God’s greatest prophets and messengers; a person’s faith is not valid without believing in him and the other prophets. [[qa:icadb:36087, qa:icadb:36090]]\n\n{{quran:3:84}}\n\nMuslims believe that Jesus was God’s servant and messenger, not God or the son of God. Honoring him therefore means neither rejecting him nor elevating him to divinity. [[qa:icadb:36087]]\n\nThe Quran also describes Jesus’s disciples as believers who submitted themselves to God. [[quran:3:52, quran:5:111]]\n\n{{quran:3:52}}",
+      "errors": [],
+      "ok": true
+     }
+    ],
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "en",
+     "term": null,
+     "source": "llm"
+    },
+    "abstain_reason": null
+   },
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 332,
+     "output": 20
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 4782,
+     "output": 289
+    }
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "Yes. Belief in Jesus, son of Mary, is essential in Islam. Muslims honor and love him as one of God’s greatest prophets and messengers; a person’s faith is not valid without believing in him and the other prophets. [1][2]\n\n﴿قُلۡ ءَامَنَّا بِٱللَّهِ وَمَآ أُنزِلَ عَلَيۡنَا وَمَآ أُنزِلَ عَلَىٰٓ إِبۡرَٰهِيمَ وَإِسۡمَٰعِيلَ وَإِسۡحَٰقَ وَيَعۡقُوبَ وَٱلۡأَسۡبَاطِ وَمَآ أُوتِيَ مُوسَىٰ وَعِيسَىٰ وَٱلنَّبِيُّونَ مِن رَّبِّهِمۡ لَا نُفَرِّقُ بَيۡنَ أَحَدࣲ مِّنۡهُمۡ وَنَحۡنُ لَهُۥ مُسۡلِمُونَ﴾ [آلِ عِمۡرَانَ: 84]\n\nMuslims believe that Jesus was God’s servant and messenger, not God or the son of God. Honoring him therefore means neither rejecting him nor elevating him to divinity. [1]\n\nThe Quran also describes Jesus’s disciples as believers who submitted themselves to God. [4][5]\n\n﴿۞ فَلَمَّآ أَحَسَّ عِيسَىٰ مِنۡهُمُ ٱلۡكُفۡرَ قَالَ مَنۡ أَنصَارِيٓ إِلَى ٱللَّهِۖ قَالَ ٱلۡحَوَارِيُّونَ نَحۡنُ أَنصَارُ ٱللَّهِ ءَامَنَّا بِٱللَّهِ وَٱشۡهَدۡ بِأَنَّا مُسۡلِمُونَ﴾ [آلِ عِمۡرَانَ: 52]",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "Yes. Belief in Jesus, son of Mary, is essential in Islam. Muslims honor and love him as one of God’s greatest prophets and messengers; a person’s faith is not valid without believing in him and the other prophets. [1][2]"
+     },
+     {
+      "kind": "quran",
+      "ref": "3:84",
+      "surah_name_ar": "آلِ عِمۡرَانَ",
+      "text_ar": "قُلۡ ءَامَنَّا بِٱللَّهِ وَمَآ أُنزِلَ عَلَيۡنَا وَمَآ أُنزِلَ عَلَىٰٓ إِبۡرَٰهِيمَ وَإِسۡمَٰعِيلَ وَإِسۡحَٰقَ وَيَعۡقُوبَ وَٱلۡأَسۡبَاطِ وَمَآ أُوتِيَ مُوسَىٰ وَعِيسَىٰ وَٱلنَّبِيُّونَ مِن رَّبِّهِمۡ لَا نُفَرِّقُ بَيۡنَ أَحَدࣲ مِّنۡهُمۡ وَنَحۡنُ لَهُۥ مُسۡلِمُونَ",
+      "text_en": "Say, \"We have believed in Allāh and in what was revealed to us and what was revealed to Abraham, Ishmael, Isaac, Jacob, and the Descendants [al-Asbāṭ], and in what was given to Moses and Jesus and to the prophets from their Lord. We make no distinction between any of them, and we are Muslims [submitting] to Him.\"",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:3:84"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/3#84"
+     },
+     {
+      "kind": "explanation",
+      "text": "Muslims believe that Jesus was God’s servant and messenger, not God or the son of God. Honoring him therefore means neither rejecting him nor elevating him to divinity. [1]\n\nThe Quran also describes Jesus’s disciples as believers who submitted themselves to God. [4][5]"
+     },
+     {
+      "kind": "quran",
+      "ref": "3:52",
+      "surah_name_ar": "آلِ عِمۡرَانَ",
+      "text_ar": "۞ فَلَمَّآ أَحَسَّ عِيسَىٰ مِنۡهُمُ ٱلۡكُفۡرَ قَالَ مَنۡ أَنصَارِيٓ إِلَى ٱللَّهِۖ قَالَ ٱلۡحَوَارِيُّونَ نَحۡنُ أَنصَارُ ٱللَّهِ ءَامَنَّا بِٱللَّهِ وَٱشۡهَدۡ بِأَنَّا مُسۡلِمُونَ",
+      "text_en": "But when Jesus felt [persistence in] disbelief from them, he said, \"Who are my supporters for [the cause of] Allāh?\" The disciples said, \"We are supporters for Allāh. We have believed in Allāh and testify that we are Muslims [submitting to Him].",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:3:52"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/3#52"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:36087",
+      "type": "qa",
+      "source": "icadb",
+      "title": "هل يكره المسلمون نبي الله عيسى عليه السلام؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36087/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:icadb:36090",
+      "type": "qa",
+      "source": "icadb",
+      "title": "كيف تناول الإسلام الإيمان بعيسى عليه السلام؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36090/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:3:84",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "آلِ عِمۡرَانَ 84",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/3#84",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "quran:3:52",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "آلِ عِمۡرَانَ 52",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/3#52",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "quran:5:111",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "المَائـِدَةِ 111",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/5#111",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "Baseera is an AI-powered tool, not a scholar or mufti. It answers only from approved sources and shows its references. No personal data is stored.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "en"
+   },
+   "verification_errors": [],
+   "secs": 6.8
+  },
+  {
+   "id": "c-01",
+   "input": "ما حكم الموسيقى والغناء في الإسلام؟ وهل فيه اختلاف بين العلماء؟",
+   "expected": {
+    "expected_level": "ج",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ج",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "الأصل أن التحليل والتحريم حكم شرعي مردّه إلى الله تعالى، لا إلى مجرد الأذواق أو ما يُذكر من آثار نفسية للموسيقى. [1][2]\n\n﴿مَا تَعۡبُدُونَ مِن دُونِهِۦٓ إِلَّآ أَسۡمَآءࣰ سَمَّيۡتُمُوهَآ أَنتُمۡ وَءَابَآؤُكُم مَّآ أَنزَلَ ٱللَّهُ بِهَا مِن سُلۡطَٰنٍۚ إِنِ ٱلۡحُكۡمُ إِلَّا لِلَّهِ أَمَرَ أَلَّا تَعۡبُدُوٓاْ إِلَّآ إِيَّاهُۚ ذَٰلِكَ ٱلدِّينُ ٱلۡقَيِّمُ وَلَٰكِنَّ أَكۡثَرَ ٱلنَّاسِ لَا يَعۡلَمُون",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:12:40",
+     "quran:40:48",
+     "quran:3:19",
+     "quran:20:9",
+     "hadith:hadeethenc:65093",
+     "hadith:hadeethenc:66259",
+     "hadith:hadeethenc:6370",
+     "hadith:hadeethenc:65129",
+     "qa:bayyinat:202",
+     "qa:bayyinat:125",
+     "qa:bayyinat:260",
+     "qa:bayyinat:143",
+     "tafsir:muyassar:27:39",
+     "tafsir:muyassar:43:4",
+     "term:glossary:1",
+     "term:glossary:10",
+     "quran:27:39",
+     "quran:43:4"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "الأصل أن التحليل والتحريم حكم شرعي مردّه إلى الله تعالى، لا إلى مجرد الأذواق أو ما يُذكر من آثار نفسية للموسيقى. [[quran:12:40, qa:bayyinat:202]]\n\n{{quran:12:40}}\n\nفي خصوص الموسيقى والمعازف: يقرر المصدر أن تحريم آلات الطرب والموسيقى هو قول عامة علماء المسلمين عبر العصور والبلدان والمذاهب، وينقل حكاية الإجماع عليه استنادًا إلى نصوص شرعية. [[qa:bayyinat:202]]\n\nأما الاختلاف، فالمصدر نفسه يثبت وجود قول مخالف، لكنه يصفه بأنه خلاف شاذ اشتهر في العصر الحديث؛ وهذه نسبة موقف المصدر وليست فتوى شخصية في واقعة بعينها. [[qa:bayyinat:202]]\n\nوأما الغناء بجميع صوره، ولا سيما الغناء المجرّد من المعازف، فالمادة المقدمة لا تتضمن تفصيل حكمه؛ لذلك ينصب هذا الجواب على الموسيقى والمعازف تحديدًا. [[qa:bayyinat:202]]\n\n{{note:partial}}\n\n{{note:disputed}}\n\n{{note:refer}}",
+      "errors": [],
+      "ok": true
+     }
+    ],
+    "route": {
+     "level": "ج",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm"
+    },
+    "abstain_reason": null
+   },
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 341,
+     "output": 20
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 4241,
+     "output": 646
+    }
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ج",
+    "answer_text": "الأصل أن التحليل والتحريم حكم شرعي مردّه إلى الله تعالى، لا إلى مجرد الأذواق أو ما يُذكر من آثار نفسية للموسيقى. [1][2]\n\n﴿مَا تَعۡبُدُونَ مِن دُونِهِۦٓ إِلَّآ أَسۡمَآءࣰ سَمَّيۡتُمُوهَآ أَنتُمۡ وَءَابَآؤُكُم مَّآ أَنزَلَ ٱللَّهُ بِهَا مِن سُلۡطَٰنٍۚ إِنِ ٱلۡحُكۡمُ إِلَّا لِلَّهِ أَمَرَ أَلَّا تَعۡبُدُوٓاْ إِلَّآ إِيَّاهُۚ ذَٰلِكَ ٱلدِّينُ ٱلۡقَيِّمُ وَلَٰكِنَّ أَكۡثَرَ ٱلنَّاسِ لَا يَعۡلَمُونَ﴾ [يُوسُفَ: 40]\n\nفي خصوص الموسيقى والمعازف: يقرر المصدر أن تحريم آلات الطرب والموسيقى هو قول عامة علماء المسلمين عبر العصور والبلدان والمذاهب، وينقل حكاية الإجماع عليه استنادًا إلى نصوص شرعية. [2]\n\nأما الاختلاف، فالمصدر نفسه يثبت وجود قول مخالف، لكنه يصفه بأنه خلاف شاذ اشتهر في العصر الحديث؛ وهذه نسبة موقف المصدر وليست فتوى شخصية في واقعة بعينها. [2]\n\nوأما الغناء بجميع صوره، ولا سيما الغناء المجرّد من المعازف، فالمادة المقدمة لا تتضمن تفصيل حكمه؛ لذلك ينصب هذا الجواب على الموسيقى والمعازف تحديدًا. [2]\n\nملاحظة: هذه الإجابة تقتصر على ما ورد في المصادر المعتمدة المتاحة لبصيرة، وليست حصرًا شاملًا للمسألة.\n\nهذه مسألة اختلف فيها أهل العلم؛ وما سبق عرضٌ لما ورد في المصادر المتاحة دون ترجيح بينها.\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "الأصل أن التحليل والتحريم حكم شرعي مردّه إلى الله تعالى، لا إلى مجرد الأذواق أو ما يُذكر من آثار نفسية للموسيقى. [1][2]"
+     },
+     {
+      "kind": "quran",
+      "ref": "12:40",
+      "surah_name_ar": "يُوسُفَ",
+      "text_ar": "مَا تَعۡبُدُونَ مِن دُونِهِۦٓ إِلَّآ أَسۡمَآءࣰ سَمَّيۡتُمُوهَآ أَنتُمۡ وَءَابَآؤُكُم مَّآ أَنزَلَ ٱللَّهُ بِهَا مِن سُلۡطَٰنٍۚ إِنِ ٱلۡحُكۡمُ إِلَّا لِلَّهِ أَمَرَ أَلَّا تَعۡبُدُوٓاْ إِلَّآ إِيَّاهُۚ ذَٰلِكَ ٱلدِّينُ ٱلۡقَيِّمُ وَلَٰكِنَّ أَكۡثَرَ ٱلنَّاسِ لَا يَعۡلَمُونَ",
+      "text_en": "You worship not besides Him except [mere] names you have named them,[599] you and your fathers, for which Allāh has sent down no evidence. Legislation is not but for Allāh. He has commanded that you worship not except Him. That is the correct religion, but most of the people do not know.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:12:40"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/12#40"
+     },
+     {
+      "kind": "explanation",
+      "text": "في خصوص الموسيقى والمعازف: يقرر المصدر أن تحريم آلات الطرب والموسيقى هو قول عامة علماء المسلمين عبر العصور والبلدان والمذاهب، وينقل حكاية الإجماع عليه استنادًا إلى نصوص شرعية. [2]\n\nأما الاختلاف، فالمصدر نفسه يثبت وجود قول مخالف، لكنه يصفه بأنه خلاف شاذ اشتهر في العصر الحديث؛ وهذه نسبة موقف المصدر وليست فتوى شخصية في واقعة بعينها. [2]\n\nوأما الغناء بجميع صوره، ولا سيما الغناء المجرّد من المعازف، فالمادة المقدمة لا تتضمن تفصيل حكمه؛ لذلك ينصب هذا الجواب على الموسيقى والمعازف تحديدًا. [2]"
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: هذه الإجابة تقتصر على ما ورد في المصادر المعتمدة المتاحة لبصيرة، وليست حصرًا شاملًا للمسألة.",
+      "note": "partial"
+     },
+     {
+      "kind": "notice",
+      "text": "هذه مسألة اختلف فيها أهل العلم؛ وما سبق عرضٌ لما ورد في المصادر المتاحة دون ترجيح بينها.",
+      "note": "disputed"
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "quran:12:40",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "يُوسُفَ 40",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/12#40",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:bayyinat:202",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "هل الإسلامُ يحرِّمُ الفرَحَ، ويدعو للاكتئ ابِ؛ بتحريمِهِ للموسيقا والمعازِف؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "secs": 16.2
+  },
+  {
+   "id": "c-02",
+   "input": "ما الراجح في قراءة الفاتحة خلف الإمام عند المذاهب؟",
+   "expected": {
+    "expected_level": "ج",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ج",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "الأصل أن هذه مسألة فقهية وقع فيها اختلاف، ولا يصح نسبة قولٍ مفصل إلى كل مذهب من غير نصٍّ معتمد. أمّا النصوص المتاحة هنا فتدل على قولٍ واحد: قراءة المأموم للفاتحة خلف الإمام؛ فقد استثنى حديث عبادة بن الصامت الفاتحة من النهي عن القراءة خلف الإمام، وكانت الواقعة في صلاة الفجر، وهي جهرية. [1]\n\n«عن عبادة بن الصامت رضي الله عنه قال: كُنَّا خَلْفَ رسول الله صلى الله عليه وسلم في صلاة الفجر فَقَرأ رسول ال",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:7:169",
+     "quran:9:7",
+     "quran:1:3",
+     "quran:11:17",
+     "hadith:hadeethenc:65444",
+     "hadith:hadeethenc:10910",
+     "hadith:hadeethenc:65559",
+     "hadith:hadeethenc:3100",
+     "qa:bayyinat:127",
+     "qa:icadb:26133",
+     "qa:bayyinat:241",
+     "qa:icadb:26367",
+     "tafsir:muyassar:1:7",
+     "tafsir:muyassar:17:78",
+     "term:icadb:1648",
+     "term:icadb:1673",
+     "quran:1:7",
+     "quran:17:78"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "الأصل أن هذه مسألة فقهية وقع فيها اختلاف، ولا يصح نسبة قولٍ مفصل إلى كل مذهب من غير نصٍّ معتمد. أمّا النصوص المتاحة هنا فتدل على قولٍ واحد: قراءة المأموم للفاتحة خلف الإمام؛ فقد استثنى حديث عبادة بن الصامت الفاتحة من النهي عن القراءة خلف الإمام، وكانت الواقعة في صلاة الفجر، وهي جهرية. [[hadith:hadeethenc:10910]]\n\n{{hadith:hadeethenc:10910}}\n\nكما نُقل عن جابر أنهم كانوا يقرؤون خلف الإمام في الظهر والعصر الفاتحة وسورة في الأوليين، والفاتحة في الأخريين، وهذا يؤيد القراءة في الصلاة السرية. [[hadith:hadeethenc:65444]]\n\n{{hadith:hadeethenc:65444}}\n\nوعليه: فظاهر هذين الدليلين هو قراءة الفاتحة خلف الإمام، في السرية والجهرية، لكن المصادر المقدمة لا تعرض أقوال المذاهب الأربعة وتفصيل أدلتها بما يسمح بالموازنة بينها أو الجزم بترجيح مذهبي شامل. [[hadith:hadeethenc:10910, hadith:hadeethenc:65444]]\n\n{{note:disputed}}\n\n{{note:partial}}\n\n{{note:refer}}",
+      "errors": [],
+      "ok": true
+     }
+    ],
+    "route": {
+     "level": "ج",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm"
+    },
+    "abstain_reason": null
+   },
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 342,
+     "output": 20
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 5386,
+     "output": 541
+    }
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ج",
+    "answer_text": "الأصل أن هذه مسألة فقهية وقع فيها اختلاف، ولا يصح نسبة قولٍ مفصل إلى كل مذهب من غير نصٍّ معتمد. أمّا النصوص المتاحة هنا فتدل على قولٍ واحد: قراءة المأموم للفاتحة خلف الإمام؛ فقد استثنى حديث عبادة بن الصامت الفاتحة من النهي عن القراءة خلف الإمام، وكانت الواقعة في صلاة الفجر، وهي جهرية. [1]\n\n«عن عبادة بن الصامت رضي الله عنه قال: كُنَّا خَلْفَ رسول الله صلى الله عليه وسلم في صلاة الفجر فَقَرأ رسول الله صلى الله عليه وسلم ، فَثَقُلَتْ عليه القراءة، فلمَّا فَرَغَ قال: «لعلَّكم تَقْرَءُون خلف إِمَامِكُم» قلنا: نعم هذا يا رسول الله، قال: «لا تفعلوا إلا بفاتحة الكتاب فإنه لا صلاة لِمَنْ لم يَقْرَأ بها».» (رواه أبو داود والترمذي وأحمد — الدرجة: حسن)\n\nكما نُقل عن جابر أنهم كانوا يقرؤون خلف الإمام في الظهر والعصر الفاتحة وسورة في الأوليين، والفاتحة في الأخريين، وهذا يؤيد القراءة في الصلاة السرية. [2]\n\n«عن جابر بن عبد الله قال: كنا نقرأ في الظهر والعصر خلف الإمام في الركعتين الأوليين بفاتحة الكتاب وسورة، وفي الأخريين بفاتحة الكتاب.» (رواه ابن ماجه — الدرجة: صحيح)\n\nوعليه: فظاهر هذين الدليلين هو قراءة الفاتحة خلف الإمام، في السرية والجهرية، لكن المصادر المقدمة لا تعرض أقوال المذاهب الأربعة وتفصيل أدلتها بما يسمح بالموازنة بينها أو الجزم بترجيح مذهبي شامل. [1][2]\n\nهذه مسألة اختلف فيها أهل العلم؛ وما سبق عرضٌ لما ورد في المصادر المتاحة دون ترجيح بينها.\n\nملاحظة: هذه الإجابة تقتصر على ما ورد في المصادر المعتمدة المتاحة لبصيرة، وليست حصرًا شاملًا للمسألة.\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "الأصل أن هذه مسألة فقهية وقع فيها اختلاف، ولا يصح نسبة قولٍ مفصل إلى كل مذهب من غير نصٍّ معتمد. أمّا النصوص المتاحة هنا فتدل على قولٍ واحد: قراءة المأموم للفاتحة خلف الإمام؛ فقد استثنى حديث عبادة بن الصامت الفاتحة من النهي عن القراءة خلف الإمام، وكانت الواقعة في صلاة الفجر، وهي جهرية. [1]"
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:10910",
+      "text_ar": "عن عبادة بن الصامت رضي الله عنه قال: كُنَّا خَلْفَ رسول الله صلى الله عليه وسلم في صلاة الفجر فَقَرأ رسول الله صلى الله عليه وسلم ، فَثَقُلَتْ عليه القراءة، فلمَّا فَرَغَ قال: «لعلَّكم تَقْرَءُون خلف إِمَامِكُم» قلنا: نعم هذا يا رسول الله، قال: «لا تفعلوا إلا بفاتحة الكتاب فإنه لا صلاة لِمَنْ لم يَقْرَأ بها».",
+      "text_en": "‘Ubādah ibn As-Sāmit (may Allah be pleased with him) reported: We were praying the Fajr prayer behind the Messenger of Allah (may Allah's peace and blessings be upon him). He started to recite, but the recitation became difficult for him. When he finished, he said: \"Perhaps you recite behind your Imām?\" We said: \"Yes, that is so, O Messenger of Allah.\" He said: \"Do not do so except with Sūrat al-Fātihah, since the prayer is invalid for the one who does not recite it.\"",
+      "grade": "حسن",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه أبو داود والترمذي وأحمد",
+      "reference": "مسند أحمد بن حنبل، لأبي عبد الله أحمد بن محمد بن حنبل، تحقيق أبو المعاطي النوري، عالم الكتب.\nالسنن، لأبي داود سليمان بن الأشعث أبو داود السجستاني الأزدي، دار الفكر، تحقيق: محمد محيي الدين عبد الحميد.\nمشكاة المصابيح للتبريزي، تحقيق: محمد ناصر الدين الألباني، ط3، المكتب الإسلامي، بيروت، 1985م.\nتوضيح الأحكام من بلوغ المرام، للحافظ أحمد بن علي بن حجر العسقلاني، عبدالله بن عبد الرحمن البسام، مكتبة الأسدي، مكة، ط الخامسة، 1423هـ.\nمنحة العلام في شرح بلوغ المرام، تأليف: عبد الله بن صالح الفوزان، ط 1، 1427هـ، دار ابن الجوزي، الرياض.",
+      "ids": [
+       "hadith:hadeethenc:10910"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/10910"
+     },
+     {
+      "kind": "explanation",
+      "text": "كما نُقل عن جابر أنهم كانوا يقرؤون خلف الإمام في الظهر والعصر الفاتحة وسورة في الأوليين، والفاتحة في الأخريين، وهذا يؤيد القراءة في الصلاة السرية. [2]"
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:65444",
+      "text_ar": "عن جابر بن عبد الله قال: كنا نقرأ في الظهر والعصر خلف الإمام في الركعتين الأوليين بفاتحة الكتاب وسورة، وفي الأخريين بفاتحة الكتاب.",
+      "text_en": null,
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه ابن ماجه",
+      "reference": "سنن ابن ماجه (2/ 28) (843).",
+      "ids": [
+       "hadith:hadeethenc:65444"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/65444"
+     },
+     {
+      "kind": "explanation",
+      "text": "وعليه: فظاهر هذين الدليلين هو قراءة الفاتحة خلف الإمام، في السرية والجهرية، لكن المصادر المقدمة لا تعرض أقوال المذاهب الأربعة وتفصيل أدلتها بما يسمح بالموازنة بينها أو الجزم بترجيح مذهبي شامل. [1][2]"
+     },
+     {
+      "kind": "notice",
+      "text": "هذه مسألة اختلف فيها أهل العلم؛ وما سبق عرضٌ لما ورد في المصادر المتاحة دون ترجيح بينها.",
+      "note": "disputed"
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: هذه الإجابة تقتصر على ما ورد في المصادر المعتمدة المتاحة لبصيرة، وليست حصرًا شاملًا للمسألة.",
+      "note": "partial"
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "hadith:hadeethenc:10910",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "لعلكم تقرءون خلف إمامكم قلنا: نعم هذا يا رسول الله، قال: لا تفعلوا إلا بفاتحة الكتاب فإنه لا صلاة لمن لم يقرأ بها",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/10910",
+      "grade": "حسن"
+     },
+     {
+      "n": 2,
+      "id": "hadith:hadeethenc:65444",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "كنا نقرأ في الظهر والعصر خلف الإمام في الركعتين الأوليين بفاتحة الكتاب وسورة، وفي الأخريين بفاتحة الكتاب",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/65444",
+      "grade": "صحيح"
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "secs": 13.1
+  },
+  {
+   "id": "c-04",
+   "input": "هل الاحتفال بالمولد النبوي جائز؟ وما اختلاف العلماء فيه؟",
+   "expected": {
+    "expected_level": "ج",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ج",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "الأصل في هذه المسألة هو اتباع القرآن والسنة؛ فالسنة مصدر للتشريع بعد القرآن، والعبادة تُبنى على الدليل لا على مجرد الاستحسان. [1]\n\n«عَنْ أَنَسٍ رضي الله عنه: أَنَّ نَفَرًا مِنْ أَصْحَابِ النَّبِيِّ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ سَأَلُوا أَزْوَاجَ النَّبِيِّ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ عَنْ عَمَلِهِ فِي السِّرِّ؟ فَقَالَ بَعْضُهُمْ: لَا أَتَزَوَّجُ النِّسَاءَ، وَقَالَ بَعْضُهُمْ: لَا آكُلُ ال",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:10:6",
+     "quran:19:15",
+     "quran:23:80",
+     "quran:7:31",
+     "hadith:hadeethenc:66202",
+     "hadith:hadeethenc:65654",
+     "hadith:hadeethenc:65309",
+     "hadith:hadeethenc:6078",
+     "qa:icadb:26028",
+     "qa:bayyinat:127",
+     "qa:bayyinat:143",
+     "qa:bayyinat:149",
+     "tafsir:muyassar:43:4",
+     "tafsir:muyassar:35:28",
+     "term:icadb:1668",
+     "term:icadb:1694",
+     "quran:43:4",
+     "quran:35:28"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "الأصل في هذه المسألة هو اتباع القرآن والسنة؛ فالسنة مصدر للتشريع بعد القرآن، والعبادة تُبنى على الدليل لا على مجرد الاستحسان. [[qa:bayyinat:127]]\n\n{{hadith:hadeethenc:6078}}\n\nيدل الحديث على أهمية لزوم سنة النبي ﷺ، واجتناب اتخاذ طرائق تعبدية مخالفة لهديه. [[hadith:hadeethenc:6078]]\n\nأما الحكم المنقول في المصدر المتاح، فهو أن الاحتفال بالمولد النبوي غير جائز؛ لأنه عُدَّ من الأمور المحدثة في الدين، ولم يرد عن النبي ﷺ ولا عن أصحابه. وهذا القول يعرّف البدعة بأنها ما أُحدث في الدين ولم يكن في عهد النبي ﷺ وأصحابه، ويجعل الاحتفال بالمولد مثالًا عليها. [[qa:icadb:26028]]\n\n{{note:partial}}\n\n{{note:refer}}",
+      "errors": [],
+      "ok": true
+     }
+    ],
+    "route": {
+     "level": "ج",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm"
+    },
+    "abstain_reason": null
+   },
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 341,
+     "output": 20
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 5354,
+     "output": 900
+    }
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ج",
+    "answer_text": "الأصل في هذه المسألة هو اتباع القرآن والسنة؛ فالسنة مصدر للتشريع بعد القرآن، والعبادة تُبنى على الدليل لا على مجرد الاستحسان. [1]\n\n«عَنْ أَنَسٍ رضي الله عنه: أَنَّ نَفَرًا مِنْ أَصْحَابِ النَّبِيِّ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ سَأَلُوا أَزْوَاجَ النَّبِيِّ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ عَنْ عَمَلِهِ فِي السِّرِّ؟ فَقَالَ بَعْضُهُمْ: لَا أَتَزَوَّجُ النِّسَاءَ، وَقَالَ بَعْضُهُمْ: لَا آكُلُ اللَّحْمَ، وَقَالَ بَعْضُهُمْ: لَا أَنَامُ عَلَى فِرَاشٍ، فَحَمِدَ اللهَ وَأَثْنَى عَلَيْهِ، فَقَالَ: «مَا بَالُ أَقْوَامٍ قَالُوا كَذَا وَكَذَا؟ لَكِنِّي أُصَلِّي وَأَنَامُ، وَأَصُومُ وَأُفْطِرُ، وَأَتَزَوَّجُ النِّسَاءَ، فَمَنْ رَغِبَ عَنْ سُنَّتِي فَلَيْسَ مِنِّي».» (متفق عليه — الدرجة: صحيح)\n\nيدل الحديث على أهمية لزوم سنة النبي ﷺ، واجتناب اتخاذ طرائق تعبدية مخالفة لهديه. [2]\n\nأما الحكم المنقول في المصدر المتاح، فهو أن الاحتفال بالمولد النبوي غير جائز؛ لأنه عُدَّ من الأمور المحدثة في الدين، ولم يرد عن النبي ﷺ ولا عن أصحابه. وهذا القول يعرّف البدعة بأنها ما أُحدث في الدين ولم يكن في عهد النبي ﷺ وأصحابه، ويجعل الاحتفال بالمولد مثالًا عليها. [3]\n\nملاحظة: هذه الإجابة تقتصر على ما ورد في المصادر المعتمدة المتاحة لبصيرة، وليست حصرًا شاملًا للمسألة.\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "الأصل في هذه المسألة هو اتباع القرآن والسنة؛ فالسنة مصدر للتشريع بعد القرآن، والعبادة تُبنى على الدليل لا على مجرد الاستحسان. [1]"
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:6078",
+      "text_ar": "عَنْ أَنَسٍ رضي الله عنه: أَنَّ نَفَرًا مِنْ أَصْحَابِ النَّبِيِّ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ سَأَلُوا أَزْوَاجَ النَّبِيِّ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ عَنْ عَمَلِهِ فِي السِّرِّ؟ فَقَالَ بَعْضُهُمْ: لَا أَتَزَوَّجُ النِّسَاءَ، وَقَالَ بَعْضُهُمْ: لَا آكُلُ اللَّحْمَ، وَقَالَ بَعْضُهُمْ: لَا أَنَامُ عَلَى فِرَاشٍ، فَحَمِدَ اللهَ وَأَثْنَى عَلَيْهِ، فَقَالَ: «مَا بَالُ أَقْوَامٍ قَالُوا كَذَا وَكَذَا؟ لَكِنِّي أُصَلِّي وَأَنَامُ، وَأَصُومُ وَأُفْطِرُ، وَأَتَزَوَّجُ النِّسَاءَ، فَمَنْ رَغِبَ عَنْ سُنَّتِي فَلَيْسَ مِنِّي».",
+      "text_en": "Anas (may Allah be pleased with him) reported: A group from among the Prophet's Companions asked the wives of the Prophet (may Allah's peace and blessings be upon him) about his deeds in private. Some of them said: I will not marry women. Others said: I will not eat meat. Some others said: I will not sleep on a bed. So, he praised Allah and commended Him and said: \"What is the matter with those people who said such-and-such? But indeed, I pray and sleep, I fast and break the fast, and I marry women. Whoever turns away from my Sunnah does not belong to me.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "متفق عليه",
+      "reference": "صحيح البخاري (7/ 2) (5063).\nصحيح مسلم (2/ 1020) (1401).\nتيسير العلام شرح عمدة الأحكام، لعبد الله البسام (ص566).\nخلاصة الكلام شرح عمدة الأحكام، لفيصل آل مبارك (ص282).",
+      "ids": [
+       "hadith:hadeethenc:6078"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/6078"
+     },
+     {
+      "kind": "explanation",
+      "text": "يدل الحديث على أهمية لزوم سنة النبي ﷺ، واجتناب اتخاذ طرائق تعبدية مخالفة لهديه. [2]\n\nأما الحكم المنقول في المصدر المتاح، فهو أن الاحتفال بالمولد النبوي غير جائز؛ لأنه عُدَّ من الأمور المحدثة في الدين، ولم يرد عن النبي ﷺ ولا عن أصحابه. وهذا القول يعرّف البدعة بأنها ما أُحدث في الدين ولم يكن في عهد النبي ﷺ وأصحابه، ويجعل الاحتفال بالمولد مثالًا عليها. [3]"
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: هذه الإجابة تقتصر على ما ورد في المصادر المعتمدة المتاحة لبصيرة، وليست حصرًا شاملًا للمسألة.",
+      "note": "partial"
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:bayyinat:127",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "،ِدعوى أن تركَ الحديثِ النبويِّ سائغٌ عند بعضِ المذاهبِ؛ كالمالكيَّة .والحنفيَّة",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "hadith:hadeethenc:6078",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "ما بال أقوام قالوا كذا وكذا؟ لكني أصلي وأنام، وأصوم وأفطر، وأتزوج النساء، فمن رغب عن سنتي فليس مني",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/6078",
+      "grade": "صحيح"
+     },
+     {
+      "n": 3,
+      "id": "qa:icadb:26028",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هي البدعة؟ وهل نقبلها؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26028/version/1.0/sentences/",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "secs": 18.4
+  },
+  {
+   "id": "c-05",
+   "input": "هل كان معاوية رضي الله عنه على حق في خلافه مع علي؟",
+   "expected": {
+    "expected_level": "ج",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ج",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "بحسب المقطع المنقول من «بينات»، كان عليّ رضي الله عنه هو الإمام الحق في هذا النزاع، وقد امتنع معاوية رضي الله عنه عن بيعته ثم قاتله عند توجّه علي إلى الشام؛ وعليه فلا يُجعل موقف معاوية مساويًا لموقف علي في الإصابة. لكن المصدر نفسه يرفض تفسير موقف معاوية بأنه كان لمجرد حب الملك والرياسة، ويعدّ هذا الاتهام شبهة ناشئة عن عدم فهم موقف أهل السنة مما وقع بين الصحابة. [1]\n\nفالتمييز مهم بين القول بأن عليً",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:5:84",
+     "quran:45:19",
+     "quran:25:68",
+     "quran:10:82",
+     "hadith:hadeethenc:66357",
+     "hadith:hadeethenc:65866",
+     "hadith:hadeethenc:10846",
+     "hadith:hadeethenc:66105",
+     "qa:bayyinat:190",
+     "qa:bayyinat:192",
+     "qa:bayyinat:188",
+     "qa:bayyinat:191",
+     "tafsir:muyassar:7:150",
+     "tafsir:muyassar:36:8",
+     "term:icadb:1640",
+     "term:icadb:1673",
+     "quran:7:150",
+     "quran:36:8"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "بحسب المقطع المنقول من «بينات»، كان عليّ رضي الله عنه هو الإمام الحق في هذا النزاع، وقد امتنع معاوية رضي الله عنه عن بيعته ثم قاتله عند توجّه علي إلى الشام؛ وعليه فلا يُجعل موقف معاوية مساويًا لموقف علي في الإصابة. لكن المصدر نفسه يرفض تفسير موقف معاوية بأنه كان لمجرد حب الملك والرياسة، ويعدّ هذا الاتهام شبهة ناشئة عن عدم فهم موقف أهل السنة مما وقع بين الصحابة. [[qa:bayyinat:190]]\n\nفالتمييز مهم بين القول بأن عليًا كان المصيب في أصل الخلاف، وبين الطعن في نية معاوية أو إسقاط عدالته؛ إذ يذكر مصدر آخر أن معاوية كان مجتهدًا متأولًا في بعض المسائل، وأن بعض الاتهامات الموجهة إليه لا تصح روايتها. [[qa:bayyinat:192]]\n\n{{note:disputed}}\n\n{{note:partial}}\n\n{{note:refer}}",
+      "errors": [],
+      "ok": true
+     }
+    ],
+    "route": {
+     "level": "ج",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm"
+    },
+    "abstain_reason": null
+   },
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 341,
+     "output": 20
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 5594,
+     "output": 662
+    }
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ج",
+    "answer_text": "بحسب المقطع المنقول من «بينات»، كان عليّ رضي الله عنه هو الإمام الحق في هذا النزاع، وقد امتنع معاوية رضي الله عنه عن بيعته ثم قاتله عند توجّه علي إلى الشام؛ وعليه فلا يُجعل موقف معاوية مساويًا لموقف علي في الإصابة. لكن المصدر نفسه يرفض تفسير موقف معاوية بأنه كان لمجرد حب الملك والرياسة، ويعدّ هذا الاتهام شبهة ناشئة عن عدم فهم موقف أهل السنة مما وقع بين الصحابة. [1]\n\nفالتمييز مهم بين القول بأن عليًا كان المصيب في أصل الخلاف، وبين الطعن في نية معاوية أو إسقاط عدالته؛ إذ يذكر مصدر آخر أن معاوية كان مجتهدًا متأولًا في بعض المسائل، وأن بعض الاتهامات الموجهة إليه لا تصح روايتها. [2]\n\nهذه مسألة اختلف فيها أهل العلم؛ وما سبق عرضٌ لما ورد في المصادر المتاحة دون ترجيح بينها.\n\nملاحظة: هذه الإجابة تقتصر على ما ورد في المصادر المعتمدة المتاحة لبصيرة، وليست حصرًا شاملًا للمسألة.\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "بحسب المقطع المنقول من «بينات»، كان عليّ رضي الله عنه هو الإمام الحق في هذا النزاع، وقد امتنع معاوية رضي الله عنه عن بيعته ثم قاتله عند توجّه علي إلى الشام؛ وعليه فلا يُجعل موقف معاوية مساويًا لموقف علي في الإصابة. لكن المصدر نفسه يرفض تفسير موقف معاوية بأنه كان لمجرد حب الملك والرياسة، ويعدّ هذا الاتهام شبهة ناشئة عن عدم فهم موقف أهل السنة مما وقع بين الصحابة. [1]\n\nفالتمييز مهم بين القول بأن عليًا كان المصيب في أصل الخلاف، وبين الطعن في نية معاوية أو إسقاط عدالته؛ إذ يذكر مصدر آخر أن معاوية كان مجتهدًا متأولًا في بعض المسائل، وأن بعض الاتهامات الموجهة إليه لا تصح روايتها. [2]"
+     },
+     {
+      "kind": "notice",
+      "text": "هذه مسألة اختلف فيها أهل العلم؛ وما سبق عرضٌ لما ورد في المصادر المتاحة دون ترجيح بينها.",
+      "note": "disputed"
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: هذه الإجابة تقتصر على ما ورد في المصادر المعتمدة المتاحة لبصيرة، وليست حصرًا شاملًا للمسألة.",
+      "note": "partial"
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:bayyinat:190",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "، وقد امتنَعَ عن بَيْعةِ أميرِ المؤمِنينَ عليِّ بنِ أبيh َكيف نُحِبُّ مُعاوِية ، وقاتَلَه؟h ٍطالب",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:bayyinat:192",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "عدلً، وقد كان يَبيعُ الأصنامَ، ويُحِلُّ الرِّبا؟h ُكيف يكونُ مُعاوِية",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "secs": 17.2
+  }
+ ]
+}
