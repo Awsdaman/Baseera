@@ -154,3 +154,55 @@ def test_level_d_general_info_never_contains_hadith_cards(fake_llm):
     fake_llm(router=['{"level": "د", "intent": "ask", "language": "ar"}'])
     r = pipeline.ask("طلقت زوجتي ثلاث مرات في لحظة غضب، فهل وقع الطلاق؟")
     assert r["status"] == "referral" and all(s["type"] in ("qa", "term") for s in r["sources"])
+
+
+# ---------------------------------------------------------------- semantic support check wiring
+class _Stub:
+    name = "stub"
+
+    def scores(self, pairs):
+        return [0.9 if "الصلاة" in claim and "الصلاة" in chunk else 0.1 for claim, chunk in pairs]
+
+
+def test_support_log_mode_records_scores_without_changing_the_outcome(fake_llm, monkeypatch):
+    from core import support as S
+    monkeypatch.setenv("SUPPORT_MODE", "log")
+    monkeypatch.setattr(S, "get_scorer", lambda name=None: _Stub())
+    ans, _ = good_answer()
+    fake_llm(router=[ROUTE_A], generate=[ans])
+    out = pipeline.ask(Q, debug=True)
+    assert out["status"] == "answered"
+    sup = out["debug"]["attempts"][-1]["support"]
+    assert sup and all("score" in s for s in sup)
+
+
+def test_support_enforce_mode_retries_on_an_unsupported_stretch(fake_llm, monkeypatch):
+    from core import support as S
+    monkeypatch.setenv("SUPPORT_MODE", "enforce")
+    monkeypatch.setattr(S, "get_scorer", lambda name=None: _Stub())
+    ans, h = good_answer()
+    # first answer: a long cited stretch the stub scorer finds unrelated to its cited passage
+    unsupported = ans.replace("أركان الإسلام خمسة كما بيّن النبي ﷺ في الحديث الآتي.", "هذه جملة طويلة تتحدث عن موضوع آخر تماما بعيد عن المصدر المذكور بعدها")
+    assert unsupported != ans
+    ok = ans.replace("أركان الإسلام خمسة كما بيّن النبي ﷺ في الحديث الآتي.", "الصلاة هي الركن الثاني من أركان الإسلام وقد بينها النبي ﷺ في الحديث الآتي وفصلها")
+    f = fake_llm(router=[ROUTE_A], generate=[unsupported, ok])
+    out = pipeline.ask(Q, debug=True)
+    attempts = out["debug"]["attempts"]
+    assert attempts[0]["ok"] is False and "not supported by the passage" in attempts[0]["errors"][0]
+    second_user = [c for c in f.calls if c[0] == L.GENERATE_MODEL][1][2]
+    assert "not supported by the passage" in second_user and unsupported[:20] in second_user
+    assert out["status"] == "answered" and out["attempts"] == 2
+
+
+def test_a_support_check_failure_never_breaks_answering(fake_llm, monkeypatch):
+    from core import support as S
+    monkeypatch.setenv("SUPPORT_MODE", "enforce")
+
+    def boom(name=None):
+        raise RuntimeError("model not downloadable")
+
+    monkeypatch.setattr(S, "get_scorer", boom)
+    ans, _ = good_answer()
+    fake_llm(router=[ROUTE_A], generate=[ans])
+    out = pipeline.ask(Q, debug=True)
+    assert out["status"] == "answered" and "error" in out["debug"]["attempts"][-1]["support"][0]

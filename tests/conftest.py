@@ -35,8 +35,9 @@ def fake_llm():
 def isolated_llm_env(monkeypatch):
     """Tests never touch a real provider or depend on the developer's .env (keys, provider, model overrides)."""
     for k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "LLM_PROVIDER", "JUDGE_PROVIDER", "OPENAI_ROUTER_MODEL", "OPENAI_GENERATE_MODEL",
-              "OPENAI_JUDGE_MODEL", "LOCAL_MODEL", "LOCAL_BASE_URL"):
+              "OPENAI_JUDGE_MODEL", "LOCAL_MODEL", "LOCAL_BASE_URL", "SUPPORT_THETA", "SUPPORT_MODEL"):
         monkeypatch.delenv(k, raising=False)
+    monkeypatch.setenv("SUPPORT_MODE", "off")  # support-check tests opt in explicitly
     L.set_llm(None)
     yield
     L.set_llm(None)

@@ -200,6 +200,14 @@ def summarize(rs):
     ask_rs = [r for r in rs if r["expected"]["expected_behavior"] in ("answer", "answer_or_abstain", "correct_verse")
               and r["status"] in ("answered", "abstained")]
     s["verifier_forced_abstention_rate"] = rate((r.get("abstain_reason") == "verification_failed") if r["status"] else None for r in ask_rs)
+    flags = []  # semantic support check: share of cited stretches scoring below theta (log mode; see core/support.py)
+    from core import support as _S
+    for r in rs:
+        att = (r.get("trace") or {}).get("attempts") or []
+        for st in (att[-1].get("support") or []) if att and att[-1].get("ok") else []:
+            if "score" in st:
+                flags.append(st["score"] < _S.theta())
+    s["support_flag_rate"] = rate(flags)
     s["behavior_pass_rate"] = rate(r["behavior_ok"] for r in rs)
     verify_rs = [r for r in rs if r["expected"]["expected_behavior"] == "verify"]
     s["verify_mode_pass_rate"] = rate(r["behavior_ok"] for r in verify_rs)

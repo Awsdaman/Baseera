@@ -1,10 +1,11 @@
 """ASK pipeline: route -> (term | referral | verify | retrieve -> generate -> verify -> retry once -> abstain)."""
 from core import llm as L
 from core import retrieve as R
+from core import support as S
 from core.generate import generate
 from core.glossary import GLOSSARY, lookup
 from core.router import detect_language, find_term, route
-from core.verify import verify_answer
+from core.verify import VerifyResult, verify_answer
 
 DISCLOSURE = {
     "ar": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
@@ -180,7 +181,16 @@ def _answer(question, info, lang, passages, trace):
             trace["attempts"].append({"n": attempts, "raw": None, "errors": [str(e)[:200]], "ok": False})
             return abstain_response(info, lang, "llm_error", errors=[str(e)[:200]])
         vr = verify_answer(raw, passages, lang)
-        trace["attempts"].append({"n": attempts, "raw": raw, "errors": vr.errors, "ok": vr.ok})
+        support = None
+        if vr.ok and not vr.abstain and S.mode() != "off":
+            # semantic check that each cited stretch is backed by the passage(s) it cites (see core/support.py)
+            try:
+                s_errs, support = S.unsupported(raw, passages)
+                if S.mode() == "enforce" and s_errs:
+                    vr = VerifyResult(ok=False, errors=s_errs)
+            except Exception as e:  # the check is an extra safety net: never let a model-loading problem break answering
+                support = [{"error": str(e)[:120]}]
+        trace["attempts"].append({"n": attempts, "raw": raw, "errors": vr.errors, "ok": vr.ok, "support": support})
         last = vr
         if vr.ok:
             if vr.abstain:
