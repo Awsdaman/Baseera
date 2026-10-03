@@ -77,8 +77,8 @@ def term_response(info, lang):
 
 def personal_response(question, info, lang):
     t = TEXT["personal"]
-    general = [p for p in R.retrieve(question, per_type={"qa": 3, "term": 1, "hadith": 1})
-               if p["type"] in ("qa", "term", "hadith") and p["score"] >= MIN_GENERAL_SCORE][:2]
+    general = [p for p in R.retrieve(question, per_type={"qa": 3, "term": 1})  # no hadith cards: weak matches read as a ruling
+               if p["type"] in ("qa", "term") and p["score"] >= MIN_GENERAL_SCORE][:2]
     cards = [_card(p, i + 1) for i, p in enumerate(general)]
     blocks = [{"kind": "notice", "text": t["en"] if lang == "en" else t["ar"]}]
     if cards:
@@ -118,12 +118,18 @@ def _corrections(question: str, lang: str):
     return blocks, ids
 
 
-def ask(question: str, lang: str | None = None) -> dict:
-    out = _ask(question, lang)
+def ask(question: str, lang: str | None = None, debug: bool = False) -> dict:
+    """`debug=True` (evals/dev only, never exposed by the API) adds out["debug"]: route, retrieved ids, every generation
+    attempt with its raw model output and verifier errors, and the abstention reason."""
+    trace = {"retrieved_ids": [], "attempts": []}
+    out = _ask(question, lang, trace)
+    if debug:
+        out["debug"] = trace | {"route": out.get("route"), "abstain_reason": out.get("abstain_reason")}
     return out
 
 
-def _ask(question: str, lang: str | None = None) -> dict:
+def _ask(question: str, lang: str | None = None, trace: dict | None = None) -> dict:
+    trace = trace if trace is not None else {"retrieved_ids": [], "attempts": []}
     question = (question or "").strip()
     lang = lang if lang in ("ar", "en") else detect_language(question)
     info = route(question)
@@ -150,14 +156,15 @@ def _ask(question: str, lang: str | None = None) -> dict:
     for pid in fix_ids:
         if pid not in have and R.get_passage(pid):
             passages.insert(0, R.get_passage(pid))
-    resp = _answer(question, info, lang, passages)
+    trace["retrieved_ids"] = [p["id"] for p in passages]
+    resp = _answer(question, info, lang, passages, trace)
     if fix_blocks:
         resp["blocks"] = fix_blocks + resp["blocks"]
         resp["corrections"] = fix_blocks
     return resp
 
 
-def _answer(question, info, lang, passages):
+def _answer(question, info, lang, passages, trace):
     if not passages:
         return abstain_response(info, lang, "no_passages")
     if not L.llm_available():
@@ -165,13 +172,15 @@ def _answer(question, info, lang, passages):
         msg = TEXT["unavailable"]["en" if lang == "en" else "ar"]
         return _resp("retrieval_only", info, lang, blocks=[{"kind": "notice", "text": msg}], sources=cards, answer_text=msg)
 
-    errors, attempts, last = None, 0, None
+    errors, attempts, last, raw = None, 0, None, None
     for attempts in (1, 2):
         try:
-            raw = generate(question, info["level"], lang, passages, error=errors)
+            raw = generate(question, info["level"], lang, passages, error=errors, previous=raw)
         except Exception as e:  # API outage, rate limit, ...: fail closed with a warm abstain, never fabricate
+            trace["attempts"].append({"n": attempts, "raw": None, "errors": [str(e)[:200]], "ok": False})
             return abstain_response(info, lang, "llm_error", errors=[str(e)[:200]])
         vr = verify_answer(raw, passages, lang)
+        trace["attempts"].append({"n": attempts, "raw": raw, "errors": vr.errors, "ok": vr.ok})
         last = vr
         if vr.ok:
             if vr.abstain:
