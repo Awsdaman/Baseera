@@ -26,6 +26,7 @@ class _ScrubQuery(logging.Filter):
 
 logging.getLogger("uvicorn.access").addFilter(_ScrubQuery())
 app = FastAPI(title="Baseera")
+NO_CACHE = {"Cache-Control": "no-cache"}  # browsers must re-check the UI on every load (a stale cached page hid new features)
 
 
 @app.get("/api/health")
@@ -74,12 +75,12 @@ def audio(surah: int):
 
 @app.get("/")
 def index():
-    return FileResponse(ROOT / "web" / "index.html")
+    return FileResponse(ROOT / "web" / "index.html", headers=NO_CACHE)
 
 
 @app.get("/retrieval")
 def retrieval_page():
-    return FileResponse(ROOT / "web" / "retrieval.html")
+    return FileResponse(ROOT / "web" / "retrieval.html", headers=NO_CACHE)
 
 
 app.mount("/static", StaticFiles(directory=ROOT / "web"), name="static")

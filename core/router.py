@@ -134,6 +134,11 @@ def route(text: str) -> dict:
     elif out["level"] == "أ" and (_CONCEPT.search(normalize_ar(text)) or _CONCEPT.search(text.lower())
                                   or _SENSITIVE.search(normalize_ar(text)) or _SENSITIVE.search(text.lower())):
         out["level"] = "ب"  # explanation/doubt/war-and-penal topics are never "stable basics"
+    # A pasted message that attributes a quoted saying to Allah / the Prophet and asks no question is a verify request, whatever the
+    # model said (the model's intent is not stable on these; found in the live evals). The reverse safety net is in the pipeline:
+    # a verify request that finds nothing to verify is answered as a question.
+    if out["intent"] == "ask" and h["intent"] == "verify" and not re.search("[؟?]", text) and has_claim_text(text):
+        out["intent"] = "verify"
     # "verify" needs text to verify; "give me a hadith that proves this" has none -> it is an ask (and will abstain).
     if out["intent"] == "verify" and not has_claim_text(text):
         out["intent"] = "ask"

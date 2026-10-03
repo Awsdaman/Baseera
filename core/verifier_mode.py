@@ -92,6 +92,9 @@ def extract_claims(text: str) -> tuple[list[dict], str]:
                 if it.get("type") in ("verse", "hadith", "quote") and len(t.split()) >= 2:
                     claims.append({"type": it["type"], "text": t, "claimed_ref": it.get("claimed_ref"),
                                    "attributed_to": it.get("attributed_to")})
+            if not claims:  # the model's extraction is not stable (it sometimes returns []): the rule-based extractor gets a turn
+                claims = heuristic_extract(text)
+                return claims, "heuristic (llm found nothing)" if claims else "llm"
             return claims, "llm"
         except Exception as e:
             claims = heuristic_extract(text)

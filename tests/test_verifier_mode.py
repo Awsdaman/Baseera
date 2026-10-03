@@ -183,3 +183,18 @@ def test_verify_text_end_to_end_on_the_user_message(dorar_empty):
     out = V.verify_text("عن عدي بن حاتم رضي الله عنه قال: سمعت النبي صلى الله عليه وسلم يقول: «اتقوا النار ولو  تمرة»")
     c = out["claims"][0]
     assert c["claim_type"] == "hadith" and c["verdict"] == "misquoted" and c["correct"]["grade"] == "صحيح"
+
+
+def test_when_the_model_extracts_nothing_the_rule_based_extractor_still_finds_the_hadith(fake_llm, dorar_empty):
+    """Live bug: the model returned [] for a pasted hadith and verify mode said 'no verses or hadiths found'."""
+    fake_llm(extract="[]")
+    msg = "عن عدي بن حاتم رضي الله عنه قال: سمعت النبي صلى الله عليه وسلم يقول: «اتقوا النار ولو  تمرة»"
+    claims, how = V.extract_claims(msg)
+    assert claims and claims[0]["type"] == "hadith" and "heuristic" in how
+    out = V.verify_text(msg)
+    assert out["claims"] and out["claims"][0]["verdict"] == "misquoted"
+
+
+def test_no_claims_anywhere_still_reports_nothing_found(fake_llm):
+    fake_llm(extract="[]")
+    assert V.verify_text("مرحبا كيف حالكم اليوم")["claims"] == []

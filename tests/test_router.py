@@ -86,3 +86,16 @@ def test_plain_basics_stay_level_a(fake_llm):
 
 def test_router_prompt_limits_translate_term_to_explicit_requests():
     assert "ONLY an explicit request" in router.SYSTEM
+
+
+@pytest.mark.parametrize("msg", ["انشر هذا الحديث: قال رسول الله ﷺ: «حب الوطن من الإيمان»",
+                                 "يقول النبي ﷺ: «اختلاف أمتي رحمة» فتحققوا منه",
+                                 "قال تعالى: ﴿إن الله مع الصابرين دائما وأبدا﴾ انشروها"])
+def test_pasted_attributed_saying_without_a_question_is_always_verify_even_if_the_model_says_ask(fake_llm, msg):
+    fake_llm(router=['{"level": "ب", "intent": "ask", "language": "ar", "term": null}'])
+    assert router.route(msg)["intent"] == "verify"
+
+
+def test_ruling_validity_question_with_quotes_stays_an_ask(fake_llm):
+    fake_llm(router=['{"level": "ب", "intent": "ask", "language": "ar", "term": null}'])
+    assert router.route('هل هذا الحكم "حكم اذكار الصباح واجبه" صحيح؟')["intent"] == "ask"

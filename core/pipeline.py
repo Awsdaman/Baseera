@@ -148,7 +148,9 @@ def _ask(question: str, lang: str | None = None, trace: dict | None = None) -> d
     if info["intent"] == "verify":
         from core.verifier_mode import verify_text
         out = verify_text(question)
-        if out["claims"]:
+        # a result made only of unidentifiable quotes ("not found" for a quoted phrase that is not scripture) verified nothing
+        meaningful = [c for c in out["claims"] if not (c["claim_type"] == "quote" and c["verdict"] in ("not_found", "unverifiable"))]
+        if meaningful:
             return _resp("verified", info, lang, verify=out, answer_text="", blocks=[])
         # Nothing to verify (no verse, hadith or attributed saying): this is a question about a topic, e.g. 'is this ruling
         # correct?', not a pasted message. Answer it like any question instead of dead-ending with "nothing found".

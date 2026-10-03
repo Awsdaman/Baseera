@@ -28,3 +28,9 @@ def test_ask_validates_input():
     assert client.post("/api/ask", json={"question": ""}).status_code == 422
     assert client.post("/api/ask", json={"question": "x" * 2001}).status_code == 422
     assert client.post("/api/verify", json={"text": ""}).status_code == 422
+
+
+def test_ui_pages_are_never_served_from_a_stale_browser_cache():
+    for path in ("/", "/retrieval"):
+        r = client.get(path)
+        assert r.status_code == 200 and r.headers["cache-control"] == "no-cache"
