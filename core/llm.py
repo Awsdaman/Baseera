@@ -52,7 +52,7 @@ ROUTER_MODEL, GENERATE_MODEL, JUDGE_MODEL = _M["router"], _M["generate"], _M["ju
 def describe() -> dict:
     """What the app is running on (shown by /api/health and in the eval report)."""
     p = provider_name()
-    return {"provider": p, "router": ROUTER_MODEL, "generate": GENERATE_MODEL, "judge": JUDGE_MODEL,
+    return {"provider": p, "router": ROUTER_MODEL, "generate": GENERATE_MODEL, "judge": judge_model(), "judge_provider": judge_provider(),
             "base_url": os.environ.get("LOCAL_BASE_URL") if p == "local" else None}
 
 
@@ -142,6 +142,40 @@ class OpenAICompatibleLLM:
 
 
 _llm = None
+_judge_llm = None
+
+
+def judge_provider() -> str | None:
+    p = (os.environ.get("JUDGE_PROVIDER") or "").strip().lower()
+    return p if p in ("anthropic", "openai", "local") else provider_name()
+
+
+def judge_model() -> str:
+    jp = judge_provider()
+    return JUDGE_MODEL if jp == provider_name() else _models(jp)["judge"]
+
+
+def _build(p):
+    if p == "anthropic":
+        return AnthropicLLM()
+    if p == "openai":
+        return OpenAICompatibleLLM()
+    if p == "local":
+        return OpenAICompatibleLLM(local=True)
+    raise LLMUnavailable("no LLM configured: set ANTHROPIC_API_KEY or OPENAI_API_KEY (or LLM_PROVIDER=local) in .env")
+
+
+def get_judge_llm():
+    """The judge may run on a different provider than the generator (JUDGE_PROVIDER=anthropic, say)."""
+    global _judge_llm
+    if _llm is not None:  # an injected fake serves every role
+        return _llm
+    jp = judge_provider()
+    if jp == provider_name():
+        return get_llm()
+    if _judge_llm is None:
+        _judge_llm = _build(jp)
+    return _judge_llm
 
 
 def get_llm():
@@ -161,8 +195,9 @@ def get_llm():
 
 def set_llm(obj):
     """Inject a fake (anything with .complete(model, system, user, max_tokens, temperature, effort)) or None to reset."""
-    global _llm
+    global _llm, _judge_llm
     _llm = obj
+    _judge_llm = None
 
 
 def llm_available() -> bool:

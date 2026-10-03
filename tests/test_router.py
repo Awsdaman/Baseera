@@ -50,3 +50,24 @@ def test_bad_llm_output_falls_back_to_heuristic(fake_llm):
 def test_language_detection():
     assert router.detect_language("What is Islam?") == "en"
     assert router.detect_language("ما هو الإسلام؟") == "ar"
+
+
+def test_verify_without_anything_to_verify_becomes_ask(fake_llm):
+    fake_llm(router=['{"level": "أ", "intent": "verify", "language": "ar", "term": null}'])
+    r = router.route("أعطني حديثًا يثبت هذا الكلام")
+    assert r["intent"] == "ask"
+
+
+def test_verify_with_a_quoted_hadith_stays_verify(fake_llm):
+    fake_llm(router=['{"level": "أ", "intent": "verify", "language": "ar", "term": null}'])
+    assert router.route("قال رسول الله ﷺ: «اطلبوا العلم ولو في الصين» تحقق")["intent"] == "verify"
+
+
+def test_contested_topic_is_escalated_to_level_j(fake_llm):
+    fake_llm(router=['{"level": "ب", "intent": "ask", "language": "ar", "term": null}'])
+    assert router.route("ما حكم الموسيقى والغناء في الإسلام؟")["level"] == "ج"
+
+
+def test_escalation_never_lowers_a_level(fake_llm):
+    fake_llm(router=['{"level": "ج", "intent": "ask", "language": "ar", "term": null}'])
+    assert router.route("ما هي أركان الإسلام؟")["level"] == "ج"

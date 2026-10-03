@@ -115,3 +115,21 @@ def test_provider_selection_and_models(monkeypatch):
     monkeypatch.setenv("LOCAL_MODEL", "my-model")
     assert L._models("local") == {"router": "my-model", "generate": "my-model", "judge": "my-model"}
     assert L._models("openai")["generate"] == "gpt-5.5"
+
+
+def test_judge_can_use_a_different_provider(monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "x")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "y")
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    monkeypatch.setenv("JUDGE_PROVIDER", "anthropic")
+    assert L.judge_provider() == "anthropic" and L.provider_name() == "openai"
+    assert L.judge_model() == "claude-sonnet-5-5"
+    assert L.describe()["judge_provider"] == "anthropic"
+    monkeypatch.delenv("JUDGE_PROVIDER")
+    assert L.judge_provider() == "openai"
+
+
+def test_injected_fake_serves_the_judge_role_too():
+    fake = object()
+    L.set_llm(fake)
+    assert L.get_judge_llm() is fake

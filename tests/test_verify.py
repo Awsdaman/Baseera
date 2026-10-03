@@ -75,7 +75,7 @@ def test_short_term_in_quotes_allowed():
 
 def test_uncited_paragraph_fails():
     r = verify_answer("هذه فقرة طويلة بلا أي مصدر ولا إحالة على الإطلاق في هذا الكلام كله.\n\nفقرة ثانية [[term:glossary:2]]", P("term:glossary:2"))
-    assert not r.ok and any("without a citation" in e for e in r.errors)
+    assert not r.ok and any("without an explicit" in e for e in r.errors)
 
 
 def test_no_citation_at_all_fails():
@@ -126,3 +126,30 @@ def test_ordinary_explanation_sentences_are_not_mistaken_for_verses():
     text = "\n\n".join(paras)
     r = verify_answer(text, P("term:glossary:1"))
     assert r.ok, r.errors
+
+
+def test_placeholder_does_not_count_as_citation_for_surrounding_explanation():
+    ps = P("hadith:hadeethenc:4560", "term:glossary:2")
+    bad = "هذا شرح طويل عن الحديث ومعناه عند أهل العلم قبل عرض النص نفسه.\n\n{{hadith:hadeethenc:4560}}"
+    r = verify_answer(bad, ps)
+    assert not r.ok and any("explicit" in e for e in r.errors)
+    good = "هذا شرح طويل عن الحديث ومعناه عند أهل العلم قبل عرض النص نفسه [[term:glossary:2]]\n\n{{hadith:hadeethenc:4560}}"
+    assert verify_answer(good, ps).ok
+
+
+def test_each_segment_around_a_placeholder_needs_its_own_citation():
+    ps = P("hadith:hadeethenc:4560", "term:glossary:2")
+    before_only = "شرح طويل قبل الحديث يتضمن معلومات كثيرة ومهمة جدا [[term:glossary:2]] {{hadith:hadeethenc:4560}} وشرح طويل آخر بعد الحديث بلا أي إحالة على مصدر"
+    assert not verify_answer(before_only, ps).ok
+    both = before_only.replace("بلا أي إحالة على مصدر", "بإحالة صحيحة [[term:glossary:2]]")
+    assert verify_answer(both, ps).ok
+
+
+def test_short_stock_phrase_from_a_verse_is_allowed_but_a_long_run_is_not():
+    """Live regression: 'حج البيت لمن استطاع إليه سبيلا' (a 6-word phrase of 3:97 that explanations reuse) must not block the
+    pillars answer, while a long unquoted copy of a verse is still rejected."""
+    ps = P("term:glossary:2", "quran:2:255")
+    ok = "ومن أركانه الحج وهو حج البيت لمن استطاع إليه سبيلا عند أهل العلم [[term:glossary:2]]"
+    assert verify_answer(ok, ps).ok, verify_answer(ok, ps).errors
+    long_copy = "وقد قال بعضهم إن الله لا إله إلا هو الحي القيوم لا تأخذه سنة ولا نوم [[term:glossary:2]]"
+    assert not verify_answer(long_copy, ps).ok

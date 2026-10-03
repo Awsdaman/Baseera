@@ -32,6 +32,17 @@ def fake_llm():
 
 
 @pytest.fixture(autouse=True)
+def isolated_llm_env(monkeypatch):
+    """Tests never touch a real provider or depend on the developer's .env (keys, provider, model overrides)."""
+    for k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "LLM_PROVIDER", "JUDGE_PROVIDER", "OPENAI_ROUTER_MODEL", "OPENAI_GENERATE_MODEL",
+              "OPENAI_JUDGE_MODEL", "LOCAL_MODEL", "LOCAL_BASE_URL"):
+        monkeypatch.delenv(k, raising=False)
+    L.set_llm(None)
+    yield
+    L.set_llm(None)
+
+
+@pytest.fixture(autouse=True)
 def no_vectors(monkeypatch, request):
     """Unit tests use keyword retrieval only (no embedding model load); mark a test @pytest.mark.vectors to use the real index."""
     if request.node.get_closest_marker("vectors"):

@@ -25,6 +25,8 @@ NO_EVIDENCE = "INSUFFICIENT_EVIDENCE"
 MIN_QUOTE_WORDS = 3
 LEAK_WORDS = 6
 LEAK_CUTOFF = 93
+LONG_RUN_WORDS = 9      # an unquoted near-copy of at least this many words is treated as typed sacred text
+COVER_RATIO = 0.6       # ...or a shorter one that reproduces >= 60% of the verse / hadith it matches
 
 _quran_cache = None
 
@@ -117,14 +119,22 @@ def _check_leaks(text: str, retrieved: dict, errors: list[str]):
         n = normalize_ar(chunk)
         if _arabic_words(chunk) < LEAK_WORDS:
             continue
+        nwords = len(n.split())
         hit = process.extractOne(n, qnorms, scorer=fuzz.partial_ratio, score_cutoff=LEAK_CUTOFF)
-        if hit:
+        if hit and _is_leak(n, nwords, hit[0]):
             errors.append(f"Text resembling a Quran verse written by the model (use a placeholder): {chunk.strip()[:60]}")
             continue
         for pid, hn in hadith_norms:
-            if fuzz.partial_ratio(n, hn) >= LEAK_CUTOFF:
+            if fuzz.partial_ratio(n, hn) >= LEAK_CUTOFF and _is_leak(n, nwords, hn):
                 errors.append(f"Text resembling retrieved hadith {pid} written by the model: {chunk.strip()[:60]}")
                 break
+
+
+def _is_leak(chunk_norm: str, nwords: int, source_norm: str) -> bool:
+    """A near-copy counts as typed sacred text when it is a long run (>= LONG_RUN_WORDS) or covers most of the source.
+    Short stock phrases ("حج البيت لمن استطاع إليه سبيلا") that explanations legitimately reuse are allowed;
+    anything inside quotation marks is still checked separately by _check_quotes."""
+    return nwords >= LONG_RUN_WORDS or len(chunk_norm) >= COVER_RATIO * len(source_norm)
 
 
 def verify_answer(text: str, retrieved: list[dict], lang: str = "ar") -> VerifyResult:
@@ -160,9 +170,12 @@ def verify_answer(text: str, retrieved: list[dict], lang: str = "ar") -> VerifyR
 
     if not PLACEHOLDER.search(text) and not CITE.search(text):
         errors.append("Answer has no citation at all")
-    for para in [p for p in re.split(r"\n\s*\n", text) if p.strip()]:
-        if len(para.split()) >= 8 and not CITE.search(para) and not PLACEHOLDER.search(para):
-            errors.append(f"Paragraph without a citation: {para.strip()[:60]}")
+    # Every stretch of explanation (between blank lines and between placeholders) of 8+ words needs its own explicit
+    # [[passage-id]]: a placeholder inserts source text but does not back up the sentences around it.
+    for para in re.split(r"\n\s*\n", text):
+        for seg in PLACEHOLDER.split(para)[0::3]:  # split() with 2 groups -> [text, kind, body, text, kind, body, text]
+            if len(seg.split()) >= 8 and not CITE.search(seg):
+                errors.append(f"Explanation without an explicit [[passage-id]] citation: {seg.strip()[:60]}")
 
     if errors:
         return VerifyResult(ok=False, errors=errors)

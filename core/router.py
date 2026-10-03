@@ -76,10 +76,18 @@ def heuristic_route(text: str) -> dict:
     if _TRANSLATE.search(t) or _TRANSLATE.search(text):
         intent, term = "translate_term", find_term(text)
         level = "أ"
-    elif (_VERIFY.search(text) or ("﴿" in text and not re.search("[؟?]", text)) or len(text) > 400
+    elif ((_VERIFY.search(text) and has_claim_text(text)) or ("﴿" in text and not re.search("[؟?]", text)) or len(text) > 400
           or (re.search(r"(قال رسول الله|قال النبي|عن النبي|قال تعالى)", text) and re.search("[«\"“﴿]", text) and not re.search("[؟?]", text))):
         intent, level = "verify", "ب"
     return {"level": level, "intent": intent, "language": lang, "term": term, "source": "heuristic"}
+
+
+_QUOTED = re.compile("[«»\"“”﴿﴾]|قال رسول الله|قال النبي|قال تعالى|قال الله|عن النبي")
+
+
+def has_claim_text(text: str) -> bool:
+    """A verify request needs something to verify: a quotation, an attributed saying, or a long pasted message."""
+    return bool(_QUOTED.search(text)) or len(text) >= 80
 
 
 def route(text: str) -> dict:
@@ -96,9 +104,14 @@ def route(text: str) -> dict:
     except Exception as e:  # never fail the request because routing failed
         h["router_error"] = str(e)[:200]
         return h
-    # Safety: personal-case detection by code can only escalate (never relax) the model's level.
+    # Safety: code can only escalate the model's level (to د for personal cases, to ج for known contested topics).
     if h["level"] == "د":
         out["level"] = "د"
+    elif _CONTESTED.search(normalize_ar(text)) and out["level"] in ("أ", "ب"):
+        out["level"] = "ج"
+    # "verify" needs text to verify; "give me a hadith that proves this" has none -> it is an ask (and will abstain).
+    if out["intent"] == "verify" and not has_claim_text(text):
+        out["intent"] = "ask"
     if h["intent"] == "translate_term" and out["intent"] == "ask" and h["term"]:
         out["intent"], out["term"] = "translate_term", h["term"]
     return out

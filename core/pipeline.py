@@ -131,7 +131,8 @@ def _ask(question: str, lang: str | None = None) -> dict:
     lang = info["language"] if info["language"] in ("ar", "en") else "ar"
 
     if info["intent"] == "translate_term":
-        info["term"] = info.get("term") or find_term(question)
+        # the model's extracted term may not be a glossary key ("Tawhid / Oneness of God"): fall back to code matching
+        info["term"] = info.get("term") if lookup(info.get("term") or "") else find_term(question)
         r = term_response(info, lang)
         if r:
             return r

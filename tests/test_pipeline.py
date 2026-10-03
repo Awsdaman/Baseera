@@ -96,9 +96,17 @@ def test_llm_error_fails_closed(fake_llm):
 
 
 def test_misquoted_verse_in_question_is_corrected(fake_llm):
-    ans = "تجدر الإشارة إلى أن الله مع الصابرين وفق ما يلي في المصدر. {{quran:2:153}}"
+    ans = "تجدر الإشارة إلى أن الله مع الصابرين وفق ما يلي في المصدر. [[quran:2:153]]" + chr(10) * 2 + "{{quran:2:153}}"
     fake_llm(router=['{"level": "أ", "intent": "ask", "language": "ar"}'], generate=[ans])
     r = pipeline.ask("ما معنى ﴿إن الله مع الصابرين دائما﴾؟")
     kinds = [b["kind"] for b in r["blocks"]]
-    assert kinds[0] == "verse_correction", kinds
+    assert r["status"] == "answered" and kinds[0] == "verse_correction", (r["status"], kinds)
     assert r["blocks"][0]["ref"] == "2:153"
+
+
+def test_translate_term_survives_a_non_glossary_term_from_the_model(fake_llm):
+    """Live regression: the model returned a term that is not a glossary key; code matching must still find التوحيد."""
+    f = fake_llm(router=['{"level": "أ", "intent": "translate_term", "language": "ar", "term": "Tawhid / Oneness of God"}'])
+    r = pipeline.ask("ترجم كلمة التوحيد إلى الإنجليزية")
+    assert r["status"] == "answered" and "Tawhid / Oneness of God" in r["answer_text"]
+    assert not [c for c in f.calls if c[0] == L.GENERATE_MODEL]

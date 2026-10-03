@@ -123,7 +123,7 @@ def judge(question, resp):
     user = (f"QUESTION:\n{question}\n\nSTATUS: {resp['status']} (level {resp.get('level')})\n\nRESPONSE SHOWN TO USER:\n{text[:3500]}\n\n"
             f"SOURCES CITED: {[s['id'] for s in resp.get('sources', [])]}\nAI-DISCLOSURE SHOWN: {bool(resp.get('ai_disclosure'))}")
     try:
-        j = L.extract_json(L.get_llm().complete(L.JUDGE_MODEL, JUDGE_SYSTEM, user, max_tokens=3000, effort="low"))
+        j = L.extract_json(L.get_judge_llm().complete(L.judge_model(), JUDGE_SYSTEM, user, max_tokens=3000, effort="low"))
         sc = {k: v for k, v in j["scores"].items() if isinstance(v, (int, float))}
         return {"scores": sc, "overall": round(sum(sc.values()) / len(sc), 2) if sc else None, "issues": j.get("issues", [])}
     except Exception as e:
@@ -138,6 +138,8 @@ def run_one(g, live, do_judge):
     r = {"id": g["id"], "input": q, "expected": {k: g.get(k) for k in ("expected_level", "expected_intent", "expected_behavior")},
          "provisional": bool(g.get("provisional")), "route": {k: route.get(k) for k in ("level", "intent", "source")},
          "router_level_ok": route["level"] in accept, "router_intent_ok": route["intent"] == g["expected_intent"]}
+    if g["expected_intent"] == "verify":  # level is irrelevant for verify mode (the claims are checked, not answered)
+        r["router_level_ok"] = True
     r["router_ok"] = r["router_level_ok"] and r["router_intent_ok"]
     try:
         r["retrieval_ok"] = retrieval_ok(g, R.retrieve(q))
@@ -152,6 +154,7 @@ def run_one(g, live, do_judge):
     r["citation_ok"] = citation_ok(resp)
     r["fidelity_ok"] = fidelity_ok(resp)
     r["answer_excerpt"] = (resp.get("answer_text") or "")[:400]
+    r["_resp"] = {k: resp.get(k) for k in ("status", "level", "answer_text", "blocks", "sources", "ai_disclosure")}
     r["verification_errors"] = resp.get("verification_errors", [])
     if resp.get("verify"):
         r["verdicts"] = [c["verdict"] for c in resp["verify"]["claims"]]
@@ -215,18 +218,37 @@ th{{background:#1B2D45;color:#fff}}tr.bad{{background:#fdecea}}.note{{background
 <p>⚑ = provisional case (placeholder example to be replaced with a real Dorar widespread-hadith example).</p></html>"""
 
 
+def rejudge(path):
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    d = L.describe()
+    for r in data["results"]:
+        if r.get("_resp") and r["_resp"]["status"] in ("answered", "abstained", "referral"):
+            r["judge"] = judge(r["input"], r["_resp"])
+    data["summary"] = {k: tuple(v) for k, v in summarize(data["results"]).items()}
+    data["meta"] += f" · RE-JUDGED with {d['judge_provider']}:{d['judge']}"
+    out = Path(path).with_name(Path(path).stem + "-rejudged.json")
+    out.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(data["meta"])
+    for k in ("judge_score_avg_of_5",):
+        print(k, data["summary"][k])
+    print("saved", out)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--offline", action="store_true")
     ap.add_argument("--no-judge", action="store_true")
     ap.add_argument("--limit", type=int)
     ap.add_argument("--only")
+    ap.add_argument("--rejudge", help="results-*.json: re-score the saved answers with the current judge (no regeneration)")
     args = ap.parse_args()
     if args.offline:
         import os
         for k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "LLM_PROVIDER"):
             os.environ.pop(k, None)
         L.set_llm(None)
+    if args.rejudge:
+        return rejudge(args.rejudge)
     live = L.llm_available() and not args.offline
     gold = load_golden(args)
     d = L.describe()
