@@ -133,3 +133,17 @@ def test_injected_fake_serves_the_judge_role_too():
     fake = object()
     L.set_llm(fake)
     assert L.get_judge_llm() is fake
+
+
+def test_token_usage_is_counted_per_model():
+    L.USAGE.clear()
+
+    class U:
+        prompt_tokens, completion_tokens = 120, 450
+
+    m = oai()
+    orig = m.client.chat.create
+    m.client.chat.create = lambda **kw: SimpleNamespace(**vars(orig(**kw)), usage=U())
+    m.complete("gpt-5.5", "s", "u")
+    m.complete("gpt-5.5", "s", "u")
+    assert L.USAGE["gpt-5.5"] == {"calls": 2, "input": 240, "output": 900}

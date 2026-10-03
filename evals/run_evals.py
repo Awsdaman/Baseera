@@ -274,6 +274,9 @@ def main():
     print("\n== FAILURE PATTERNS ==")
     for k, v in patterns.items():
         print(f"  {k}: {', '.join(dict.fromkeys(v))}")
+    print("\n== TOKEN USAGE (this run) ==")
+    for m, u in L.USAGE.items():
+        print(f"  {m:22} calls={u['calls']:4} input={u['input']:8} output={u['output']:8}  (output includes hidden reasoning tokens)")
     print(f"\nreport: {REPORTS / 'latest.html'}")
 
 

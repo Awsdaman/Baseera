@@ -25,6 +25,16 @@ class LLMUnavailable(RuntimeError):
     pass
 
 
+USAGE: dict[str, dict[str, int]] = {}  # model -> {"calls", "input", "output"}; printed by the eval runner (cost visibility)
+
+
+def _count(model: str, usage, in_attr: str, out_attr: str):
+    u = USAGE.setdefault(model, {"calls": 0, "input": 0, "output": 0})
+    u["calls"] += 1
+    u["input"] += int(getattr(usage, in_attr, 0) or 0)
+    u["output"] += int(getattr(usage, out_attr, 0) or 0)  # for reasoning models this includes hidden reasoning tokens
+
+
 def provider_name() -> str | None:
     p = (os.environ.get("LLM_PROVIDER") or "").strip().lower()
     if p:
@@ -82,6 +92,7 @@ class AnthropicLLM:
             kw["output_config"] = {"effort": effort}
         msg = self.client.messages.create(model=model, max_tokens=max_tokens, system=system,
                                           messages=[{"role": "user", "content": user}], **kw)
+        _count(model, getattr(msg, "usage", None), "input_tokens", "output_tokens")
         if msg.stop_reason == "refusal":
             raise RuntimeError("model refused (safety classifier); failing closed")
         return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text")
@@ -135,6 +146,7 @@ class OpenAICompatibleLLM:
                 resp = self.client.chat.completions.create(model=model, messages=messages, **{token_key: max_tokens})
             else:
                 raise
+        _count(model, getattr(resp, "usage", None), "prompt_tokens", "completion_tokens")
         choice = resp.choices[0]
         if choice.finish_reason == "content_filter":
             raise RuntimeError("provider content filter triggered; failing closed")
