@@ -152,9 +152,15 @@ Checked, not assumed: the rule-based router (plus the LLM and code-level escalat
 
 `python evals/run_evals.py --workers 4` (default 4; 1 for a local model server): 3.7x faster live (134 s vs 498 s on 16 cases) with identical per-case outcomes.
 
+## Learning over time (opt-in, human in the loop)
+
+Baseera never changes itself from user input. The only thing it can keep is an **opt-in problem report**: a "report a problem" box under every result with a stated policy next to a consent checkbox; the button stays disabled until the box is ticked, and the server refuses (HTTP 400) any report without `consent: true`. A report stores the question, the outcome (status / level / intent / abstention reason), a 600-character answer excerpt, the cited source ids, the chosen reason and an optional comment. Never an IP address, user agent, session or account id; e-mail addresses, phone numbers and links are scrubbed; everything is deleted after 90 days (`REPORT_RETENTION_DAYS`, purged at every server start). Reports live in `data/db/reports.sqlite` (git-ignored).
+
+A reviewer (you) then decides, with `python -m tools.review ...`: `approve-test` (becomes a permanent regression case in `evals/golden.jsonl`), `approve-rewrite` (a phrasing mapped to a clean question in `data/curated/rewrites.json`, applied before search from then on, near-exact matches only), `gap` (topic recorded in `data/curated/source_gaps.json`: what sources to add), `dismiss`, `summary`, `purge`. Learning therefore happens through reviewed, versioned files, not through hidden model changes. The three curated files are plain JSON/JSONL you can read and diff.
+
 ## Privacy
 
-No accounts, no analytics, no database of questions: requests are processed in memory. The access log strips query strings (so `/api/retrieve?q=…` is not logged). Third parties that receive text: **Anthropic** (the question and retrieved passages, for routing/generation), **Dorar** (hadith wording from a pasted message, to look up grades) and **mp3quran** (surah number only). API responses from Dorar/icadb/HadeethEnc are cached on disk in `data/cache/` (keyed by hash of the request; the request text itself is not stored).
+Without an opt-in report: no accounts, no analytics, no database of questions: requests are processed in memory. The access log strips query strings (so `/api/retrieve?q=…` is not logged). Third parties that receive text: **Anthropic** (the question and retrieved passages, for routing/generation), **Dorar** (hadith wording from a pasted message, to look up grades) and **mp3quran** (surah number only). API responses from Dorar/icadb/HadeethEnc are cached on disk in `data/cache/` (keyed by hash of the request; the request text itself is not stored).
 
 ## Assumptions and limits (read these)
 

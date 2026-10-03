@@ -44,6 +44,15 @@ def isolated_llm_env(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def isolated_curated_data(tmp_path, monkeypatch):
+    """Tests never read the real curated rewrites or write the real reports DB."""
+    from core import rewrites
+    monkeypatch.setattr(rewrites, "PATH", tmp_path / "no-rewrites.json")
+    rewrites._cache["mtime"] = None
+    monkeypatch.setenv("REPORTS_DB", str(tmp_path / "reports.sqlite"))
+
+
+@pytest.fixture(autouse=True)
 def no_vectors(monkeypatch, request):
     """Unit tests use keyword retrieval only (no embedding model load); mark a test @pytest.mark.vectors to use the real index."""
     if request.node.get_closest_marker("vectors"):

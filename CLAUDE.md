@@ -52,6 +52,9 @@ Keep original text for display; normalized text (no tashkeel/tatweel, أإآ->ا
 - Bayyinat PDF text extraction is garbled (swapped letters/lost lam-alef); clean up or fall back to icadb Q&A.
 - Python needs `truststore` for HTTPS on this machine.
 
+## Learning over time (opt-in only)
+`core/reports.py` stores a question ONLY with explicit consent (UI checkbox + policy; server refuses otherwise), scrubbed, 90-day retention. `tools/review.py` turns reports into golden cases / approved rewrites (`data/curated/rewrites.json`, used by `core/rewrites.py` before search) / source gaps. Nothing learns automatically. Never log or store question text anywhere else.
+
 ## LLM providers and evals (added later)
 - `core/llm.py`: `LLM_PROVIDER=anthropic|openai|local` (see `.env.example`); `JUDGE_PROVIDER` can differ; `LLM_CACHE=1` caches identical requests (dev/evals); token usage is counted in `llm.USAGE`. Tests never touch a real provider (autouse fixture scrubs env).
 - `pipeline.ask(q, debug=True)` returns the full trace (raw outputs, verifier errors, retrieved ids). The API never exposes it nor `verification_errors`.

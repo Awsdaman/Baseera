@@ -1,6 +1,7 @@
 """ASK pipeline: route -> (term | referral | verify | retrieve -> generate -> verify -> retry once -> abstain)."""
 from core import llm as L
 from core import retrieve as R
+from core import rewrites
 from core import support as S
 from core.generate import generate
 from core.glossary import GLOSSARY, lookup
@@ -137,6 +138,14 @@ def _ask(question: str, lang: str | None = None, trace: dict | None = None) -> d
     info = route(question)
     info["language"] = lang if lang in ("ar", "en") else info.get("language", "ar")
     lang = info["language"] if info["language"] in ("ar", "en") else "ar"
+
+    rw = rewrites.lookup(question)  # a human-approved rewrite of this exact phrasing beats the model's restatement
+    if rw:
+        info["canonical_question"], info["rewrite"] = rw["canonical"], "approved"
+        if rw.get("claim"):
+            info["claim"] = rw["claim"]
+        if info["intent"] == "verify" and not rw.get("keep_verify"):
+            info["intent"] = "ask"
 
     if info["intent"] == "translate_term":
         # the model's extracted term may not be a glossary key ("Tawhid / Oneness of God"): fall back to code matching

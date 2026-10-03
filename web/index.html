@@ -63,6 +63,9 @@
   .spin { display:inline-block; width:18px; height:18px; border:3px solid #cfe3e1; border-top-color:var(--teal); border-radius:50%; animation:sp 1s linear infinite; vertical-align:middle; margin-inline-end:8px; }
   @keyframes sp { to { transform:rotate(360deg); } }
   audio { width:100%; max-width:380px; height:34px; margin-top:6px; }
+  .reportbox { margin:14px 0; border:1px dashed var(--line); border-radius:10px; padding:8px 12px; background:#fff; font-size:.9rem; }
+  .reportbox summary { cursor:pointer; color:var(--teal); } .reportbox select { width:100%; padding:8px; border:1px solid #cbd2db; border-radius:8px; font:inherit; background:#fff; }
+  .consent { display:flex; gap:8px; align-items:flex-start; margin:8px 0; font-size:.85rem; color:var(--mute); }
   footer { max-width:900px; margin:10px auto 30px; padding:0 16px; color:var(--mute); font-size:.8rem; }
   @media (max-width:560px) { body { font-size:16px; } .verse { font-size:1.35rem; } .bar { padding:10px 12px; } .brand p { display:none; } .tab { padding:9px 6px; font-size:.9rem; } }
 </style>
@@ -105,6 +108,9 @@ const I18N = {
    st:{answered:'', abstained:'لم أجد ما يكفي في المصادر — بدل التخمين، هذه مراجع تساعدك:', referral:'سؤالك يخص حالة شخصية — معلومات عامة فقط وإحالة لمختص:', retrieval_only:'خدمة التوليد غير مفعّلة — هذه أقرب المصادر:'},
    verdicts:{verified:'نص صحيح', misquoted:'منقول بخطأ', fabricated:'غير موجود في المصحف', sound:'حديث ثابت', weak:'حديث ضعيف', mixed:'أحكام متفاوتة', not_found:'غير موجود في المصادر المعتمدة', graded:'درجته غير مصنّفة آليًا', unverifiable:'لا يمكن التحقق'},
    hadithFab:'موضوع / لا أصل له', claim:'المنقول', correct:'النص الصحيح', correctHadith:'اللفظ الصحيح للحديث (كما ورد في المصادر)', whatDiffers:'ما الذي يختلف في ما نقلتَه؟', grader:'الحاكم', book:'المصدر', gradeCol:'الحكم', none:'لم نعثر على آيات أو أحاديث في النص.', err:'حدث خطأ، حاول مرة أخرى.',
+   reportSummary:'هل وجدتَ مشكلة في هذه النتيجة؟ أبلغ عنها', reportReason:'ما المشكلة؟', reportComment:'تفاصيل إضافية (اختياري)', reportSend:'إرسال البلاغ', reportThanks:'شكرًا، سيراجع البلاغ بشرٌ.', reportErr:'تعذّر الإرسال.',
+   reportReasons:{wrong_answer:'الإجابة خاطئة', incomplete:'الإجابة ناقصة', should_have_answered:'كان يجب أن تجيب بدل الامتناع', wrong_source:'المصدر غير مناسب', wrong_verify_result:'نتيجة التحقق خاطئة', other:'أخرى'},
+   reportConsent:'أوافق على حفظ سؤالي وملخّص الإجابة لدى بصيرة لمراجعتهما يدويًّا وتحسين الأداة، وسيُحذفان تلقائيًا بعد 90 يومًا. لا يُحفظ أي شيء آخر عنّي.',
    credit:'المصادر: مجمع الملك فهد (المصحف والتفسير الميسر) · QuranEnc · HadeethEnc.com · بينات · icadb · الدرر السنية · mp3quran.' },
  en: { tagline:'Ask • Verify • Know the source', disclosure:'⚠️ Baseera is an AI-powered tool, not a scholar or mufti. It answers from approved sources, shows its references, and stores no personal data.',
    tabAsk:'Ask', tabVerify:'Verify a message', ask:'Ask', verify:'Verify', examples:'Try:', askPh:'Type your question in Arabic or English …', verifyPh:'Paste a message (e.g. from WhatsApp) containing verses or hadiths to check …',
@@ -116,6 +122,9 @@ const I18N = {
    st:{answered:'', abstained:'I did not find enough in the approved sources — rather than guess, here are places to look:', referral:'Your question is a personal case — general information only, plus a referral:', retrieval_only:'Answer generation is not enabled — here are the closest sources:'},
    verdicts:{verified:'Correct text', misquoted:'Misquoted', fabricated:'Not in the Mushaf', sound:'Sound hadith', weak:'Weak hadith', mixed:'Mixed grades', not_found:'Not found in approved sources', graded:'Grade not auto-classified', unverifiable:'Cannot verify'},
    hadithFab:'Fabricated / no basis', claim:'As quoted', correct:'Correct text', correctHadith:'Correct wording of the hadith (as in the sources)', whatDiffers:'What differs in what you quoted', grader:'Grader', book:'Source', gradeCol:'Grade', none:'No verses or hadiths found in the text.', err:'Something went wrong, please try again.',
+   reportSummary:'Found a problem with this result? Report it', reportReason:'What is wrong?', reportComment:'More details (optional)', reportSend:'Send report', reportThanks:'Thank you, a person will review it.', reportErr:'Could not send.',
+   reportReasons:{wrong_answer:'The answer is wrong', incomplete:'The answer is incomplete', should_have_answered:'It should have answered instead of declining', wrong_source:'Unsuitable source', wrong_verify_result:'The verification result is wrong', other:'Other'},
+   reportConsent:'I agree that Baseera saves my question and a summary of the answer for manual review to improve the tool; they are deleted automatically after 90 days. Nothing else about me is stored.',
    credit:'Sources: King Fahd Complex (Mushaf, Muyassar tafsir) · QuranEnc · HadeethEnc.com · Bayyinat · icadb · Dorar · mp3quran.' }
 };
 let L = 'ar'; try { L = localStorage.getItem('bs-lang') || 'ar'; } catch (e) {}
@@ -228,6 +237,43 @@ function renderVerify(d) {
   return d.claims.map(claimCard).join('') + `<div class="meta">${esc(d.ai_disclosure || '')}</div>`;
 }
 
+
+// ---- opt-in problem report: saved ONLY if the user ticks the consent box (see core/reports.py)
+let lastCtx = null;
+function outcomeFrom(url, d) {
+  if (d.status === 'verified' && d.verify) {
+    return { status: 'verified', intent: 'verify', language: L, level: d.level, source_ids: [],
+             answer_text: (d.verify.claims || []).map(c => c.claim_type + ':' + c.verdict + ' ' + String(c.claim).slice(0, 80)).join(' | ') };
+  }
+  return { status: d.status, level: d.level, intent: d.intent, language: d.language, abstain_reason: d.abstain_reason,
+           answer_text: d.answer_text, source_ids: (d.sources || []).map(s => s.id) };
+}
+function reportHtml() {
+  const t = T();
+  return `<details class="reportbox"><summary>${esc(t.reportSummary)}</summary>
+    <label class="label">${esc(t.reportReason)}</label>
+    <select id="rp-reason">${Object.entries(t.reportReasons).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join('')}</select>
+    <label class="label">${esc(t.reportComment)}</label>
+    <textarea id="rp-comment" maxlength="500" style="min-height:60px"></textarea>
+    <label class="consent"><input type="checkbox" id="rp-consent"> <span>${esc(t.reportConsent)}</span></label>
+    <div class="row"><button class="go" id="rp-send" disabled>${esc(t.reportSend)}</button><span class="meta" id="rp-msg"></span></div></details>`;
+}
+function wireReport() {
+  const box = document.querySelector('.reportbox'); if (!box) return;
+  const cb = $('#rp-consent'), send = $('#rp-send');
+  cb.onchange = () => { send.disabled = !cb.checked; };
+  send.onclick = async () => {
+    if (!cb.checked || !lastCtx) return;
+    send.disabled = true;
+    try {
+      const r = await fetch('/api/report', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: lastCtx.question, reason: $('#rp-reason').value, comment: $('#rp-comment').value || null, consent: true, outcome: lastCtx.outcome }) });
+      if (!r.ok) throw new Error(r.status);
+      $('#rp-msg').textContent = T().reportThanks; cb.disabled = true;
+    } catch (e) { $('#rp-msg').textContent = T().reportErr; send.disabled = false; }
+  };
+}
+
 async function call(url, body, btn, render) {
   btn.disabled = true; $('#out').innerHTML = loading();
   try {
@@ -235,6 +281,8 @@ async function call(url, body, btn, render) {
     if (!r.ok) throw new Error(r.status);
     const d = await r.json();
     if (d.status === 'verified' && d.verify) $('#out').innerHTML = renderVerify({ ...d.verify, ai_disclosure: d.ai_disclosure }); else $('#out').innerHTML = render(d);
+    lastCtx = { question: body.question || body.text, outcome: outcomeFrom(url, d) };
+    $('#out').insertAdjacentHTML('beforeend', reportHtml()); wireReport();
   } catch (e) { $('#out').innerHTML = `<div class="status warn">${esc(T().err)}</div>`; }
   btn.disabled = false;
 }

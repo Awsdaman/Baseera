@@ -1,5 +1,6 @@
 """Phase 1 API: raw retrieval results. (Phase 2 adds /api/ask, Phase 3 /api/verify.)"""
 import logging
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
@@ -8,6 +9,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from core import pipeline
+from core import reports
 from core import retrieve as R
 from core import verifier_mode
 from core.db import connect
@@ -25,7 +27,16 @@ class _ScrubQuery(logging.Filter):
 
 
 logging.getLogger("uvicorn.access").addFilter(_ScrubQuery())
-app = FastAPI(title="Baseera")
+@asynccontextmanager
+async def lifespan(_app):
+    try:
+        reports.purge()  # retention: reports older than REPORT_RETENTION_DAYS are deleted at every start
+    except Exception:
+        pass
+    yield
+
+
+app = FastAPI(title="Baseera", lifespan=lifespan)
 NO_CACHE = {"Cache-Control": "no-cache"}  # browsers must re-check the UI on every load (a stale cached page hid new features)
 
 
@@ -47,6 +58,14 @@ class AskBody(BaseModel):
     language: str | None = None
 
 
+class ReportBody(BaseModel):
+    question: str = Field(..., min_length=1, max_length=2000)
+    reason: str
+    comment: str | None = Field(None, max_length=500)
+    consent: bool = False
+    outcome: dict | None = None
+
+
 class VerifyBody(BaseModel):
     text: str = Field(..., min_length=1, max_length=6000)
 
@@ -57,6 +76,22 @@ def ask(body: AskBody):
     for internal in ("verification_errors", "debug"):  # may contain model-written text / raw outputs: dev and eval use only
         resp.pop(internal, None)
     return resp
+
+
+@app.post("/api/report")
+def report(body: ReportBody):
+    """Opt-in problem report: stored ONLY with explicit consent (the UI shows the policy next to the checkbox)."""
+    try:
+        reports.add_report(body.question, body.reason, body.comment, body.outcome or {}, body.consent)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    return {"ok": True}
+
+
+@app.get("/api/privacy")
+def privacy():
+    return {"policy": reports.POLICY, "retention_days": reports.RETENTION_DAYS, "stores": ["question", "answer summary", "cited source ids", "reason", "comment"],
+            "never_stores": ["IP address", "user agent", "session or account id", "anything without consent"]}
 
 
 @app.post("/api/verify")
