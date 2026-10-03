@@ -17,8 +17,8 @@ Final live eval (52 cases): router 100%, retrieval 12/12, citations 100%, verse 
 ## Pipeline-enhancement ideas (from the SAWB reference photo), done one by one
 1. DONE: semantic support check (`core/support.py`, log mode default, enforce opt-in); reranker rejected on data.
 2. DONE (verify-mode part): synthetic data `evals/synth_verify.py` found and fixed a real shortlist bug (misquote recall 73% -> 99.8%). Not done on purpose: LLM-generated Q&A data (costs money; the router is already 100% on the golden set).
-3. TODO: parallel eval workers (the eval takes ~25 min sequentially).
-4. TODO/decide: small trained router classifier (only worth it for the local-model path; needs labelled data).
+3. DONE: parallel eval workers (`--workers N`, default 4; 1 for a local model). Made retrieval/embedding/http/token counting thread-safe. 3.7x faster live (134 s vs 498 s on 16 cases), identical outcomes.
+4. DECIDED NOT TO BUILD (evidence in `evals/router_check.py`): the heuristic router flags only 0.4% (2/543) of real icadb general questions as personal cases (level د) and an embedding kNN gets 77% leave-one-out on 47 labelled questions (needs hundreds of labels). Router cost is ~0.4% of an eval run; the rule fallback already exists. Revisit only if the chosen local model routes badly (then train a small classifier on bge-m3 embeddings with labelled data).
 
 ## Left to do
 1. (Optional, ~$1) one more live run to confirm dp6-07 and get a clean 0 forced abstentions: `python evals/run_evals.py --only dp6-07 --no-judge` (cheap) or the full run.

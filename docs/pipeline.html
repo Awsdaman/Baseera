@@ -88,7 +88,7 @@
         <div class="box"><b>Generator (swappable LLM)</b>Anthropic · OpenAI · local server<small>sees passages; may emit only <code>{{quran:S:A}}</code> <code>{{hadith:SRC:ID}}</code> <code>{{tafsir:S:A}}</code> <code>{{note:…}}</code> and <code>[[id]]</code></small></div>
         <div class="arrow">&#9660;</div>
         <div class="box star"><b>Verifier: pure code, no LLM</b>
-          <small>ids retrieved? · no model-typed Quran / hadith (fuzzy leak scan, quotes) · every 8+ word stretch cited · malformed placeholders rejected</small></div>
+          <small>ids retrieved? · no model-typed Quran / hadith (fuzzy leak scan, quotes) · every 8+ word stretch cited · malformed placeholders rejected<br>+ semantic support check: cited passage must back the sentence (bge-m3, log mode)</small></div>
         <div class="row" style="grid-template-columns:1fr 1fr">
           <div class="box bad"><b>reject, 1st time</b><small>retry once: sees its rejected answer + a fix recipe</small></div>
           <div class="box warn"><b>reject, 2nd time</b><small>abstain + where to look</small></div>
@@ -147,7 +147,7 @@
         <tr><td>False abstention on answerable questions</td><td class="n ok">0%</td><td class="n mid">3.3% (1/30)</td></tr>
         <tr><td>LLM-judge score (1-5)</td><td class="n">4.71</td><td class="n">4.71</td></tr>
       </table>
-      <p class="legend" style="text-align:left;margin:8px 0 0">*optimistic: router rules were tuned while looking at this set. The 1 false abstention (a quoted shahada) was fixed afterwards and confirmed by replaying the saved outputs; not yet re-run live. 171 unit tests pass.</p>
+      <p class="legend" style="text-align:left;margin:8px 0 0">*optimistic: router rules were tuned while looking at this set. The 1 false abstention (a quoted shahada) was fixed afterwards and confirmed by replaying the saved outputs; not yet re-run live. 187 tests pass.</p>
     </div>
     <div class="panel">
       <h3>Design choices that produced those numbers</h3>
@@ -156,6 +156,8 @@
         <li>Scope remarks ("not exhaustive", "ask a scholar") are code-owned notes, so the model is never asked for an uncitable sentence.</li>
         <li>Retry shows the model its rejected answer and a fix recipe; 5 of 38 answers needed it, none needed a third try.</li>
         <li>Stock phrases (shahada, <i>bismillah</i>) are allowed; a long run or most of a verse is not.</li>
+        <li>Verify mode was calibrated on 2,856 synthetic verse cases (misquote recall 73% to 99.8% after a bug it exposed) and 1,000 hadith cases.</li>
+        <li>Evals run in parallel (3.7x faster); a rejected-answer trace and per-case token use are stored.</li>
         <li>Provider-agnostic LLM layer with token counting; a full run is about 300k input and 40k output tokens.</li>
         <li>Everything beyond the LLM (verify mode, referral, glossary, retrieval) works with no API key.</li>
       </ul>

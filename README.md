@@ -139,6 +139,14 @@ The bug it found: a short verse that fits entirely inside the claim scored 100 i
 
 Checks that a cited passage actually backs the sentence citing it (the verifier only checks form). Calibrated on 119 cited stretches from accepted answers: bge-m3 similarity separates the cited passage from a topically close uncited one with AUC 0.90 (0.96 against unrelated passages); the BAAI/bge-reranker-v2-m3 cross-encoder was no better (0.89) and ~100x slower, so it is not used. At the conservative threshold (keeps 99% of cited stretches) it catches ~24% of look-alike and ~45% of unrelated mis-citations, so it is a safety net, not a hallucination detector: default `SUPPORT_MODE=log` (scores stored in the debug trace and the eval metric `support_flag_rate`), `SUPPORT_MODE=enforce` makes an unsupported stretch a verifier error (retry, then abstain).
 
+### Router: why there is no trained classifier (`evals/router_check.py`)
+
+Checked, not assumed: the rule-based router (plus the LLM and code-level escalation) flags 0.4% (2/543) of real icadb general questions as personal cases, one of which is genuinely personal; a bge-m3 kNN classifier reaches only 77% leave-one-out on the 47 labelled golden questions, so it would need hundreds of labelled examples (which would have to be LLM-labelled). The router is ~0.4% of an eval run's tokens, so a trained one saves nothing. Revisit if the chosen local model routes poorly.
+
+### Evals are parallel
+
+`python evals/run_evals.py --workers 4` (default 4; 1 for a local model server): 3.7x faster live (134 s vs 498 s on 16 cases) with identical per-case outcomes.
+
 ## Privacy
 
 No accounts, no analytics, no database of questions: requests are processed in memory. The access log strips query strings (so `/api/retrieve?q=…` is not logged). Third parties that receive text: **Anthropic** (the question and retrieved passages, for routing/generation), **Dorar** (hadith wording from a pasted message, to look up grades) and **mp3quran** (surah number only). API responses from Dorar/icadb/HadeethEnc are cached on disk in `data/cache/` (keyed by hash of the request; the request text itself is not stored).
