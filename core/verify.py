@@ -29,6 +29,18 @@ LEAK_CUTOFF = 93
 _quran_cache = None
 
 
+def _long_verses() -> list[str]:
+    """Normalized verses of >=5 words. Tiny verses ("الرحمن", "طه") fuzzy-match 'inside' any long sentence, so they
+    are excluded from the fuzzy leak checks (exact-substring checks still use the whole Mushaf)."""
+    global _long_cache
+    if _long_cache is None:
+        _long_cache = [q[2] for q in _quran() if len(q[2].split()) >= 5]
+    return _long_cache
+
+
+_long_cache = None
+
+
 def _quran():
     """[(surah, ayah, normalized emlaey, normalized uthmani)] for the whole Mushaf."""
     global _quran_cache
@@ -81,7 +93,7 @@ def _check_quotes(text: str, retrieved: dict, errors: list[str]):
                 continue
             n = normalize_ar(seg)
             if any(n in q[2] or n in q[3] for q in _quran()) or \
-                    process.extractOne(n, [q[2] for q in _quran()], scorer=fuzz.partial_ratio, score_cutoff=LEAK_CUTOFF):
+                    process.extractOne(n, _long_verses(), scorer=fuzz.partial_ratio, score_cutoff=LEAK_CUTOFF):
                 errors.append(f"Quran text written by the model inside quotation marks (use a {{{{quran:S:A}}}} placeholder): {seg[:60]}")
                 continue
             hadith = [p for p in retrieved.values() if p["type"] == "hadith"]
@@ -99,7 +111,7 @@ def _check_quotes(text: str, retrieved: dict, errors: list[str]):
 
 def _check_leaks(text: str, retrieved: dict, errors: list[str]):
     clean = CITE.sub(" ", PLACEHOLDER.sub(" ", text))
-    qnorms = [q[2] for q in _quran()]
+    qnorms = _long_verses()
     hadith_norms = [(p["id"], normalize_ar(p["text"] or "")) for p in retrieved.values() if p["type"] == "hadith"]
     for chunk in _SPLIT.split(clean):
         n = normalize_ar(chunk)

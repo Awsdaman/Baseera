@@ -116,3 +116,13 @@ def test_empty_fails():
 
 def test_tafsir_placeholder_needs_the_tafsir_passage():
     assert not verify_answer("{{tafsir:2:255}}", P(KURSI)).ok
+
+
+def test_ordinary_explanation_sentences_are_not_mistaken_for_verses():
+    """Regression: live Sonnet output was rejected because tiny verses fuzzy-matched inside normal sentences."""
+    paras = ["معناهما الإقرار بأن الله وحده هو المعبود بحق، وأن محمدًا ﷺ عبده ورسوله [[term:glossary:1]]",
+             "والزكاة هي إنفاق جزء يسير من المال على الفقراء والمساكين، وتعين المسلم على تغليب البذل والعطاء على الشح [[term:glossary:1]]",
+             "والحج تفرغ للخالق في وقت ومكان معينين بمناسك واحدة لكل المؤمنين، وهذا شرح عام مبني على النصوص المذكورة أعلاه [[term:glossary:1]]"]
+    text = "\n\n".join(paras)
+    r = verify_answer(text, P("term:glossary:1"))
+    assert r.ok, r.errors
