@@ -27,6 +27,22 @@ Open quality points the judge/support check raised (not fixed): contested-fiqh g
 - Opt-in learning loop (see README "Learning over time"): `core/reports.py`, `/api/report`, `/api/privacy`, report box in the UI, `tools/review.py`, `core/rewrites.py`, `data/curated/`. 226 tests pass.
 - Last full live eval after these changes (55 cases, before the last router/extractor stability fixes): 53/55; the two misses (v-02, v-03) were the router calling pasted hadiths "ask" and are fixed and re-run green. A fresh full run is advisable.
 
+## Local model selection (in progress, resume here tomorrow)
+Hardware: this machine IS the desktop (Ryzen 5 7600X, 32 GB RAM, RX 7600 XT 16 GB, LM Studio with the Vulkan llama.cpp 2.51.0 engine selected; `lms` CLI works; `lms runtime survey` sees 15.98 GiB VRAM). Laptop (RTX 4050 6 GB) not tested yet.
+
+Research (Oct 2026, web): Arabic-native Falcon-H1-Arabic 7B tops the ~10B class (OALL 71.7) but its Hugging Face repos return 401 (gated/private), so it is not downloadable; ALLaM-7B / Fanar-9B have weak GGUF support. Strong multilingual options that fit 16 GB: **Gemma 4 12B-it** (140 languages, MMMLU 83.4, ~7 GB Q4_K_M, 256K ctx) = my expected winner; Qwen3.5-9B (unsloth Q6_K 7.5 GB); Qwen3-14B (lmstudio-community Q4_K_M 9.0 GB); Qwen3.6/3.8-27B dense Q4 is ~16.5 GB (too tight with context); Qwen3.6-35B-A3B MoE needs ~21 GB (partial offload). Laptop (6 GB) candidates: a 4B-class model or Qwen3.5-9B at Q4 with a small context (untested).
+
+User approved downloading ONLY Gemma 4 12B (unsloth/gemma-4-12b-it-GGUF, file gemma-4-12b-it-Q4_K_M.gguf, 7.12 GB). `lms get` could not resolve the name, so the file was fetched directly with curl to `~/.lmstudio/models/unsloth/gemma-4-12b-it-GGUF/` (check it is complete: size ~7.12e9 bytes).
+
+Code is ready for local models: `LLM_PROVIDER=local`, `LOCAL_BASE_URL`, `LOCAL_MODEL`, `LOCAL_NO_THINK=1` (Qwen soft switch), `LLM_PASSAGE_CHARS` (shrink passages for small contexts), hidden `<think>` text is stripped, `--workers 1` is the default for local. 230 tests pass.
+
+NEXT STEPS (tomorrow):
+1. `lms ls` should list the model; load it with a 16K context and all layers on the GPU, e.g. `lms load unsloth/gemma-4-12b-it-GGUF --gpu max --context-length 16384 --identifier gemma4-12b` (check `lms load --help`), then `lms server start` (port 1234).
+2. Smoke test + speed: set in `.env` (or the shell) `LLM_PROVIDER=local LOCAL_BASE_URL=http://localhost:1234/v1 LOCAL_MODEL=gemma4-12b JUDGE_PROVIDER=openai`; ask one question through `core.pipeline.ask(...)`; measure tokens/second and prompt-processing time (prompts are ~5-8K tokens).
+3. Full eval on the local model WITHOUT spending credit: `python evals/run_evals.py --no-judge --workers 1` (about 40 min), with `LLM_CACHE=1`. Compare with the OpenAI numbers (router 100%, citations 100%, fidelity 100%, forced abstentions 0, false abstention 0). Then optionally judge it with `--rejudge` (small OpenAI cost) or a Claude judge.
+4. Look at what breaks: the verifier retry rate, Arabic quality, placeholders/notes use, JSON from the router (the rule-based router is the fallback). If Gemma 4 12B is not good enough, ask the user before downloading the next candidate (Qwen3.5-9B Q6_K or Qwen3-14B Q4_K_M).
+5. Decide the production split: local model for generation/routing on the desktop (can serve the team), OpenAI only as optional judge. Then repeat a smaller test on the laptop.
+
 ## Left to do
 1. (Optional, ~$1) one more live run to confirm dp6-07 and get a clean 0 forced abstentions: `python evals/run_evals.py --only dp6-07 --no-judge` (cheap) or the full run.
 2. **Local-model backend** — waiting for the user to pick the model. `core/llm.py` already supports `LLM_PROVIDER=local` (OpenAI-compatible server: Ollama/LM Studio/vLLM; `LOCAL_BASE_URL`, `LOCAL_MODEL`; tested with stubs only). Once chosen: try it live; add small-context limits (cap passages / `max_chars` in `core/generate.py` through env); check Arabic JSON routing quality (the heuristic router is the fallback); run the evals with `LLM_CACHE=1`.
