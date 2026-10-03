@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Baseera: Pipeline and Architecture</title>
+<style>
+  :root { --navy:#1B2D45; --teal:#1F7872; --gold:#C9A04A; --blue:#2F6FBF; --ink:#1c2430; --line:#8b97a8; --paper:#fbfaf6; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#e9e6dc; font-family:"Segoe UI",system-ui,Arial,sans-serif; color:var(--ink); }
+  .sheet { max-width:1240px; margin:24px auto; background:var(--paper); border:1px solid #cfcab9; border-radius:14px; padding:22px 24px 26px; box-shadow:0 2px 10px rgba(0,0,0,.08); }
+  h1 { margin:0 0 4px; text-align:center; font-size:30px; letter-spacing:.2px; color:var(--navy); }
+  h1 .ar { font-family:"Amiri","Noto Naskh Arabic",serif; color:var(--teal); }
+  .sub { text-align:center; color:#586274; margin:0 0 16px; font-size:14px; }
+  .cols { display:grid; grid-template-columns:1fr 34px 1.08fr 34px 1.05fr; gap:0; align-items:stretch; }
+  .col { border-radius:10px; overflow:hidden; border:1px solid rgba(0,0,0,.08); }
+  .col h2 { margin:0; padding:12px 10px; text-align:center; color:#fff; font-size:17px; letter-spacing:.4px; }
+  .col .body { padding:14px 14px 16px; display:flex; flex-direction:column; gap:10px; height:calc(100% - 46px); }
+  .p1 h2 { background:var(--blue); } .p1 .body { background:#dbe7f6; }
+  .p2 h2 { background:var(--teal); } .p2 .body { background:#d9ece7; }
+  .p3 h2 { background:var(--gold); } .p3 .body { background:#f5e8cc; }
+  .gap { display:flex; align-items:center; justify-content:center; font-size:30px; color:var(--line); }
+  .box { background:#fff; border:2px solid #2b3445; border-radius:6px; padding:8px 10px; font-size:13px; line-height:1.35; text-align:center; }
+  .box b { display:block; font-size:14px; }
+  .box small { color:#4a5568; display:block; margin-top:2px; }
+  .box.key { background:#eef6ff; } .box.good { background:#e8f7ec; border-color:#2e7d32; } .box.warn { background:#fff4e0; border-color:#b7791f; }
+  .box.bad { background:#fdecea; border-color:#b3261e; } .box.grey { background:#f0f1f3; border-color:#6b7280; }
+  .box.star { background:#dff3e4; border-color:#1d5e2a; box-shadow:0 0 0 2px rgba(29,94,42,.15); }
+  .arrow { text-align:center; color:var(--line); line-height:.8; font-size:20px; margin:-4px 0; }
+  .row { display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:8px; }
+  .diamond { align-self:center; width:210px; min-height:96px; padding:26px 30px; background:#fff; border:2px solid #2b3445; text-align:center; font-size:12.5px; font-weight:600;
+             clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%); display:flex; align-items:center; justify-content:center; line-height:1.25; position:relative; }
+  .dwrap { display:flex; justify-content:center; filter:drop-shadow(0 0 0 #2b3445); }
+  .tag { display:inline-block; font-size:11px; font-weight:700; border-radius:10px; padding:1px 8px; margin:0 2px; background:#2b3445; color:#fff; }
+  .tag.y { background:#2e7d32; } .tag.n { background:#b3261e; } .tag.t { background:var(--teal); } .tag.g { background:#8a6a1f; }
+  .strip { margin-top:18px; display:grid; grid-template-columns:1.1fr 1fr; gap:16px; }
+  .panel { border:1px solid #d3cfc0; border-radius:10px; background:#fff; padding:12px 14px; }
+  .panel h3 { margin:0 0 8px; font-size:15px; color:var(--navy); }
+  .panel ul { margin:0; padding-left:18px; font-size:13px; line-height:1.55; }
+  table { width:100%; border-collapse:collapse; font-size:13px; } td,th { padding:4px 6px; border-bottom:1px solid #ece8da; text-align:left; } th { color:#586274; font-weight:600; }
+  td.n { text-align:right; font-variant-numeric:tabular-nums; font-weight:700; } td.n.ok { color:#2e7d32; } td.n.mid { color:#b7791f; }
+  .rules { margin-top:16px; display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  .rule { background:var(--navy); color:#fff; border-radius:8px; padding:9px 11px; font-size:12.5px; line-height:1.4; }
+  .rule b { color:var(--gold); display:block; margin-bottom:2px; }
+  .legend { margin-top:10px; font-size:12px; color:#586274; text-align:center; }
+  @media (max-width:980px) { .cols { grid-template-columns:1fr; } .gap { transform:rotate(90deg); height:34px; } .strip,.rules { grid-template-columns:1fr; } .sheet { margin:8px; padding:14px; } }
+  @media print { body { background:#fff; } .sheet { box-shadow:none; border:0; margin:0; max-width:none; } }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <h1>BASEERA <span class="ar">بصيرة</span>: Grounded Islamic Q&amp;A and Verification Pipeline</h1>
+  <p class="sub">The LLM never types a verse or a hadith. It points at them; code checks the pointers and inserts the exact stored text.</p>
+
+  <div class="cols">
+    <!-- ===================== PHASE 1 ===================== -->
+    <section class="col p1">
+      <h2>PHASE 1: DATA &amp; INDEX</h2>
+      <div class="body">
+        <div class="box key"><b>Approved sources (docs/data.pdf)</b><small>local files + APIs, nothing scraped</small></div>
+        <div class="row" style="grid-template-columns:1fr 1fr">
+          <div class="box"><b>Quran</b>Mushaf Hafs<small>6,236 verses (asserted)</small></div>
+          <div class="box"><b>Tafsir &amp; EN</b>Muyassar + Noor Intl.<small>6,236 verses each</small></div>
+          <div class="box"><b>HadeethEnc</b>3,574 hadiths<small>ar + en, grades, credit shown</small></div>
+          <div class="box"><b>Bayyinat</b>263 Q&amp;As<small>PDF; Arabic ligature repair</small></div>
+          <div class="box"><b>icadb</b>543 Q&amp;A + 58 terms<small>approved cards only</small></div>
+          <div class="box"><b>Glossary</b>10 official terms<small>override translation</small></div>
+        </div>
+        <div class="arrow">&#9660;</div>
+        <div class="box"><b>Normalize Arabic for matching</b><small>strip tashkeel/tatweel, unify أإآ, ى, ة, light stemming; original text kept for display</small></div>
+        <div class="arrow">&#9660;</div>
+        <div class="box star"><b>SQLite + FTS5</b>16,920 passages<small>quran 6,236 · tafsir 6,236 · hadith 3,574 · Q&amp;A 806 · terms 68</small></div>
+        <div class="box star"><b>Chroma vectors (bge-m3)</b>10,684 embeddings<small>tafsir stays keyword-only (CPU cost)</small></div>
+        <div class="box grey"><b>Live, cached</b><small>Dorar hadith grades (~300k hadiths) · mp3quran audio · referral links only: islamqa, binbaz, binothaimeen</small></div>
+      </div>
+    </section>
+
+    <div class="gap">&#9654;</div>
+
+    <!-- ===================== PHASE 2 ===================== -->
+    <section class="col p2">
+      <h2>PHASE 2: ROUTE, RETRIEVE, GENERATE, VERIFY</h2>
+      <div class="body">
+        <div class="box key"><b>Router</b>level أ / ب / ج / د · intent ask / verify / translate_term<small>LLM + heuristic fallback; code can only escalate (to ب, ج, د), never relax</small></div>
+        <div class="arrow">&#9660;</div>
+        <div class="box"><b>Hybrid retrieval</b>FTS5 BM25 + Chroma vectors, reciprocal rank fusion<small>alias lookup (آية الكرسي, سورة الإخلاص, 2:255) · tafsir hit pulls its verse</small></div>
+        <div class="arrow">&#9660;</div>
+        <div class="box"><b>Generator (swappable LLM)</b>Anthropic · OpenAI · local server<small>sees passages; may emit only <code>{{quran:S:A}}</code> <code>{{hadith:SRC:ID}}</code> <code>{{tafsir:S:A}}</code> <code>{{note:…}}</code> and <code>[[id]]</code></small></div>
+        <div class="arrow">&#9660;</div>
+        <div class="box star"><b>Verifier: pure code, no LLM</b>
+          <small>ids retrieved? · no model-typed Quran / hadith (fuzzy leak scan, quotes) · every 8+ word stretch cited · malformed placeholders rejected</small></div>
+        <div class="row" style="grid-template-columns:1fr 1fr">
+          <div class="box bad"><b>reject, 1st time</b><small>retry once: sees its rejected answer + a fix recipe</small></div>
+          <div class="box warn"><b>reject, 2nd time</b><small>abstain + where to look</small></div>
+        </div>
+        <div class="box good"><b>accept</b><small>substitute exact text from the DB; grades only from Dorar / HadeethEnc</small></div>
+      </div>
+    </section>
+
+    <div class="gap">&#9654;</div>
+
+    <!-- ===================== PHASE 3 ===================== -->
+    <section class="col p3">
+      <h2>PHASE 3: RESPOND</h2>
+      <div class="body">
+        <div class="box key"><b>Arabic or English question / pasted message</b></div>
+        <div class="dwrap"><div class="diamond">level د (personal case) or intent?</div></div>
+        <div class="row" style="grid-template-columns:1fr 1fr">
+          <div class="box warn"><span class="tag n">د</span><b>Template</b><small>general info + referral links, never a ruling, generator not called</small></div>
+          <div class="box"><span class="tag t">term</span><b>Glossary</b><small>approved translation, no LLM</small></div>
+        </div>
+        <div class="box"><span class="tag g">verify</span><b>Claim extraction</b><small>LLM or regex</small></div>
+        <div class="row" style="grid-template-columns:1fr 1fr">
+          <div class="box"><b>Verse</b><small>rapidfuzz vs whole Mushaf, word diff</small></div>
+          <div class="box"><b>Hadith</b><small>Dorar live + HadeethEnc</small></div>
+        </div>
+        <div class="row" style="grid-template-columns:repeat(4,1fr);gap:5px">
+          <div class="box good" style="padding:6px 3px;font-size:11.5px"><b>green</b>verified</div>
+          <div class="box warn" style="padding:6px 3px;font-size:11.5px"><b>amber</b>misquoted / weak</div>
+          <div class="box bad" style="padding:6px 3px;font-size:11.5px"><b>red</b>fabricated</div>
+          <div class="box grey" style="padding:6px 3px;font-size:11.5px"><b>grey</b>not found</div>
+        </div>
+        <div class="arrow">&#9660;</div>
+        <div class="box star"><b>UI (AR / EN)</b><small>Quran · hadith + grade · tafsir · generated explanation · scope notes · numbered sources · AI-tool disclosure · optional recitation audio. No personal data stored.</small></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="rules">
+    <div class="rule"><b>1. No typed scripture</b>The model emits placeholders; code inserts the exact text.</div>
+    <div class="rule"><b>2. Cite what you used</b>Every claim cites a passage that was actually retrieved.</div>
+    <div class="rule"><b>3. Grades from data</b>Hadith grades come only from Dorar / HadeethEnc, never the model.</div>
+    <div class="rule"><b>4. Abstain, don't guess</b>Insufficient evidence gives a warm answer with where to look; level د gets referral only.</div>
+  </div>
+
+  <div class="strip">
+    <div class="panel">
+      <h3>Evaluation: live run, 52 cases (router gpt-5.4-mini · generator gpt-5.6-sol · judge gpt-5.5)</h3>
+      <table>
+        <tr><th>Metric</th><th>First run</th><th>Final run</th></tr>
+        <tr><td>Verse fidelity (no model-typed Quran text)</td><td class="n">100%</td><td class="n ok">100%</td></tr>
+        <tr><td>Citation rate</td><td class="n mid">89.7%</td><td class="n ok">100%</td></tr>
+        <tr><td>Correct abstention / referral</td><td class="n mid">85.7%</td><td class="n ok">100% (7/7)</td></tr>
+        <tr><td>Verify mode (viral messages)</td><td class="n">100%</td><td class="n ok">100% (5/5)</td></tr>
+        <tr><td>Retrieval recall (targeted cases)</td><td class="n">100% (8)</td><td class="n ok">100% (12/12)</td></tr>
+        <tr><td>Router accuracy</td><td class="n mid">86.5%</td><td class="n ok">100%*</td></tr>
+        <tr><td>False abstention on answerable questions</td><td class="n ok">0%</td><td class="n mid">3.3% (1/30)</td></tr>
+        <tr><td>LLM-judge score (1-5)</td><td class="n">4.71</td><td class="n">4.71</td></tr>
+      </table>
+      <p class="legend" style="text-align:left;margin:8px 0 0">*optimistic: router rules were tuned while looking at this set. The 1 false abstention (a quoted shahada) was fixed afterwards and confirmed by replaying the saved outputs; not yet re-run live. 171 unit tests pass.</p>
+    </div>
+    <div class="panel">
+      <h3>Design choices that produced those numbers</h3>
+      <ul>
+        <li>Verifier is deterministic code: invented ids, unretrieved citations and model-written verses cannot pass (adversarial tests).</li>
+        <li>Scope remarks ("not exhaustive", "ask a scholar") are code-owned notes, so the model is never asked for an uncitable sentence.</li>
+        <li>Retry shows the model its rejected answer and a fix recipe; 5 of 38 answers needed it, none needed a third try.</li>
+        <li>Stock phrases (shahada, <i>bismillah</i>) are allowed; a long run or most of a verse is not.</li>
+        <li>Provider-agnostic LLM layer with token counting; a full run is about 300k input and 40k output tokens.</li>
+        <li>Everything beyond the LLM (verify mode, referral, glossary, retrieval) works with no API key.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="legend">Boxes with a green outline are the load-bearing guarantees. Source: this repository (docs/pipeline.html), numbers from evals/reports/.</p>
+</div>
+</body>
+</html>
