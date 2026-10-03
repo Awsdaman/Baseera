@@ -176,3 +176,35 @@ def test_llm_cache_does_not_store_failures(tmp_path):
     with pytest.raises(RuntimeError):
         c.complete("m", "s", "u")
     assert list(tmp_path.iterdir()) == []
+
+
+# ---------------------------------------------------------------- local reasoning models
+def test_strip_thinking_removes_reasoning_blocks_and_orphan_closing_tags():
+    assert L.strip_thinking("<think>الخطوة الأولى...</think>\nالجواب النهائي [[qa:x:1]]") == "الجواب النهائي [[qa:x:1]]"
+    assert L.strip_thinking("<thinking>a</thinking>b<think>c</think>d") == "bd"
+    assert L.strip_thinking("hidden reasoning here</think>real answer") == "real answer"
+    assert L.strip_thinking("plain answer") == "plain answer"
+
+
+def test_local_backend_strips_thinking_and_can_switch_it_off(monkeypatch):
+    m = oai(local=True, text="<think>reasoning</think>الجواب")
+    assert m.complete("qwen3-14b", "s", "u") == "الجواب"
+    monkeypatch.setenv("LOCAL_NO_THINK", "1")
+    m.complete("qwen3-14b", "s", "question")
+    assert m.client.chat.calls[-1]["messages"][1]["content"].endswith("/no_think")
+    monkeypatch.delenv("LOCAL_NO_THINK")
+    m.complete("qwen3-14b", "s", "question")
+    assert not m.client.chat.calls[-1]["messages"][1]["content"].endswith("/no_think")
+
+
+def test_openai_backend_never_strips_or_alters_replies():
+    m = oai(text="<think>kept</think>x")
+    assert m.complete("gpt-5.5", "s", "u") == "<think>kept</think>x"
+
+
+def test_passage_size_is_tunable_for_small_context_models(monkeypatch):
+    from core.generate import format_passages
+    p = [{"id": "a:1", "type": "qa", "source": "s", "text": "x" * 2000, "text_en": None, "grade": None}]
+    assert len(format_passages(p)) > 900
+    monkeypatch.setenv("LLM_PASSAGE_CHARS", "200")
+    assert len(format_passages(p)) < 400

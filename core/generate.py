@@ -1,4 +1,6 @@
 """Answer generation with level-specific behavior. The model only ever sees passages and emits placeholders."""
+import os
+
 from core import llm as L
 from core.verify import NO_EVIDENCE
 
@@ -64,7 +66,8 @@ def glossary_block(terms: list[dict]) -> str:
     return "\n".join(f"- {g['ar']} = {g['en']}" for g in GLOSSARY)
 
 
-def format_passages(passages: list[dict], max_chars: int = 900) -> str:
+def format_passages(passages: list[dict], max_chars: int | None = None) -> str:
+    max_chars = max_chars or int(os.environ.get("LLM_PASSAGE_CHARS", 900))  # lower it for small-context local models
     out = []
     for p in passages:
         body = (p["text"] or "").replace("\n", " ")[:max_chars]

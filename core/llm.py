@@ -157,6 +157,8 @@ class OpenAICompatibleLLM:
             kw["max_completion_tokens"] = max_tokens
             if temperature is not None:
                 kw["temperature"] = temperature
+        if self.local and os.environ.get("LOCAL_NO_THINK") == "1":
+            user += chr(10) + "/no_think"  # Qwen-style soft switch that turns the hidden reasoning phase off (saves time and tokens)
         messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
         try:
             resp = self.client.chat.completions.create(model=model, messages=messages, **kw)
@@ -171,7 +173,21 @@ class OpenAICompatibleLLM:
         choice = resp.choices[0]
         if choice.finish_reason == "content_filter":
             raise RuntimeError("provider content filter triggered; failing closed")
-        return choice.message.content or ""
+        text = choice.message.content or ""
+        if self.local:
+            text = strip_thinking(text)
+        return text
+
+
+_THINK = re.compile(r"<think(?:ing)?>.*?</think(?:ing)?>", re.S | re.I)
+
+
+def strip_thinking(text: str) -> str:
+    """Local reasoning models (Qwen, Gemma, ...) may put their hidden reasoning in the reply: remove it before anything is verified."""
+    text = _THINK.sub("", text)
+    if re.search(r"</think(?:ing)?>", text, re.I):  # a template that opens the block itself leaves only the closing tag
+        text = re.split(r"</think(?:ing)?>", text, flags=re.I)[-1]
+    return text.strip()
 
 
 _llm = None
