@@ -110,3 +110,47 @@ def test_translate_term_survives_a_non_glossary_term_from_the_model(fake_llm):
     r = pipeline.ask("ترجم كلمة التوحيد إلى الإنجليزية")
     assert r["status"] == "answered" and "Tawhid / Oneness of God" in r["answer_text"]
     assert not [c for c in f.calls if c[0] == L.GENERATE_MODEL]
+
+
+def test_retry_prompt_contains_the_previous_rejected_answer(fake_llm):
+    ans, _ = good_answer()
+    bad = "هذا هو الجواب الكامل عن السؤال المطروح {{quran:2:255}} [[qa:bayyinat:424242]]"
+    f = fake_llm(router=[ROUTE_A], generate=[bad, ans])
+    pipeline.ask(Q)
+    second_user = [c for c in f.calls if c[0] == L.GENERATE_MODEL][1][2]
+    assert "<<<" in second_user and bad in second_user and "REJECTED" in second_user
+    first_user = [c for c in f.calls if c[0] == L.GENERATE_MODEL][0][2]
+    assert "<<<" not in first_user
+
+
+def test_debug_trace_only_when_requested(fake_llm):
+    ans, _ = good_answer()
+    fake_llm(router=[ROUTE_A], generate=[ans])
+    assert "debug" not in pipeline.ask(Q)
+    fake_llm(router=[ROUTE_A], generate=["INSUFFICIENT_EVIDENCE"])
+    out = pipeline.ask(Q, debug=True)
+    d = out["debug"]
+    assert d["abstain_reason"] == "model_insufficient_evidence" and d["retrieved_ids"]
+    assert d["attempts"][0]["raw"] == "INSUFFICIENT_EVIDENCE" and d["attempts"][0]["ok"] is True and d["route"]["level"] == "أ"
+
+
+def test_debug_trace_records_each_failed_attempt_with_errors(fake_llm):
+    bad = "هذا هو الجواب الكامل عن السؤال المطروح {{quran:2:255}} [[qa:bayyinat:424242]]"
+    fake_llm(router=[ROUTE_A], generate=[bad, bad])
+    d = pipeline.ask(Q, debug=True)["debug"]
+    assert d["abstain_reason"] == "verification_failed" and len(d["attempts"]) == 2
+    assert all(a["raw"] == bad and not a["ok"] and a["errors"] for a in d["attempts"])
+
+
+def test_note_marker_in_a_pipeline_answer_becomes_a_notice_block(fake_llm):
+    ans, _ = good_answer()
+    fake_llm(router=[ROUTE_A], generate=[ans + chr(10) * 2 + "{{note:refer}}"])
+    r = pipeline.ask(Q)
+    assert r["status"] == "answered"
+    assert any(b["kind"] == "notice" and b.get("note") == "refer" for b in r["blocks"])
+
+
+def test_level_d_general_info_never_contains_hadith_cards(fake_llm):
+    fake_llm(router=['{"level": "د", "intent": "ask", "language": "ar"}'])
+    r = pipeline.ask("طلقت زوجتي ثلاث مرات في لحظة غضب، فهل وقع الطلاق؟")
+    assert r["status"] == "referral" and all(s["type"] in ("qa", "term") for s in r["sources"])

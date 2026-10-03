@@ -71,3 +71,18 @@ def test_contested_topic_is_escalated_to_level_j(fake_llm):
 def test_escalation_never_lowers_a_level(fake_llm):
     fake_llm(router=['{"level": "ج", "intent": "ask", "language": "ar", "term": null}'])
     assert router.route("ما هي أركان الإسلام؟")["level"] == "ج"
+
+
+@pytest.mark.parametrize("text", ["لماذا يعبد المسلمون الكعبة؟", "ما معنى الجهاد في الإسلام؟", "What does the word jihad mean in Islam?"])
+def test_basic_level_is_escalated_to_b_for_doubts_and_war_topics(fake_llm, text):
+    fake_llm(router=['{"level": "أ", "intent": "ask", "language": "ar", "term": null}'])
+    assert router.route(text)["level"] == "ب"
+
+
+def test_plain_basics_stay_level_a(fake_llm):
+    fake_llm(router=['{"level": "أ", "intent": "ask", "language": "ar", "term": null}'])
+    assert router.route("ما هي أركان الإسلام؟")["level"] == "أ"
+
+
+def test_router_prompt_limits_translate_term_to_explicit_requests():
+    assert "ONLY an explicit request" in router.SYSTEM

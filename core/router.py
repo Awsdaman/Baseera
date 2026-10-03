@@ -22,7 +22,7 @@ Levels (content sensitivity):
 - د: a personal situation or ruling request about a specific person's case: validity of a particular contract/worship/marriage, family disputes, legal or medical matters with religious impact, "am I allowed to ... in my marriage / in my country".
 Intents:
 - verify: the user pastes a message/verse/hadith and wants it checked or asks for proof of a claim.
-- translate_term: asks to translate or explain the English equivalent of an Islamic term (set "term").
+- translate_term: ONLY an explicit request to translate a term or give its English equivalent (set "term"). "What does X mean in Islam?" is a plain ask, not translate_term.
 - ask: everything else.
 A hostile or accusatory question about Islam is still level ب (answer wisely), not د.
 Language is the language of the message itself."""
@@ -36,6 +36,7 @@ _PERSONAL_EN = re.compile(
 _DISPUTE = re.compile(r"(اختلاف(?: العلماء| الفقهاء)?|ترجيح|المذاهب|اصح الاقوال|هل كل المسلمين|do all muslims agree|differ(?:ence|ent)? (?:between|among) (?:the )?(?:scholars|schools))", re.I)
 _CONTESTED = re.compile(r"(الراجح|ايهما علي حق|الشيعه|معاويه|صفين|وقعه الجمل|المولد النبوي|الموسيقي|المعازف|الغناء|تصوير ذوات|تكفير|الخلاف بين)")
 _BASIC = re.compile(r"(ما معني (?:ايه|اية|سوره|حديث|قوله تعالي|لا اله)|ما فضل|ما هي (?:سوره|اركان|الصلوات)|كم عدد|من هو النبي|اركان|ما هي سوره)")
+_SENSITIVE = re.compile(r"(جهاد|قتال|الحدود|الرده|الرق|الاسترقاق|jihad|apostasy|slavery)")
 _CONCEPT = re.compile(r"(مقاصد|الحكمه|لماذا|هل الاسلام|هل يتعارض|هل يظلم|ارهاب|عنف|do muslims|why do|is islam)")
 _VERIFY = re.compile(r"(تحقق|هل هذا الحديث صحيح|هل هذه الايه|صحيح ام|fact.?check|is this (?:hadith|verse)|verify|authentic\?|ارسل لي|وصلني)", re.I)
 _TRANSLATE = re.compile(r"(ترجم|ترجمه|ما معنى كلمه .* بالانجليزيه|translate|how (?:do you|to) say|english (?:word|equivalent|for))", re.I)
@@ -109,6 +110,9 @@ def route(text: str) -> dict:
         out["level"] = "د"
     elif _CONTESTED.search(normalize_ar(text)) and out["level"] in ("أ", "ب"):
         out["level"] = "ج"
+    elif out["level"] == "أ" and (_CONCEPT.search(normalize_ar(text)) or _CONCEPT.search(text.lower())
+                                  or _SENSITIVE.search(normalize_ar(text)) or _SENSITIVE.search(text.lower())):
+        out["level"] = "ب"  # explanation/doubt/war-and-penal topics are never "stable basics"
     # "verify" needs text to verify; "give me a hadith that proves this" has none -> it is an ask (and will abstain).
     if out["intent"] == "verify" and not has_claim_text(text):
         out["intent"] = "ask"

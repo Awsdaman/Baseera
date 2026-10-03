@@ -147,3 +147,32 @@ def test_token_usage_is_counted_per_model():
     m.complete("gpt-5.5", "s", "u")
     m.complete("gpt-5.5", "s", "u")
     assert L.USAGE["gpt-5.5"] == {"calls": 2, "input": 240, "output": 900}
+
+
+def test_llm_cache_serves_identical_requests_without_calling_the_provider(tmp_path):
+    class Inner:
+        calls = 0
+
+        def complete(self, model, system, user, max_tokens=1500, temperature=None, effort=None):
+            Inner.calls += 1
+            return f"answer-{Inner.calls}"
+
+    c = L.CachedLLM(Inner(), "unit-test-provider")
+    c.dir = tmp_path
+    a = c.complete("m", "sys", "usr", max_tokens=100, effort="low")
+    assert c.complete("m", "sys", "usr", max_tokens=100, effort="low") == a and Inner.calls == 1
+    assert c.complete("m", "sys", "usr2", max_tokens=100, effort="low") != a and Inner.calls == 2   # different prompt -> new call
+    assert c.complete("m", "sys", "usr", max_tokens=100, effort="high") != a and Inner.calls == 3    # different effort -> new call
+
+
+def test_llm_cache_does_not_store_failures(tmp_path):
+    class Boom:
+        def complete(self, *a, **k):
+            raise RuntimeError("429")
+
+    c = L.CachedLLM(Boom(), "x")
+    c.dir = tmp_path
+    import pytest
+    with pytest.raises(RuntimeError):
+        c.complete("m", "s", "u")
+    assert list(tmp_path.iterdir()) == []

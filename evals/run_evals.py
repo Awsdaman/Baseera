@@ -1,11 +1,14 @@
 """Baseera evaluation: golden set -> metrics + HTML report.
 
-    python evals/run_evals.py                 # live if ANTHROPIC_API_KEY is set, else offline subset
+    python evals/run_evals.py                 # live if an LLM is configured in .env (see core/llm.py), else offline subset
     python evals/run_evals.py --offline       # force offline (no LLM): routing heuristics, retrieval, referral, term, verify
     python evals/run_evals.py --no-judge --limit 10 --only dp6-01,a-02
+    python evals/run_evals.py --rejudge evals/reports/results-<ts>.json    # re-score saved answers with the current judge
+    python evals/run_evals.py --reverify evals/reports/results-<ts>.json   # re-run the verifier on saved raw outputs (free)
 
-Metrics: router accuracy | retrieval recall | citation rate | verse fidelity (must be 100%) |
-         correct-abstention rate | false-abstention rate | LLM-judge score vs docs/data.pdf p.5 standards.
+Metrics: router accuracy | retrieval recall | citation rate | verse fidelity (must be 100%) | correct-abstention rate |
+         false-abstention rate | verifier-forced abstention rate (target 0) | LLM-judge score vs docs/data.pdf p.5 standards.
+Each case stores the full trace (raw model output + verifier errors per attempt, retrieved ids, abstention reason, tokens).
 """
 import argparse
 import html
@@ -120,8 +123,14 @@ def fidelity_ok(resp):
 
 def judge(question, resp):
     text = resp.get("answer_text") or " ".join(b.get("text", "") for b in resp["blocks"] if b["kind"] == "explanation")
+    cards = [b for b in resp.get("blocks", []) if b["kind"] == "general_info"]
+    card_titles = [c.get("title") or c.get("id") for b in cards for c in b.get("cards", [])]
+    notes = [b.get("note") for b in resp.get("blocks", []) if b["kind"] == "notice" and b.get("note")]
     user = (f"QUESTION:\n{question}\n\nSTATUS: {resp['status']} (level {resp.get('level')})\n\nRESPONSE SHOWN TO USER:\n{text[:3500]}\n\n"
-            f"SOURCES CITED: {[s['id'] for s in resp.get('sources', [])]}\nAI-DISCLOSURE SHOWN: {bool(resp.get('ai_disclosure'))}")
+            f"SOURCES CITED: {[s['id'] for s in resp.get('sources', [])]}\nAI-DISCLOSURE SHOWN: {bool(resp.get('ai_disclosure'))}\n"
+            f"REFERRAL LINKS SHOWN BELOW THE ANSWER: {[r['name'] for r in resp.get('referrals') or []]}\n"
+            f"GENERAL-INFORMATION CARDS SHOWN: {card_titles}\n"
+            f"SYSTEM-WRITTEN SCOPE NOTES SHOWN (fixed text, not model-written): {notes}")
     try:
         j = L.extract_json(L.get_judge_llm().complete(L.judge_model(), JUDGE_SYSTEM, user, max_tokens=3000, effort="low"))
         sc = {k: v for k, v in j["scores"].items() if isinstance(v, (int, float))}
@@ -133,28 +142,39 @@ def judge(question, resp):
 def run_one(g, live, do_judge):
     t0 = time.time()
     q = g["input"]
-    route = pipeline.route(q)
+    usage0 = {m: dict(u) for m, u in L.USAGE.items()}
+    try:
+        resp = pipeline.ask(q, debug=True)  # ONE call: the route scored is the route that produced the answer
+    except Exception as e:
+        resp = {"status": "error", "blocks": [], "sources": [], "answer_text": str(e)[:200], "route": {"level": None, "intent": None}}
+    route = resp.get("route") or {}
+    trace = resp.get("debug") or {"retrieved_ids": [], "attempts": []}
     accept = g.get("expected_acceptable_levels") or [g["expected_level"]]
     r = {"id": g["id"], "input": q, "expected": {k: g.get(k) for k in ("expected_level", "expected_intent", "expected_behavior")},
          "provisional": bool(g.get("provisional")), "route": {k: route.get(k) for k in ("level", "intent", "source")},
-         "router_level_ok": route["level"] in accept, "router_intent_ok": route["intent"] == g["expected_intent"]}
+         "router_level_ok": route.get("level") in accept, "router_intent_ok": route.get("intent") == g["expected_intent"]}
     if g["expected_intent"] == "verify":  # level is irrelevant for verify mode (the claims are checked, not answered)
         r["router_level_ok"] = True
     r["router_ok"] = r["router_level_ok"] and r["router_intent_ok"]
-    try:
-        r["retrieval_ok"] = retrieval_ok(g, R.retrieve(q))
+    try:  # recall is measured on what the generator was actually given (PER_TYPE_ASK + verse corrections), not a larger set
+        wants = g.get("must_retrieve_any") or g.get("must_retrieve_title") or g.get("must_cite_ids")
+        ids = trace["retrieved_ids"] or ([p["id"] for p in R.retrieve(q, per_type=pipeline.PER_TYPE_ASK)] if wants else [])
+        r["retrieval_ok"] = retrieval_ok(g, [p for p in (R.get_passage(i) for i in ids) if p])
     except Exception as e:
         r["retrieval_ok"], r["retrieval_error"] = False, str(e)[:120]
-    try:
-        resp = pipeline.ask(q)
-    except Exception as e:
-        resp = {"status": "error", "blocks": [], "sources": [], "answer_text": str(e)[:200]}
     r["status"] = resp["status"]
     r["behavior_ok"] = behavior_ok(g, resp)
     r["citation_ok"] = citation_ok(resp)
     r["fidelity_ok"] = fidelity_ok(resp)
     r["answer_excerpt"] = (resp.get("answer_text") or "")[:400]
-    r["_resp"] = {k: resp.get(k) for k in ("status", "level", "answer_text", "blocks", "sources", "ai_disclosure")}
+    r["lang"] = resp.get("language")
+    r["abstain_reason"] = resp.get("abstain_reason")
+    r["attempts"] = len(trace["attempts"])
+    r["trace"] = trace  # raw model output + verifier errors per attempt, retrieved ids (needed for --reverify)
+    r["tokens"] = {m: {k: u[k] - usage0.get(m, {}).get(k, 0) for k in u} for m, u in L.USAGE.items()
+                   if u != usage0.get(m)}
+    r["_resp"] = {k: resp.get(k) for k in ("status", "level", "answer_text", "blocks", "sources", "ai_disclosure", "referrals",
+                                           "abstain_reason", "language")}
     r["verification_errors"] = resp.get("verification_errors", [])
     if resp.get("verify"):
         r["verdicts"] = [c["verdict"] for c in resp["verify"]["claims"]]
@@ -176,6 +196,10 @@ def summarize(rs):
     s["correct_abstention_rate"] = rate(r["behavior_ok"] for r in exp_abst)
     exp_ans = [r for r in rs if r["expected"]["expected_behavior"] in ("answer", "term", "correct_verse")]
     s["false_abstention_rate"] = rate((r["status"] in ("abstained", "referral")) if r["status"] != "retrieval_only" else None for r in exp_ans)
+    # Abstentions forced by the verifier (the model answered but the answer was rejected twice): target 0, in EVERY ask-type case.
+    ask_rs = [r for r in rs if r["expected"]["expected_behavior"] in ("answer", "answer_or_abstain", "correct_verse")
+              and r["status"] in ("answered", "abstained")]
+    s["verifier_forced_abstention_rate"] = rate((r.get("abstain_reason") == "verification_failed") if r["status"] else None for r in ask_rs)
     s["behavior_pass_rate"] = rate(r["behavior_ok"] for r in rs)
     verify_rs = [r for r in rs if r["expected"]["expected_behavior"] == "verify"]
     s["verify_mode_pass_rate"] = rate(r["behavior_ok"] for r in verify_rs)
@@ -205,7 +229,8 @@ def html_report(rs, summary, patterns, meta):
         f"<td>{r['id']}{' ⚑' if r['provisional'] else ''}</td><td dir=auto>{html.escape(r['input'][:90])}</td>"
         f"<td>{r['route']['level']}/{r['route']['intent']}</td><td>{cell(r['router_ok'])}</td><td>{cell(r['retrieval_ok'])}</td><td>{r['status']}</td>"
         f"<td>{cell(r['behavior_ok'])}</td><td>{cell(r['citation_ok'])}</td><td>{cell(r['fidelity_ok'])}</td>"
-        f"<td>{cell(r.get('judge', {}).get('overall'))}</td></tr>" for r in rs)
+        f"<td>{cell(r.get('judge', {}).get('overall'))}</td><td>{html.escape(str(r.get('abstain_reason') or ''))}</td>"
+        f"<td>{r.get('attempts', '')}</td></tr>" for r in rs)
     sm = "".join(f"<tr><td>{k}</td><td>{'n/a (not run)' if v[0] is None else v[0]}</td><td>{v[1]}</td></tr>" for k, v in summary.items())
     pt = "".join(f"<li><b>{html.escape(k)}</b> ({len(v)}): {html.escape(', '.join(dict.fromkeys(v)))}</li>" for k, v in patterns.items()) or "<li>none</li>"
     return f"""<!doctype html><html lang=en><meta charset=utf-8><title>Baseera eval report</title>
@@ -214,7 +239,7 @@ th{{background:#1B2D45;color:#fff}}tr.bad{{background:#fdecea}}.note{{background
 <h1>Baseera — evaluation report</h1><p class=note>{html.escape(meta)}</p>
 <h2>Summary (%)</h2><table><tr><th>metric</th><th>value</th><th>n</th></tr>{sm}</table>
 <h2>Top failure patterns</h2><ul>{pt}</ul>
-<h2>Per case</h2><table><tr><th>id</th><th>input</th><th>route</th><th>router</th><th>retrieval</th><th>status</th><th>behavior</th><th>citations</th><th>fidelity</th><th>judge/5</th></tr>{rows}</table>
+<h2>Per case</h2><table><tr><th>id</th><th>input</th><th>route</th><th>router</th><th>retrieval</th><th>status</th><th>behavior</th><th>citations</th><th>fidelity</th><th>judge/5</th><th>abstain reason</th><th>attempts</th></tr>{rows}</table>
 <p>⚑ = provisional case (placeholder example to be replaced with a real Dorar widespread-hadith example).</p></html>"""
 
 
@@ -234,6 +259,30 @@ def rejudge(path):
     print("saved", out)
 
 
+def reverify(path):
+    """Re-run the (current) verifier on the saved raw model outputs: iterate on core/verify.py at zero API cost."""
+    from core.verify import verify_answer
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    flipped, same, n = [], 0, 0
+    for r in data["results"]:
+        tr = r.get("trace") or {}
+        passages = [p for p in (R.get_passage(i) for i in tr.get("retrieved_ids", [])) if p]
+        for a in tr.get("attempts", []):
+            if a.get("raw") is None:
+                continue
+            n += 1
+            vr = verify_answer(a["raw"], passages, r.get("lang") or "ar")
+            if vr.ok != a["ok"]:
+                flipped.append((r["id"], a["n"], a["ok"], vr.ok, (vr.errors or [""])[0][:110]))
+            else:
+                same += 1
+    print(f"{n} saved attempts re-verified with the current verifier: {same} unchanged, {len(flipped)} changed")
+    for f in flipped:
+        print(f"  {f[0]} attempt {f[1]}: {'pass' if f[2] else 'reject'} -> {'pass' if f[3] else 'reject'}  {f[4]}")
+    still = [r["id"] for r in data["results"] if r.get("abstain_reason") == "verification_failed"]
+    print("cases that abstained on verification:", still or "none")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--offline", action="store_true")
@@ -241,7 +290,10 @@ def main():
     ap.add_argument("--limit", type=int)
     ap.add_argument("--only")
     ap.add_argument("--rejudge", help="results-*.json: re-score the saved answers with the current judge (no regeneration)")
+    ap.add_argument("--reverify", help="results-*.json: re-run the current verifier on the saved raw model outputs (free)")
     args = ap.parse_args()
+    if args.reverify:
+        return reverify(args.reverify)
     if args.offline:
         import os
         for k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "LLM_PROVIDER"):
@@ -260,7 +312,8 @@ def main():
         r = run_one(g, live, not args.no_judge)
         rs.append(r)
         flag = "OK " if r["behavior_ok"] in (True, None) and r["router_ok"] else "BAD"
-        print(f"[{flag}] {r['id']:7} route={r['route']['level']}/{r['route']['intent']:14} status={r['status']:15} behavior={r['behavior_ok']} retr={r['retrieval_ok']} ({r['secs']}s)", flush=True)
+        why = f" why={r['abstain_reason']}" if r.get("abstain_reason") else ""
+        print(f"[{flag}] {r['id']:7} route={r['route']['level']}/{r['route']['intent']:14} status={r['status']:15} behavior={r['behavior_ok']} retr={r['retrieval_ok']} attempts={r['attempts']}{why} ({r['secs']}s)", flush=True)
     summary, patterns = summarize(rs), failure_patterns(rs)
     REPORTS.mkdir(exist_ok=True)
     stamp = time.strftime("%Y%m%d-%H%M%S")

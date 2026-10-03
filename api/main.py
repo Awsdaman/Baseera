@@ -52,7 +52,10 @@ class VerifyBody(BaseModel):
 
 @app.post("/api/ask")
 def ask(body: AskBody):
-    return pipeline.ask(body.question, body.language)
+    resp = pipeline.ask(body.question, body.language)  # never debug=True here
+    for internal in ("verification_errors", "debug"):  # may contain model-written text / raw outputs: dev and eval use only
+        resp.pop(internal, None)
+    return resp
 
 
 @app.post("/api/verify")

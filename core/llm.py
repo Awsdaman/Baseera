@@ -167,14 +167,37 @@ def judge_model() -> str:
     return JUDGE_MODEL if jp == provider_name() else _models(jp)["judge"]
 
 
+class CachedLLM:
+    """LLM_CACHE=1 (evals / development only): identical requests are answered from data/cache/llm, so re-running an
+    unchanged prompt costs nothing. The key covers provider, model, prompts and every sampling parameter."""
+
+    def __init__(self, inner, tag: str):
+        import hashlib
+        from pathlib import Path
+        self.inner, self.tag, self._sha = inner, tag, hashlib.sha256
+        self.dir = Path(__file__).resolve().parent.parent / "data" / "cache" / "llm"
+        self.dir.mkdir(parents=True, exist_ok=True)
+
+    def complete(self, model, system, user, max_tokens=1500, temperature=None, effort=None):
+        key = self._sha(json.dumps([self.tag, model, system, user, max_tokens, temperature, effort], ensure_ascii=False).encode("utf-8")).hexdigest()
+        f = self.dir / f"{key}.txt"
+        if f.exists():
+            return f.read_text(encoding="utf-8")
+        out = self.inner.complete(model, system, user, max_tokens=max_tokens, temperature=temperature, effort=effort)
+        f.write_text(out, encoding="utf-8")  # only successful completions are cached (errors propagate)
+        return out
+
+
 def _build(p):
     if p == "anthropic":
-        return AnthropicLLM()
-    if p == "openai":
-        return OpenAICompatibleLLM()
-    if p == "local":
-        return OpenAICompatibleLLM(local=True)
-    raise LLMUnavailable("no LLM configured: set ANTHROPIC_API_KEY or OPENAI_API_KEY (or LLM_PROVIDER=local) in .env")
+        llm = AnthropicLLM()
+    elif p == "openai":
+        llm = OpenAICompatibleLLM()
+    elif p == "local":
+        llm = OpenAICompatibleLLM(local=True)
+    else:
+        raise LLMUnavailable("no LLM configured: set ANTHROPIC_API_KEY or OPENAI_API_KEY (or LLM_PROVIDER=local) in .env")
+    return CachedLLM(llm, p) if os.environ.get("LLM_CACHE") == "1" else llm
 
 
 def get_judge_llm():
@@ -193,15 +216,7 @@ def get_judge_llm():
 def get_llm():
     global _llm
     if _llm is None:
-        p = provider_name()
-        if p == "anthropic":
-            _llm = AnthropicLLM()
-        elif p == "openai":
-            _llm = OpenAICompatibleLLM()
-        elif p == "local":
-            _llm = OpenAICompatibleLLM(local=True)
-        else:
-            raise LLMUnavailable("no LLM configured: set ANTHROPIC_API_KEY or OPENAI_API_KEY (or LLM_PROVIDER=local) in .env")
+        _llm = _build(provider_name())
     return _llm
 
 

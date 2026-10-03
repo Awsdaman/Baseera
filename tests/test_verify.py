@@ -153,3 +153,66 @@ def test_short_stock_phrase_from_a_verse_is_allowed_but_a_long_run_is_not():
     assert verify_answer(ok, ps).ok, verify_answer(ok, ps).errors
     long_copy = "وقد قال بعضهم إن الله لا إله إلا هو الحي القيوم لا تأخذه سنة ولا نوم [[term:glossary:2]]"
     assert not verify_answer(long_copy, ps).ok
+
+
+# ---------------------------------------------------------------- code-owned notes, multi-id citations, citation recipes
+def test_note_placeholder_is_rendered_by_code_in_both_languages():
+    from core.verify import NOTES
+    ps = P("term:glossary:2")
+    text = "التوحيد إفراد الله بالعبادة وهو أصل الدين الذي جاء به الأنبياء جميعا [[term:glossary:2]]\n\n{{note:partial}}"
+    r = verify_answer(text, ps)
+    assert r.ok, r.errors
+    note = [b for b in r.blocks if b["kind"] == "notice"][0]
+    assert note["note"] == "partial" and note["text"] == NOTES["partial"]["ar"]
+    assert verify_answer(text, ps, "en").blocks[-1]["text"] == NOTES["partial"]["en"]
+    assert NOTES["partial"]["ar"] in r.answer_text
+
+
+def test_unknown_note_key_is_rejected():
+    r = verify_answer("{{note:foo}} [[term:glossary:2]]", P("term:glossary:2"))
+    assert not r.ok and any("Unknown note" in e for e in r.errors)
+
+
+def test_a_note_alone_is_not_a_source():
+    r = verify_answer("{{note:partial}}", P("term:glossary:2"))
+    assert not r.ok and any("no citation" in e for e in r.errors)
+
+
+def test_free_text_disclaimer_is_still_rejected():
+    text = "معنى التوحيد إفراد الله بالعبادة [[term:glossary:2]]\n\nهذه الإجابة لا تغطي كل ما يتعلق بالمسألة وهي ليست حصرا شاملا لها"
+    r = verify_answer(text, P("term:glossary:2"))
+    assert not r.ok and any("without an explicit" in e for e in r.errors)
+
+
+def test_a_note_does_not_cite_the_text_around_it():
+    text = "نص طويل يتكون من أكثر من ثمان كلمات بلا إحالة ولا مصدر {{note:partial}} [[term:glossary:2]]"
+    assert not verify_answer(text, P("term:glossary:2")).ok
+
+
+def test_multi_id_citation_checks_every_id():
+    ps = P("term:glossary:2", "term:glossary:3")
+    text = "شرح طويل عن معنى التوحيد والعبادة عند أهل العلم وبيان أركانهما [[term:glossary:2, term:glossary:3]]"
+    r = verify_answer(text, ps)
+    assert r.ok, r.errors
+    assert {s["id"] for s in r.sources} == {"term:glossary:2", "term:glossary:3"} and "[1][2]" in r.blocks[0]["text"]
+    bad = verify_answer(text.replace("term:glossary:3", "term:glossary:9999"), ps)
+    assert not bad.ok and any("NOT retrieved" in e for e in bad.errors)
+
+
+def test_malformed_citation_is_reported_precisely():
+    r = verify_answer("شرح طويل عن معنى التوحيد والعبادة عند أهل العلم وبيان أركانهما [[hello world]]", P("term:glossary:2"))
+    assert not r.ok and any("Malformed citation" in e for e in r.errors)
+
+
+def test_text_after_a_verse_placeholder_needs_its_own_citation_of_that_verse():
+    ps = P("quran:3:45")
+    bad = "{{quran:3:45}}\nThe Quran explicitly includes Jesus among the prophets and messengers of God according to the sources."
+    assert not verify_answer(bad, ps, "en").ok
+    good = bad + " [[quran:3:45]]"
+    assert verify_answer(good, ps, "en").ok
+
+
+def test_citation_error_carries_a_fix_recipe_and_the_rejected_text():
+    r = verify_answer("هذه فقرة طويلة بلا أي مصدر ولا إحالة على الإطلاق في هذا الكلام كله [[term:glossary:2]]\n\nوهذه فقرة ثانية طويلة جدا بلا إحالة على أي مصدر من المصادر", P("term:glossary:2"))
+    msg = next(e for e in r.errors if "without an explicit" in e)
+    assert "Fix:" in msg and "{{note:partial}}" in msg and "وهذه فقرة ثانية" in msg
