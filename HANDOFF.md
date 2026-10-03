@@ -14,6 +14,12 @@ Read this first in a new session, then CLAUDE.md and README.md.
 Done: code-owned `{{note:...}}` markers, multi-id citations + fix recipes, retry that shows the previous answer, debug trace (dev/evals only; the API strips `verification_errors`/`debug`), router escalation (concepts/war topics -> ب, contested -> ج) and translate_term clarification, level-د cards without hadith, eval runner (one ask per case, traces, token use per case, verifier-forced-abstention metric, `--reverify`, `--rejudge`), `LLM_CACHE=1`, golden-set corrections (12 retrieval targets), stock-phrase handling for quoted formulas, docs.
 Final live eval (52 cases): router 100%, retrieval 12/12, citations 100%, verse fidelity 100%, correct abstention 100%, verify mode 5/5, false abstention 1/30 (dp6-07, fixed afterwards and confirmed via `--reverify`, not re-run live), judge 4.71. 171 tests pass.
 
+## Pipeline-enhancement ideas (from the SAWB reference photo), done one by one
+1. DONE: semantic support check (`core/support.py`, log mode default, enforce opt-in); reranker rejected on data.
+2. DONE (verify-mode part): synthetic data `evals/synth_verify.py` found and fixed a real shortlist bug (misquote recall 73% -> 99.8%). Not done on purpose: LLM-generated Q&A data (costs money; the router is already 100% on the golden set).
+3. TODO: parallel eval workers (the eval takes ~25 min sequentially).
+4. TODO/decide: small trained router classifier (only worth it for the local-model path; needs labelled data).
+
 ## Left to do
 1. (Optional, ~$1) one more live run to confirm dp6-07 and get a clean 0 forced abstentions: `python evals/run_evals.py --only dp6-07 --no-judge` (cheap) or the full run.
 2. **Local-model backend** — waiting for the user to pick the model. `core/llm.py` already supports `LLM_PROVIDER=local` (OpenAI-compatible server: Ollama/LM Studio/vLLM; `LOCAL_BASE_URL`, `LOCAL_MODEL`; tested with stubs only). Once chosen: try it live; add small-context limits (cap passages / `max_chars` in `core/generate.py` through env); check Arabic JSON routing quality (the heuristic router is the fallback); run the evals with `LLM_CACHE=1`.

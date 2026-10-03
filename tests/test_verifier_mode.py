@@ -118,3 +118,19 @@ def test_no_claims_message():
 def test_introducer_phrase_is_not_a_claim():
     cl = V.heuristic_extract("انشر هذا الحديث: قال رسول الله ﷺ: «حب الوطن من الإيمان»")
     assert [c["text"] for c in cl] == ["حب الوطن من الإيمان"]
+
+
+def test_one_word_edit_of_a_verse_that_contains_a_short_verse_phrase_is_misquoted_not_fabricated():
+    """Found with synthetic data: short verses ('ياويلنا إنا كنا ظالمين') fit inside the claim, scored 100 in partial_ratio and
+    crowded the real verse (21:46) out of the shortlist, so a 1-word edit was reported as 'not in the Quran'."""
+    edited = "ولئن مستهم نفحة الملأ عذاب ربك ليقولن ياويلنا إنا كنا ظالمين"          # من -> الملأ
+    r = V.check_verse(edited)
+    assert r["verdict"] == "misquoted" and r["match"]["ref"] == "21:46" and r["score"] > 0.85
+    assert any(d["op"] == "replace" and d["claimed"] == "الملا" and d["correct"] == "من" for d in r["diff"])
+    deleted = "ولئن مستهم نفحة عذاب ربك ليقولن ياويلنا إنا كنا ظالمين"
+    assert V.check_verse(deleted)["match"]["ref"] == "21:46"
+
+
+def test_claim_that_starts_one_verse_before_the_shortlisted_verse_is_still_found():
+    r = V.check_verse("الله لا إله إلا هو الحي القيوم لا تأخذه سنة ولا نوم له ما في السماء وما في الأرض من ذا الذي يشفع عنده إلا بإذنه")
+    assert r["verdict"] == "misquoted" and r["match"]["ref"] == "2:255"

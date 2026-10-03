@@ -161,21 +161,34 @@ def check_verse(claim_text: str, claimed_ref: str | None = None) -> dict:
         return base | {"verdict": "verified", "color": "green", "match": v[0], "matches": v, "score": 1.0,
                        "note": "نصٌّ قرآني صحيح." if full else "جزء من آية صحيحة النص.", "diff": []}
 
-    # fuzzy: shortlist verses by partial_ratio on both spellings, then refine word by word
-    short = process.extract(cn, [r["text_norm"] for r in rows], scorer=fuzz.partial_ratio, limit=6)
-    short += process.extract(cn, [r["norm_u"] for r in rows], scorer=fuzz.partial_ratio, limit=4)
-    cand = {i for _, _, i in short}
+    # fuzzy: shortlist candidate verses on both spellings, then refine word by word. partial_ratio alone is a trap found with
+    # synthetic data (evals/synth_verify.py): a SHORT verse that fits entirely inside the claim scores 100 and crowds the right
+    # verse out of the shortlist, so each shortlist below is restricted to the cases where its score is meaningful.
+    clen = len(cn)
+    cand: set[int] = set()
+    for key in ("text_norm", "norm_u"):
+        texts = [r[key] for r in rows]
+        # (a) the claim sits (nearly) inside one verse: only verses at least ~as long as the claim can contain it
+        idx = [i for i, t in enumerate(texts) if len(t) >= 0.8 * clen]
+        cand |= {idx[j] for _, _, j in process.extract(cn, [texts[i] for i in idx], scorer=fuzz.partial_ratio, limit=6)}
+        # (b) the claim is about as long as a verse: whole-string similarity
+        cand |= {i for _, _, i in process.extract(cn, texts, scorer=fuzz.ratio, limit=6)}
+        # (c) the claim spans several verses: the longest verses (>= 5 words) that sit inside it
+        inside = [i for i, t in enumerate(texts) if len(t.split()) >= 5 and len(t) < clen]
+        hits = process.extract(cn, [texts[i] for i in inside], scorer=fuzz.partial_ratio, score_cutoff=88, limit=None)
+        cand |= {i for _, i in sorted(((len(texts[inside[j]]), inside[j]) for _, _, j in hits), reverse=True)[:6]}
     best = None
-    for i in cand:
-        for span in (1, 2, 3):
-            grp = rows[i:i + span]
-            if len(grp) < span or len({g["surah"] for g in grp}) != 1:
-                continue
-            norm_words = " ".join(g["text_norm"] for g in grp).split()
-            sim, a, b = _word_sim(words, norm_words)
-            gap = abs(len(norm_words) - len(words))  # on equal similarity prefer the verse closest in length
-            if best is None or (sim, -gap) > (best[0], best[5]):
-                best = (sim, grp, a, b, norm_words, -gap)
+    for i0 in sorted(cand):
+        for i in (i0, i0 - 1, i0 - 2):  # a multi-verse claim may start one or two verses before the shortlisted one
+            for span in (1, 2, 3):
+                grp = rows[i:i + span] if i >= 0 else []
+                if len(grp) < span or len({g["surah"] for g in grp}) != 1:
+                    continue
+                norm_words = " ".join(g["text_norm"] for g in grp).split()
+                sim, a, b = _word_sim(words, norm_words)
+                gap = abs(len(norm_words) - len(words))  # on equal similarity prefer the verse closest in length
+                if best is None or (sim, -gap) > (best[0], best[5]):
+                    best = (sim, grp, a, b, norm_words, -gap)
     if best and best[0] >= VERSE_MISQUOTE_MIN:
         sim, grp, a, b, norm_words, _ = best
         show_words = " ".join(g["text_emlaey"] for g in grp).split()

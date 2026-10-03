@@ -122,6 +122,23 @@ Caveats: one run on 52 cases; the router number is a little optimistic (the rout
 
 Unit/integration tests: **171 pass** (`python -m pytest -q`), including adversarial verifier cases, pipeline retry/abstain paths with a fake LLM, the OpenAI/Anthropic/local wrappers against stubs, API privacy checks, the eval runner, data-integrity assertions (6,236 verses) and retrieval on real questions. Tests need the ingested database (`python ingest/build_all.py`).
 
+### Verify-mode calibration on synthetic data (`evals/synth_verify.py`, free, no LLM)
+
+Exact labels from perturbing the Mushaf: exact verses, fragments, two-verse runs, 1-2 word substitutions / deletions / insertions / swaps, splices of two verses, heavily edited text and unrelated Arabic (2,856 verse cases), plus 1,000 hadith cases against the local HadeethEnc index.
+
+| | Result |
+|---|---|
+| Verified (exact / fragment / Uthmani / multi-verse) | 868/868 correct |
+| Misquoted (1-2 word edits) | 99.8% recall (was **73%** before a shortlist bug found by this data) |
+| Fabricated (splices, heavy edits, non-Quran text) | 95.9% recall |
+| Hadith match at `HADITH_MATCH_MIN=85` | precision 97.9%, recall 94.7% (best F1 at 80: 97.7%) |
+
+The bug it found: a short verse that fits entirely inside the claim scored 100 in `partial_ratio` and crowded the right verse out of the candidate shortlist, so a one-word edit of a verse was reported as "not in the Quran". Fixed in `core/verifier_mode.py` with three restricted shortlists. Thresholds were deliberately left at `VERSE_MISQUOTE_MIN=0.72` (the sweep prefers 0.80, but calling a near-miss "misquoted" and showing the correct verse is the safer error) and `HADITH_MATCH_MIN=85` (favours precision, because a false match would attach the wrong grade). Caveat: synthetic edits are easier than real mis-remembering.
+
+### Semantic support check (`core/support.py`, `evals/support_dev.py`)
+
+Checks that a cited passage actually backs the sentence citing it (the verifier only checks form). Calibrated on 119 cited stretches from accepted answers: bge-m3 similarity separates the cited passage from a topically close uncited one with AUC 0.90 (0.96 against unrelated passages); the BAAI/bge-reranker-v2-m3 cross-encoder was no better (0.89) and ~100x slower, so it is not used. At the conservative threshold (keeps 99% of cited stretches) it catches ~24% of look-alike and ~45% of unrelated mis-citations, so it is a safety net, not a hallucination detector: default `SUPPORT_MODE=log` (scores stored in the debug trace and the eval metric `support_flag_rate`), `SUPPORT_MODE=enforce` makes an unsupported stretch a verifier error (retry, then abstain).
+
 ## Privacy
 
 No accounts, no analytics, no database of questions: requests are processed in memory. The access log strips query strings (so `/api/retrieve?q=…` is not logged). Third parties that receive text: **Anthropic** (the question and retrieved passages, for routing/generation), **Dorar** (hadith wording from a pasted message, to look up grades) and **mp3quran** (surah number only). API responses from Dorar/icadb/HadeethEnc are cached on disk in `data/cache/` (keyed by hash of the request; the request text itself is not stored).
