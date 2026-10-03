@@ -32,7 +32,8 @@ app = FastAPI(title="Baseera")
 def health():
     con = connect()
     counts = {r[0]: r[1] for r in con.execute("SELECT type, count(*) FROM passages GROUP BY type")}
-    return {"ok": True, "passages": counts, "verses": con.execute("SELECT count(*) FROM quran").fetchone()[0]}
+    from core import llm as L
+    return {"ok": True, "llm": L.describe() | {"configured": L.llm_available()}, "passages": counts, "verses": con.execute("SELECT count(*) FROM quran").fetchone()[0]}
 
 
 @app.get("/api/retrieve")

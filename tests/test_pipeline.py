@@ -78,7 +78,8 @@ def test_translate_term_uses_approved_glossary_not_the_model(fake_llm):
 
 def test_no_api_key_gives_retrieval_only_never_fabricates(monkeypatch):
     L.set_llm(None)
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    for k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "LLM_PROVIDER"):
+        monkeypatch.delenv(k, raising=False)
     r = pipeline.ask(Q)
     assert r["status"] == "retrieval_only" and r["sources"]
     assert not any(b["kind"] in ("quran", "hadith") for b in r["blocks"])

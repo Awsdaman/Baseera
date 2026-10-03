@@ -224,11 +224,13 @@ def main():
     args = ap.parse_args()
     if args.offline:
         import os
-        os.environ.pop("ANTHROPIC_API_KEY", None)
+        for k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "LLM_PROVIDER"):
+            os.environ.pop(k, None)
         L.set_llm(None)
     live = L.llm_available() and not args.offline
     gold = load_golden(args)
-    meta = (f"{'LIVE run (Haiku router, Sonnet generator + judge)' if live else 'OFFLINE run: no ANTHROPIC_API_KEY, so generation / citation / fidelity / judge metrics are NOT measured; heuristic router, retrieval, level-د referral, glossary and verify-mode are'}"
+    d = L.describe()
+    meta = (f"{('LIVE run on ' + str(d['provider']) + ': router=' + d['router'] + ', generator=' + d['generate'] + ', judge=' + d['judge']) if live else 'OFFLINE run: no LLM configured, so generation / citation / fidelity / judge metrics are NOT measured; heuristic router, retrieval, level-د referral, glossary and verify-mode are'}"
             f" · {len(gold)} cases · {time.strftime('%Y-%m-%d %H:%M')}")
     print(meta)
     rs = []

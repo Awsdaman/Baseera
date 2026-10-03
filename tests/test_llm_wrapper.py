@@ -23,19 +23,95 @@ def make(stop="end_turn"):
 
 def test_sonnet_never_gets_temperature_and_gets_effort():
     m = make()
-    assert m.complete(L.GENERATE_MODEL, "s", "u", max_tokens=6000, temperature=0.2, effort="medium") == "ok"
+    assert m.complete("claude-sonnet-5-5", "s", "u", max_tokens=6000, temperature=0.2, effort="medium") == "ok"
     kw = m.client.messages.calls[0]
     assert "temperature" not in kw and kw["output_config"] == {"effort": "medium"} and kw["max_tokens"] == 6000
 
 
 def test_haiku_gets_temperature_and_no_effort():
     m = make()
-    m.complete(L.ROUTER_MODEL, "s", "u", max_tokens=120, temperature=0.0, effort="low")
+    m.complete("claude-haiku-4-5-20251001", "s", "u", max_tokens=120, temperature=0.0, effort="low")
     kw = m.client.messages.calls[0]
     assert kw["temperature"] == 0.0 and "output_config" not in kw
 
 
 def test_thinking_blocks_are_ignored_and_refusal_fails_closed():
-    assert make().complete(L.GENERATE_MODEL, "s", "u") == "ok"
+    assert make().complete("claude-sonnet-5-5", "s", "u") == "ok"
     with pytest.raises(RuntimeError):
-        make("refusal").complete(L.GENERATE_MODEL, "s", "u")
+        make("refusal").complete("claude-sonnet-5-5", "s", "u")
+
+
+# ---------------------------------------------------------------- OpenAI / local (OpenAI-compatible) backend
+class StubChat:
+    def __init__(self, reject=None, finish="stop", text="مرحبا"):
+        self.calls, self.reject, self.finish, self.text = [], reject, finish, text
+        self.completions = self
+
+    def create(self, **kw):
+        self.calls.append(kw)
+        if self.reject and any(k in kw for k in self.reject):
+            err = RuntimeError(f"Unsupported parameter: {sorted(self.reject)}")
+            err.status_code = 400
+            raise err
+        return SimpleNamespace(choices=[SimpleNamespace(finish_reason=self.finish, message=SimpleNamespace(content=self.text))])
+
+
+def oai(local=False, **kw):
+    obj = L.OpenAICompatibleLLM.__new__(L.OpenAICompatibleLLM)
+    obj.local = local
+    obj.client = SimpleNamespace(chat=StubChat(**kw))
+    return obj
+
+
+def test_openai_standard_model_params():
+    m = oai()
+    assert m.complete("gpt-4o", "sys", "usr", max_tokens=6000, temperature=0.2, effort="medium") == "مرحبا"
+    kw = m.client.chat.calls[0]
+    assert kw["max_completion_tokens"] == 6000 and kw["temperature"] == 0.2 and "reasoning_effort" not in kw and "max_tokens" not in kw
+    assert kw["messages"] == [{"role": "system", "content": "sys"}, {"role": "user", "content": "usr"}]
+
+
+def test_openai_reasoning_model_floors_tokens_and_has_no_temperature():
+    m = oai()
+    m.complete("gpt-5-mini", "s", "u", max_tokens=120, temperature=0.0, effort="low")
+    kw = m.client.chat.calls[0]
+    assert kw["max_completion_tokens"] >= 4000 and "temperature" not in kw and kw["reasoning_effort"] == "low"
+
+
+def test_openai_retries_without_rejected_optional_params():
+    m = oai(reject={"temperature"})
+    assert m.complete("gpt-4o", "s", "u", max_tokens=500, temperature=0.5) == "مرحبا"
+    calls = m.client.chat.calls
+    assert len(calls) == 2 and "temperature" not in calls[1] and calls[1]["max_completion_tokens"] == 500
+
+
+def test_openai_content_filter_fails_closed():
+    import pytest
+    with pytest.raises(RuntimeError):
+        oai(finish="content_filter").complete("gpt-4o", "s", "u")
+
+
+def test_local_backend_uses_plain_max_tokens_and_default_temperature():
+    m = oai(local=True)
+    m.complete("qwen2.5:14b", "s", "u", max_tokens=700, effort="medium")
+    kw = m.client.chat.calls[0]
+    assert kw["max_tokens"] == 700 and kw["temperature"] == 0.2 and "max_completion_tokens" not in kw and "reasoning_effort" not in kw
+
+
+def test_provider_selection_and_models(monkeypatch):
+    for k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "LLM_PROVIDER"):
+        monkeypatch.delenv(k, raising=False)
+    assert L.provider_name() is None and not L.llm_available()
+    monkeypatch.setenv("OPENAI_API_KEY", "x")
+    assert L.provider_name() == "openai"
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "y")
+    assert L.provider_name() == "anthropic"           # Anthropic wins when both are set unless LLM_PROVIDER says otherwise
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    assert L.provider_name() == "openai"
+    monkeypatch.setenv("LLM_PROVIDER", "local")
+    assert L.provider_name() == "local" and L.llm_available()
+    monkeypatch.setenv("LLM_PROVIDER", "bogus")
+    assert L.provider_name() is None
+    monkeypatch.setenv("LOCAL_MODEL", "my-model")
+    assert L._models("local") == {"router": "my-model", "generate": "my-model", "judge": "my-model"}
+    assert L._models("openai")["generate"] == "gpt-5.5"

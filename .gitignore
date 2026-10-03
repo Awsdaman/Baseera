@@ -10,3 +10,5 @@ data/raw/*
 .env*
 !.env.example
 env-folder-original/
+OpenAI API.txt
+*API*.txt
