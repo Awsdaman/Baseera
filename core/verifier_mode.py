@@ -4,6 +4,7 @@ Verses  -> rapidfuzz + word-level alignment against the full local Mushaf (exact
 Hadiths -> Dorar (live, scholars' grades) + HadeethEnc (local); grades are copied from those sources, never the model.
 The only LLM use is claim EXTRACTION (Haiku); a regex extractor is the fallback.
 """
+import collections
 import difflib
 import re
 
@@ -16,6 +17,8 @@ from core.normalize import normalize_ar
 
 MAX_INPUT = 6000
 VERSE_MISQUOTE_MIN = 0.72      # word-level similarity to call a claim a "misquoted" verse
+SIM_TIE = 0.08                 # a curated (HadeethEnc) wording this close to the best one is preferred
+HADITH_WORD_SIM_MIN = 0.80    # word-level similarity that also counts as the same hadith (catches short claims missing a word)
 HADITH_MATCH_MIN = 85          # rapidfuzz partial_ratio to accept a Dorar / HadeethEnc hit as the same hadith
 _PBUH = re.compile(r"(ﷺ|صلى الله عليه وسلم|صلّى الله عليه وسلّم|صلي الله عليه وسلم|عليه الصلاة والسلام|\(ص\))")
 
@@ -62,6 +65,8 @@ def heuristic_extract(text: str) -> list[dict]:
         add("verse", m.group(1), m.start(1), m.end(1))
     for m in re.finditer(r"(?:قال|يقول|عن)\s+(?:رسول الله|النبي|نبينا|الرسول)[^:：\n«\"“]{0,30}[:：]\s*[«\"“]?([^\n«»\"”]{8,500})", text):
         add("hadith", m.group(1), m.start(1), m.end(1))
+    for m in re.finditer(r"(?:رسول الله|النبي)[^:：\n«\"“]{0,40}يقول\s*[:：]\s*[«\"“]?([^\n«»\"”]{8,500})", text):
+        add("hadith", m.group(1), m.start(1), m.end(1))
     for m in re.finditer(r"(?:وقال|قال|ويقول|يقول)\s*(?:ﷺ|صلى الله عليه وسلم)\s*[:：]\s*[«\"“]?([^\n«»\"”]{8,500})", text):
         add("hadith", m.group(1), m.start(1), m.end(1))
     for m in re.finditer(r"(?:حديث|الحديث)\s*[:：]\s*[«\"“]?([^\n«»\"”]{8,500})", text):
@@ -101,7 +106,7 @@ def _word_sim(claim: list[str], correct: list[str]):
     best = (0.0, 0, min(len(correct), n))
     if n == 0 or not correct:
         return best
-    for size in {max(1, n - 2), n, n + 2}:
+    for size in sorted({max(1, n - 2), max(1, n - 1), n, n + 1, n + 2}):
         size = min(size, len(correct))
         for i in range(0, max(1, len(correct) - size + 1)):
             seg = correct[i:i + size]
@@ -118,11 +123,11 @@ def _verse_dict(row):
             "id": f"quran:{row['surah']}:{row['ayah']}"}
 
 
-def _diff(claim_words: list[str], correct_words_norm: list[str], correct_words_show: list[str]):
+def _diff(claim_words: list[str], correct_words_norm: list[str], correct_words_show: list[str], claim_show: list[str] | None = None):
     sm = difflib.SequenceMatcher(None, claim_words, correct_words_norm, autojunk=False)
     out = []
     for op, a1, a2, b1, b2 in sm.get_opcodes():
-        claimed, correct = " ".join(claim_words[a1:a2]), " ".join(correct_words_show[b1:b2])
+        claimed, correct = " ".join((claim_show or claim_words)[a1:a2]), " ".join(correct_words_show[b1:b2])
         if op == "equal":
             out.append({"op": "equal", "text": correct})
         elif op == "replace":
@@ -228,23 +233,94 @@ def classify_grade(grade: str | None) -> str:
     return "unknown"
 
 
+# Formulae that occur in nearly every hadith: they say nothing about WHICH hadith a claim is (normalized spelling).
+FORMULA = set("""الله رسول صلي عليه وسلم رضي عنه عنها عنهما عنهم قال قالت النبي يا ان من في علي الي عن ما لا هو هي ثم قد كان كانت اذا ذلك هذا
+هذه الذي اللهم سمعت يقول فقال قلت فقلت انه انها او ولا فلا لم لن اي كل بن ابي ابن""".split())
+SHORT_CLAIM_WORDS = 8     # below this many words only the word-level alignment may accept a match
+MIN_SHARED_IDF = 8.0          # summed rarity (idf) of the distinctive words a SHORT near-match must share with the hadith
+MIN_CONTENT_WORDS = 2  # a claim needs at least this many distinctive words to be checkable
+
+
+_df = None
+
+
+def _idf_sum(words) -> float:
+    """Sum of ln(N/df) over words, with df counted over the HadeethEnc texts (rare words weigh more)."""
+    import math
+    global _df
+    if _df is None:
+        _df = collections.Counter()
+        rows = connect().execute("SELECT text_ar FROM passages WHERE source='hadeethenc'").fetchall()
+        for r in rows:
+            _df.update({_stem(w) for w in normalize_ar(r[0]).split()})
+        _df["__n__"] = len(rows)
+    n = _df["__n__"]
+    return sum(math.log(n / max(_df.get(w, 0), 1)) for w in words)
+
+
+def content_words(words: list[str]) -> list[str]:
+    return [w for w in (_stem(x) for x in words) if len(w) > 1 and w not in FORMULA]
+
+
+def _stem(w: str) -> str:
+    """Drop a leading conjunction (و / ف) for ALIGNMENT only: 'فاتقوا' and 'اتقوا' are the same word of the hadith."""
+    return w[1:] if len(w) > 3 and w[0] in "وف" else w
+
+
+def _align(claim_words: list[str], text: str) -> dict:
+    """Word-level alignment of a claim against one known hadith text: best window, similarity, exactness, display words."""
+    nwords = normalize_ar(text).split()
+    nstem = [_stem(w) for w in nwords]
+    sim, a, b = _word_sim([_stem(w) for w in claim_words], nstem)
+    # exact = the claim's words appear in the text in order, ignoring a leading connecting و / ف (quoting 'اتقوا' for 'فاتقوا' is exact)
+    padded = " " + " ".join(_stem(w) for w in claim_words) + " "
+    exact = padded in (" " + " ".join(nstem) + " ")
+    show = text.split()
+    if len(show) != len(nwords):  # punctuation made the token counts differ: fall back to the normalized words
+        show = nwords
+    return {"sim": sim, "exact": exact, "window_norm": nwords[a:b], "window_stem": nstem[a:b], "window_show": show[a:b]}
+
+
+def _candidate(source: str, cid: str, text: str, claim_words: list[str], cn: str, **fields) -> dict | None:
+    """Accept a known hadith text as a match for the claim: either whole-string similarity or a word-level near-match."""
+    score = max(fuzz.partial_ratio(cn, normalize_ar(text)), fuzz.partial_ratio(normalize_ar(text), cn) if len(text) <= 1.4 * len(cn) else 0)
+    al = _align(claim_words, text)
+    fuzzy_ok = score >= HADITH_MATCH_MIN and len(claim_words) >= SHORT_CLAIM_WORDS  # whole-string fuzzy matching is unreliable for short claims
+    if not fuzzy_ok and al["sim"] < HADITH_WORD_SIM_MIN:
+        return None
+    # the match must rest on distinctive words, not on shared boilerplate ("قال رسول الله صلى الله عليه وسلم")
+    cc = set(content_words(claim_words))
+    shared = len(cc & set(content_words(al["window_norm"])))
+    if shared < min(MIN_CONTENT_WORDS, len(cc)):
+        return None
+    if not al["exact"] and len(claim_words) < SHORT_CLAIM_WORDS:
+        # A short claim that is not word-for-word in the hadith counts as a misquote of it only if the words they share are RARE in
+        # the corpus ("تمرة") and not common narrator / narration words ("أنس بن مالك"): rarity-weighted evidence.
+        if _idf_sum(cc & set(content_words(al["window_norm"]))) < MIN_SHARED_IDF:
+            return None
+    return {"source": source, "id": cid, "text": text, "score": score, "sim": round(al["sim"], 3), "exact": al["exact"],
+            "window_norm": al["window_norm"], "window_stem": al["window_stem"], "window_show": al["window_show"], **fields}
+
+
 def _hadeethenc_matches(cn: str) -> list[dict]:
     from core import retrieve as R
+    cw = cn.split()
     out = []
-    for pid in R.keyword_search(cn, "hadith", k=15):
+    for pid in R.keyword_search(cn, "hadith", k=20):
         p = R.get_passage(pid)
         if not p:
             continue
-        score = fuzz.partial_ratio(cn, normalize_ar(p["text"]))
-        if score >= HADITH_MATCH_MIN:
-            out.append({"source": "hadeethenc", "id": p["id"], "grade": p["grade"], "grade_class": classify_grade(p["grade"]),
-                        "grader": "HadeethEnc.com", "book": p["meta"].get("attribution_ar"), "reference": p["meta"].get("reference"),
-                        "text": p["text"], "score": score, "reference_url": p["reference_url"]})
-    return sorted(out, key=lambda m: -m["score"])[:3]
+        m = _candidate("hadeethenc", p["id"], p["text"], cw, cn, grade=p["grade"], grade_class=classify_grade(p["grade"]),
+                       grader="HadeethEnc.com", book=p["meta"].get("attribution_ar"), reference=p["meta"].get("reference"),
+                       reference_url=p["reference_url"])
+        if m:
+            out.append(m)
+    return sorted(out, key=lambda m: (m["exact"], m["sim"], m["score"]), reverse=True)[:3]
 
 
 def _dorar_matches(claim: str, cn: str) -> tuple[list[dict], str | None]:
     words = claim.split()
+    cw = cn.split()
     queries = [" ".join(words[:10])]
     if len(words) > 10:
         queries += [" ".join(words[:5]), " ".join(words[-6:])]
@@ -256,18 +332,36 @@ def _dorar_matches(claim: str, cn: str) -> tuple[list[dict], str | None]:
             err = str(e)[:120]
             continue
         for h in hits:
-            hn = normalize_ar(h["text"])
-            if h["id"] in seen or len(hn.split()) < 3:
+            if h["id"] in seen or len(normalize_ar(h["text"]).split()) < 3:
                 continue
-            score = max(fuzz.partial_ratio(cn, hn), fuzz.partial_ratio(hn, cn) if len(hn) >= 0.7 * len(cn) else 0)
-            if score >= HADITH_MATCH_MIN:
+            m = _candidate("dorar", h["id"], h["text"], cw, cn, grade=h["grade"], grade_class=classify_grade(h["grade"]),
+                           grader=h["grader"], book=h["book"], reference=h["page_or_number"], narrator=h["narrator"],
+                           reference_url=h["reference_url"])
+            if m:
                 seen.add(h["id"])
-                out.append({"source": "dorar", "id": h["id"], "grade": h["grade"], "grade_class": classify_grade(h["grade"]),
-                            "grader": h["grader"], "book": h["book"], "reference": h["page_or_number"], "narrator": h["narrator"],
-                            "text": h["text"], "score": score, "reference_url": h["reference_url"]})
+                out.append(m)
         if out:
             break
-    return sorted(out, key=lambda m: -m["score"])[:8], err
+    return sorted(out, key=lambda m: (m["exact"], m["sim"], m["score"]), reverse=True)[:8], err
+
+
+def _grade_verdict(matches: list[dict], curated_min_score: int = 90) -> tuple[str, str, str]:
+    """(verdict, color, note) from the scholars' grades of the given matches. HadeethEnc's curated 'sound' decides when present."""
+    classes = {m["grade_class"] for m in matches}
+    curated_sound = [m for m in matches if m["source"] == "hadeethenc" and m["grade_class"] == "sound" and m["score"] >= curated_min_score]
+    if curated_sound:
+        extra = len([m for m in matches if m["source"] == "dorar" and m["grade_class"] != "sound"])
+        return "sound", "green", "حديث ثابت: أورده موقع HadeethEnc ضمن الأحاديث الصحيحة المحقَّقة." + (
+            f" (وفي الدرر السنية {extra} حكمًا آخر على روايات أو أسانيد أخرى بنفس اللفظ؛ انظرها أدناه.)" if extra else "")
+    if classes == {"sound"}:
+        return "sound", "green", "حديث ثابت بحسب أحكام العلماء في المصادر المعتمدة."
+    if "sound" not in classes and "fabricated" in classes:
+        return "fabricated", "red", "حكم العلماء عليه: موضوع أو لا أصل له — لا تنسبه إلى النبي ﷺ."
+    if "sound" in classes:
+        return "mixed", "amber", "اختلفت أحكام العلماء أو الروايات؛ انظر الدرجات والمصادر أدناه."
+    if "weak" in classes:
+        return "weak", "amber", "حديث ضعيف بحسب أحكام العلماء في المصادر المعتمدة."
+    return "graded", "grey", "وُجد الحديث لكن تعذّر تصنيف درجته آليًا؛ انظر نصوص أحكام العلماء أدناه."
 
 
 def check_hadith(claim_text: str, claimed_ref: str | None = None) -> dict:
@@ -276,6 +370,8 @@ def check_hadith(claim_text: str, claimed_ref: str | None = None) -> dict:
     base = {"claim_type": "hadith", "claim": claim_text, "claimed_ref": claimed_ref}
     if len(cn.split()) < 3:
         return base | {"verdict": "unverifiable", "color": "grey", "note": "النص قصير جدًا للتحقق منه."}
+    if len(content_words(cn.split())) < MIN_CONTENT_WORDS:
+        return base | {"verdict": "unverifiable", "color": "grey", "note": "النص عبارة عن صيغ متداولة في كثير من الأحاديث، فلا يمكن تحديد الحديث المقصود والتحقق منه."}
     matches = _hadeethenc_matches(cn)
     d, err = _dorar_matches(claim, cn)
     matches += d
@@ -284,23 +380,34 @@ def check_hadith(claim_text: str, claimed_ref: str | None = None) -> dict:
         if err:
             note += " (تعذّر الاتصال بالدرر السنية مؤقتًا.)"
         return base | {"verdict": "not_found", "color": "grey", "matches": [], "note": note, "source_error": err}
-    classes = {m["grade_class"] for m in matches}
-    curated_sound = [m for m in matches if m["source"] == "hadeethenc" and m["grade_class"] == "sound" and m["score"] >= 90]
-    if curated_sound:
-        extra = len([m for m in matches if m["source"] == "dorar" and m["grade_class"] != "sound"])
-        verdict, color = "sound", "green"
-        note = "حديث ثابت: أورده موقع HadeethEnc ضمن الأحاديث الصحيحة المحقَّقة." + (
-            f" (وفي الدرر السنية {extra} حكمًا آخر على روايات أو أسانيد أخرى بنفس اللفظ؛ انظرها أدناه.)" if extra else "")
-    elif classes == {"sound"}:
-        verdict, color, note = "sound", "green", "حديث ثابت بحسب أحكام العلماء في المصادر المعتمدة."
-    elif "sound" not in classes and "fabricated" in classes:
-        verdict, color, note = "fabricated", "red", "حكم العلماء عليه: موضوع أو لا أصل له — لا تنسبه إلى النبي ﷺ."
-    elif "sound" in classes:
-        verdict, color, note = "mixed", "amber", "اختلفت أحكام العلماء أو الروايات؛ انظر الدرجات والمصادر أدناه."
-    elif "weak" in classes:
-        verdict, color, note = "weak", "amber", "حديث ضعيف بحسب أحكام العلماء في المصادر المعتمدة."
-    else:
-        verdict, color, note = "graded", "grey", "وُجد الحديث لكن تعذّر تصنيف درجته آليًا؛ انظر نصوص أحكام العلماء أدناه."
+
+    # best wording: exact beats near; on equal similarity the curated source (HadeethEnc) wins
+    matches.sort(key=lambda m: (m["exact"], m["sim"], m["source"] == "hadeethenc", m["score"]), reverse=True)
+    best = matches[0]
+    if not best["exact"]:
+        # HadeethEnc carries the hadith's OVERALL grade; Dorar entries are remarks on single narrations. So when the curated
+        # wording is about as close as the best one, it is the one we show and grade from.
+        close = [m for m in matches if m["source"] == "hadeethenc" and m["sim"] >= best["sim"] - SIM_TIE]
+        if close:
+            best = close[0]
+    if not best["exact"]:
+        # The claim does not reproduce any known wording exactly: show the closest authentic wording and what differs.
+        same = [m for m in matches if m["window_norm"] == best["window_norm"]] or [best]
+        g_verdict, g_color, g_note = _grade_verdict(same, curated_min_score=0)
+        if best["source"] != "hadeethenc" and g_verdict in ("weak", "mixed", "graded"):
+            # only Dorar remarks on single narrations exist for this wording: say that, do not call the hadith weak
+            g_verdict, g_note = "graded", "انظر أدناه أحكام العلماء على روايات هذا اللفظ (وهي ملاحظات على أسانيد بعينها وليست حكمًا عامًا على الحديث)."
+        correct = {"text_ar": " ".join(best["window_show"]).strip(" «»\"“”'.،,;:"), "source": best["source"], "id": best["id"], "grade": best["grade"],
+                   "grade_class": best["grade_class"], "grader": best["grader"], "book": best["book"], "reference": best["reference"],
+                   "reference_url": best["reference_url"], "similarity": best["sim"],
+                   "diff": _diff([_stem(w) for w in cn.split()], best["window_stem"], best["window_show"], claim_show=cn.split())}
+        note = (f"اللفظ المنقول يختلف عن اللفظ الوارد في المصادر؛ الصواب: «{correct['text_ar']}». " + g_note)
+        color = "red" if g_verdict == "fabricated" else "amber"
+        return base | {"verdict": "misquoted", "color": color, "grade_verdict": g_verdict, "correct": correct, "diff": correct["diff"],
+                       "matches": same + [m for m in matches if m not in same][:4], "note": note, "source_error": err}
+
+    exact = [m for m in matches if m["exact"]]
+    verdict, color, note = _grade_verdict(exact if any(m["source"] == "hadeethenc" for m in exact) else matches)
     return base | {"verdict": verdict, "color": color, "matches": matches, "note": note, "source_error": err}
 
 

@@ -13,7 +13,7 @@ LEVELS = ("أ", "ب", "ج", "د")
 INTENTS = ("ask", "verify", "translate_term")
 
 SYSTEM = """You are the routing component of Baseera, an Islamic Q&A assistant. Classify the user message.
-Return ONLY a JSON object: {"level": "أ|ب|ج|د", "intent": "ask|verify|translate_term", "language": "ar|en|other", "term": "<term or null>"}
+Return ONLY a JSON object: {"level": "أ|ب|ج|د", "intent": "ask|verify|translate_term", "language": "ar|en|other", "term": "<term or null>", "canonical_question": "<...>", "claim": "<... or null>"}
 
 Levels (content sensitivity):
 - أ: stable basics: Quran, authentic hadith, pillars of Islam/faith, basic seerah, basic ethics, definitions.
@@ -21,11 +21,14 @@ Levels (content sensitivity):
 - ج: fiqh disagreements between schools, detailed aqeedah disputes, contested historical issues, questions that need specialist scholarly treatment, "do all Muslims agree on this?".
 - د: a personal situation or ruling request about a specific person's case: validity of a particular contract/worship/marriage, family disputes, legal or medical matters with religious impact, "am I allowed to ... in my marriage / in my country".
 Intents:
-- verify: the user pastes a message/verse/hadith and wants it checked or asks for proof of a claim.
+- verify: the user pastes a message that CONTAINS a Quran verse, a hadith or a saying attributed to the Prophet / a companion / a scholar, and wants that text checked. A question about whether a RULING or STATEMENT is correct (e.g. is "the ruling on X is obligatory" right?) is NOT verify: it is an ask about the topic.
 - translate_term: ONLY an explicit request to translate a term or give its English equivalent (set "term"). "What does X mean in Islam?" is a plain ask, not translate_term.
 - ask: everything else.
 A hostile or accusatory question about Islam is still level ب (answer wisely), not د.
-Language is the language of the message itself."""
+Language is the language of the message itself.
+canonical_question: rewrite the message as ONE clear, self-contained question in the SAME language, naming the topic and what is asked, so a search engine can find the sources.
+  Example: 'هل هذا الحكم "حكم أذكار الصباح واجبة" صحيح؟'  ->  'ما حكم أذكار الصباح، وهل هي واجبة؟'.  Keep an already-clear question as it is.
+claim: if the user quotes or asserts a statement and asks whether it is correct, put that statement here (without the surrounding question); otherwise null."""
 
 _PERSONAL = re.compile(
     r"(هل يجوز لي|هل يحق لي|هل يصح لي|ما حكم (?:زواجي|طلاقي|عقدي)|في زواجي|زوجتي|زوجي|طلقت|طلاقي|عقد(?:ي| العمل| الايجار)|"
@@ -91,17 +94,35 @@ def has_claim_text(text: str) -> bool:
     return bool(_QUOTED.search(text)) or len(text) >= 80
 
 
+_CLAIM_Q = re.compile(r"هل\s+(?:هذا\s+)?(?:الحكم|القول|الكلام|الكلام التالي)\s*[\"«“'](.+?)[\"»”']\s*(?:صحيح|صحيحه|خطأ|غلط|دقيق|ثابت)")
+
+
+def extract_claim(text: str):
+    """Heuristic: 'is this ruling "X" correct?' -> X (used when the model router is unavailable or returned nothing)."""
+    m = _CLAIM_Q.search(text)
+    return m.group(1).strip() if m else None
+
+
+def _clean(v, limit=400):
+    v = v.strip() if isinstance(v, str) else ""
+    return v[:limit] if v and v.lower() not in ("null", "none") else None
+
+
 def route(text: str) -> dict:
     h = heuristic_route(text)
+    claim_h = extract_claim(text)
+    h["claim"], h["canonical_question"] = claim_h, (claim_h + "؟") if claim_h else None
     if not L.llm_available():
         return h
     try:
-        raw = L.get_llm().complete(L.ROUTER_MODEL, SYSTEM, text, max_tokens=120)
+        raw = L.get_llm().complete(L.ROUTER_MODEL, SYSTEM, text, max_tokens=300)
         j = L.extract_json(raw)
         level = j.get("level") if j.get("level") in LEVELS else h["level"]
         intent = j.get("intent") if j.get("intent") in INTENTS else h["intent"]
         out = {"level": level, "intent": intent, "language": j.get("language") or h["language"],
-               "term": j.get("term") if j.get("term") not in (None, "null", "") else h["term"], "source": "llm"}
+               "term": j.get("term") if j.get("term") not in (None, "null", "") else h["term"], "source": "llm",
+               "canonical_question": _clean(j.get("canonical_question")) or h["canonical_question"],
+               "claim": _clean(j.get("claim")) or claim_h}
     except Exception as e:  # never fail the request because routing failed
         h["router_error"] = str(e)[:200]
         return h

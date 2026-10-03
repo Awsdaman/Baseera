@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 
 from core import dorar
+from core.normalize import normalize_ar
 from core import verifier_mode as V
 
 SAMPLE = Path(__file__).resolve().parent.parent / "data" / "samples" / "dorar_search.json"
@@ -134,3 +135,51 @@ def test_one_word_edit_of_a_verse_that_contains_a_short_verse_phrase_is_misquote
 def test_claim_that_starts_one_verse_before_the_shortlisted_verse_is_still_found():
     r = V.check_verse("الله لا إله إلا هو الحي القيوم لا تأخذه سنة ولا نوم له ما في السماء وما في الأرض من ذا الذي يشفع عنده إلا بإذنه")
     assert r["verdict"] == "misquoted" and r["match"]["ref"] == "2:255"
+
+
+# ---------------------------------------------------------------- hadith wording: correct version + grade (user-reported case)
+SHORT_MISQUOTE = "اتقوا النار ولو تمرة"          # missing "بشق"
+SHORT_EXACT = "اتقوا النار ولو بشق تمرة"
+
+
+def test_misquoted_hadith_shows_the_correct_wording_with_its_grade_and_a_diff(dorar_empty):
+    r = V.check_hadith(SHORT_MISQUOTE)
+    assert r["verdict"] == "misquoted" and r["color"] == "amber" and r["grade_verdict"] == "sound"
+    c = r["correct"]
+    assert normalize_ar(c["text_ar"]) == "فاتقوا النار ولو بشق تمره"                 # the authentic wording, from HadeethEnc
+    assert c["source"] == "hadeethenc" and c["grade"] == "صحيح" and "متفق" in (c["book"] or "")
+    missing = [d for d in r["diff"] if d["op"] == "missing"]
+    assert len(missing) == 1 and normalize_ar(missing[0]["correct"]) == "بشق"
+    assert "الصواب" in r["note"] and "حديث ثابت" in r["note"]                        # tells BOTH: wording is wrong, hadith is sound
+
+
+def test_exact_wording_is_not_flagged_even_without_the_connecting_particle(dorar_empty):
+    r = V.check_hadith(SHORT_EXACT)
+    assert r["verdict"] == "sound" and r["color"] == "green" and "correct" not in r
+
+
+def test_dorar_remarks_on_one_narration_never_become_the_hadiths_overall_grade(dorar_sample):
+    """Live bug: a Dorar critique of one narrator ('فيه غفلة') made a sound hadith look weak. Only the curated grade may decide."""
+    r = V.check_hadith(SHORT_MISQUOTE)
+    assert r["verdict"] == "misquoted" and r["grade_verdict"] != "weak"
+
+
+def test_boilerplate_phrases_are_unverifiable_not_matched_to_a_random_hadith(dorar_empty):
+    for t in ("قال رسول الله صلى الله عليه وسلم", "عن أبي هريرة رضي الله عنه قال", "صلى الله عليه وسلم"):
+        assert V.check_hadith(t)["verdict"] == "unverifiable", t
+
+
+def test_unrelated_short_text_is_not_found(dorar_empty):
+    assert V.check_hadith("مررت بالسوق أمس واشتريت خضروات طازجة")["verdict"] == "not_found"
+
+
+def test_extractor_recognises_i_heard_the_prophet_say_form():
+    msg = "عن عدي بن حاتم رضي الله عنه قال: سمعت النبي صلى الله عليه وسلم يقول: «اتقوا النار ولو  تمرة»"
+    cl = V.heuristic_extract(msg)
+    assert [(c["type"], c["text"]) for c in cl] == [("hadith", SHORT_MISQUOTE)]
+
+
+def test_verify_text_end_to_end_on_the_user_message(dorar_empty):
+    out = V.verify_text("عن عدي بن حاتم رضي الله عنه قال: سمعت النبي صلى الله عليه وسلم يقول: «اتقوا النار ولو  تمرة»")
+    c = out["claims"][0]
+    assert c["claim_type"] == "hadith" and c["verdict"] == "misquoted" and c["correct"]["grade"] == "صحيح"

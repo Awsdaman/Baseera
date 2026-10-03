@@ -205,18 +205,61 @@ def run_hadith(n: int, rnd: random.Random):
     return [c for c in cases if (c["score"] >= th) != (c["label"] == "match")]
 
 
+def run_hadith_short(n: int, rnd: random.Random):
+    """End-to-end check of check_hadith (HadeethEnc side only; Dorar disabled) on SHORT claims, the case the word-level path exists for."""
+    V.dorar.search = lambda *a, **k: []
+    con = connect()
+    rows = [dict(r) for r in con.execute("SELECT id, text_ar FROM passages WHERE source='hadeethenc'")]
+    rows = [r for r in rows if len(normalize_ar(r["text_ar"]).split()) >= 25]
+    cases = []
+    for r in rnd.sample(rows, n):
+        w = normalize_ar(r["text_ar"]).split()
+        for _ in range(20):  # a window with at least 3 distinctive words (boilerplate windows are not checkable claims)
+            a = rnd.randint(8, len(w) - 8)  # matn part of the text, after the narrator introduction
+            frag = w[a:a + rnd.randint(4, 7)]
+            if len(V.content_words(frag)) >= 3:
+                break
+        cases.append({"kind": "short_exact", "label": "sound_or_found", "text": " ".join(frag), "id": r["id"]})
+        k = rnd.randint(1, len(frag) - 2)
+        cases.append({"kind": "short_missing_word", "label": "misquoted", "text": " ".join(frag[:k] + frag[k + 1:]), "id": r["id"]})
+    for t in foreign_arabic(n * 3, rnd, 4, 7):
+        if len(V.content_words(normalize_ar(t).split())) >= 3 and sum(c["kind"] == "short_foreign" for c in cases) < n:
+            cases.append({"kind": "short_foreign", "label": "not_found", "text": t, "id": None})
+    ok, by = 0, collections.defaultdict(lambda: [0, 0])
+    bad = []
+    for c in cases:
+        v = V.check_hadith(c["text"])
+        found_id = (v.get("correct") or {}).get("id") or next((m["id"] for m in v.get("matches", []) if m["source"] == "hadeethenc"), None)
+        if c["label"] == "not_found":
+            good = v["verdict"] in ("not_found", "unverifiable")
+        elif c["label"] == "misquoted":
+            good = v["verdict"] == "misquoted" or (v["verdict"] in ("sound", "weak", "mixed", "graded") and found_id == c["id"])
+        else:
+            good = found_id == c["id"] and v["verdict"] != "not_found"
+        by[c["kind"]][0] += good
+        by[c["kind"]][1] += 1
+        if not good:
+            bad.append(dict(c, verdict=v["verdict"], found=found_id))
+    print(f"\n=== SHORT HADITH CLAIMS (4-7 words), local HadeethEnc, word-level match min={V.HADITH_WORD_SIM_MIN}: {len(cases)} cases")
+    for k, v in by.items():
+        print(f"  {k:20} {v[0]}/{v[1]} = {100 * v[0] / v[1]:.0f}%")
+    return bad
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--verses", type=int, default=250)
     ap.add_argument("--hadith", type=int, default=250)
     ap.add_argument("--seed", type=int, default=7)
-    ap.add_argument("--only", choices=["verses", "hadith"])
+    ap.add_argument("--only", choices=["verses", "hadith", "hadith_short"])
     a = ap.parse_args()
     fails = []
-    if a.only != "hadith":
+    if a.only in (None, "verses"):
         fails += [dict(f, section="verse") for f in run_verses(a.verses, random.Random(a.seed))]
-    if a.only != "verses":
+    if a.only in (None, "hadith"):
         fails += [dict(f, section="hadith") for f in run_hadith(a.hadith, random.Random(a.seed + 1))]
+    if a.only in (None, "hadith_short"):
+        fails += [dict(f, section="hadith_short") for f in run_hadith_short(a.hadith, random.Random(a.seed + 2))]
     OUT.write_text("\n".join(json.dumps(f, ensure_ascii=False) for f in fails), encoding="utf-8")
     print(f"\n{len(fails)} misclassified examples saved to {OUT.name} for review")
 

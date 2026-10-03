@@ -79,6 +79,8 @@ def behavior_ok(g, resp):
         return st in ("answered", "abstained", "referral")
     if b == "abstain":
         return st == "abstained"
+    if b == "abstain_or_clarify":  # no fabrication: abstain, or answer WITHOUT showing any Quran / hadith (e.g. ask the user for the missing text)
+        return st == "abstained" or (st == "answered" and not any(x["kind"] in ("quran", "hadith") for x in resp.get("blocks", [])))
     if b == "referral":
         return st == "referral" and bool(resp.get("referrals"))
     if b == "term":
@@ -192,7 +194,7 @@ def rate(vals):
 def summarize(rs):
     s = {"router_accuracy": rate(r["router_ok"] for r in rs), "retrieval_recall": rate(r["retrieval_ok"] for r in rs),
          "citation_rate": rate(r["citation_ok"] for r in rs), "verse_fidelity": rate(r["fidelity_ok"] for r in rs)}
-    exp_abst = [r for r in rs if r["expected"]["expected_behavior"] in ("abstain", "referral")]
+    exp_abst = [r for r in rs if r["expected"]["expected_behavior"] in ("abstain", "abstain_or_clarify", "referral")]
     s["correct_abstention_rate"] = rate(r["behavior_ok"] for r in exp_abst)
     exp_ans = [r for r in rs if r["expected"]["expected_behavior"] in ("answer", "term", "correct_verse")]
     s["false_abstention_rate"] = rate((r["status"] in ("abstained", "referral")) if r["status"] != "retrieval_only" else None for r in exp_ans)

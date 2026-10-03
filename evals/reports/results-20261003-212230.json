@@ -1,0 +1,782 @@
+{
+ "meta": "LIVE run on openai: router=gpt-5.4-mini, generator=gpt-5.6-sol, judge=gpt-5.5 · 6 cases · 2026-10-03 21:22",
+ "summary": {
+  "router_accuracy": [
+   100.0,
+   6
+  ],
+  "retrieval_recall": [
+   100.0,
+   2
+  ],
+  "citation_rate": [
+   100.0,
+   4
+  ],
+  "verse_fidelity": [
+   100.0,
+   4
+  ],
+  "correct_abstention_rate": [
+   0.0,
+   1
+  ],
+  "false_abstention_rate": [
+   0.0,
+   3
+  ],
+  "verifier_forced_abstention_rate": [
+   0.0,
+   3
+  ],
+  "support_flag_rate": [
+   0.0,
+   7
+  ],
+  "behavior_pass_rate": [
+   83.3,
+   6
+  ],
+  "verify_mode_pass_rate": [
+   100.0,
+   2
+  ],
+  "judge_score_avg_of_5": [
+   null,
+   0
+  ],
+  "router_level_أ": [
+   100.0,
+   2
+  ],
+  "router_level_ب": [
+   100.0,
+   4
+  ],
+  "router_level_ج": [
+   null,
+   0
+  ],
+  "router_level_د": [
+   null,
+   0
+  ]
+ },
+ "patterns": {
+  "behavior_ok": [
+   "dp6-06"
+  ]
+ },
+ "results": [
+  {
+   "id": "dp6-06",
+   "input": "أعطني حديثًا يثبت هذا الكلام",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": false,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "من فضلك أرسل الكلام المقصود كاملًا؛ حتى يمكن التحقق هل ورد ما يثبته من قول النبي ﷺ أو فعله أو تقريره، مع بيان درجة ثبوته. [1]",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:88:1",
+     "quran:20:9",
+     "quran:85:17",
+     "quran:14:27",
+     "hadith:hadeethenc:58069",
+     "hadith:hadeethenc:8307",
+     "hadith:hadeethenc:65170",
+     "hadith:hadeethenc:65011",
+     "qa:bayyinat:51",
+     "qa:bayyinat:143",
+     "qa:icadb:26026",
+     "qa:bayyinat:158",
+     "tafsir:muyassar:5:13",
+     "tafsir:muyassar:33:4",
+     "term:glossary:7",
+     "term:icadb:1666",
+     "quran:5:13",
+     "quran:33:4",
+     "quran:26:84",
+     "quran:4:42",
+     "quran:100:7"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "من فضلك أرسل الكلام المقصود كاملًا؛ حتى يمكن التحقق هل ورد ما يثبته من قول النبي ﷺ أو فعله أو تقريره، مع بيان درجة ثبوته. [[term:glossary:7]]",
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "من فضلك أرسل الكلام المقصود كاملًا؛ حتى يمكن التحقق هل ورد ما يثبته من قول النبي ﷺ أو فعله أو تقريره، مع بيان درجة ثبوته.",
+        "cites": [
+         "term:glossary:7"
+        ],
+        "best_id": "term:glossary:7",
+        "score": 0.7022
+       }
+      ]
+     }
+    ],
+    "canonical_question": "هل يوجد حديث يثبت هذا الكلام؟",
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "هل يوجد حديث يثبت هذا الكلام؟",
+     "claim": null,
+     "original": "أعطني حديثًا يثبت هذا الكلام"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "من فضلك أرسل الكلام المقصود كاملًا؛ حتى يمكن التحقق هل ورد ما يثبته من قول النبي ﷺ أو فعله أو تقريره، مع بيان درجة ثبوته. [1]",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "من فضلك أرسل الكلام المقصود كاملًا؛ حتى يمكن التحقق هل ورد ما يثبته من قول النبي ﷺ أو فعله أو تقريره، مع بيان درجة ثبوته. [1]"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "term:glossary:7",
+      "type": "term",
+      "source": "glossary",
+      "title": "الحديث",
+      "reference_url": "docs/data.pdf#page=7",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 518,
+     "output": 36
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 5951,
+     "output": 196
+    }
+   },
+   "secs": 25.5
+  },
+  {
+   "id": "dp6-11",
+   "input": "ما معنى قوله تعالى ﴿إن الله مع الصابرين دائما﴾؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "correct_verse"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "اللفظ الوارد في الآية لا يتضمن كلمة دائمًا، وإنما يوجّه المؤمنين إلى الاستعانة بالصبر والصلاة، ثم يبيّن أن الله مع الصابرين. [1]\n\n﴿يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ ٱسۡتَعِينُواْ بِٱلصَّبۡرِ وَٱلصَّلَوٰةِۚ إِنَّ ٱللَّهَ مَعَ ٱلصَّٰبِرِينَ﴾ [البَقَرَةِ: 153]\n\nومعنى معية الله للصابرين هنا: أنه يعينهم ويؤيدهم وينصرهم، فلا يخذلهم. وهي معية خاصة مرتبطة بصبرهم وثباتهم على طاعته وفي مواجهة الشدائد. [2][3",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:2:153",
+     "quran:8:46",
+     "quran:8:66",
+     "quran:16:128",
+     "hadith:hadeethenc:65327",
+     "hadith:hadeethenc:65311",
+     "hadith:hadeethenc:65398",
+     "hadith:hadeethenc:4935",
+     "qa:icadb:26025",
+     "qa:icadb:26285",
+     "qa:icadb:26286",
+     "qa:icadb:36119",
+     "tafsir:muyassar:8:66",
+     "tafsir:muyassar:8:46",
+     "term:glossary:1",
+     "term:icadb:1665"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "اللفظ الوارد في الآية لا يتضمن كلمة دائمًا، وإنما يوجّه المؤمنين إلى الاستعانة بالصبر والصلاة، ثم يبيّن أن الله مع الصابرين. [[quran:2:153]]\n\n{{quran:2:153}}\n\nومعنى معية الله للصابرين هنا: أنه يعينهم ويؤيدهم وينصرهم، فلا يخذلهم. وهي معية خاصة مرتبطة بصبرهم وثباتهم على طاعته وفي مواجهة الشدائد. [[tafsir:muyassar:8:46, tafsir:muyassar:8:66]]\n\nفالمقصود ليس أن الصابر لا تصيبه مشقة، بل أن الله يمدّه بالعون والتأييد حال صبره. [[quran:8:46, tafsir:muyassar:8:46]]",
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "اللفظ الوارد في الآية لا يتضمن كلمة دائمًا، وإنما يوجّه المؤمنين إلى الاستعانة بالصبر والصلاة، ثم يبيّن أن الله مع الصابرين.",
+        "cites": [
+         "quran:2:153"
+        ],
+        "best_id": "quran:2:153",
+        "score": 0.7107
+       },
+       {
+        "text": "ومعنى معية الله للصابرين هنا: أنه يعينهم ويؤيدهم وينصرهم، فلا يخذلهم. وهي معية خاصة مرتبطة بصبرهم وثباتهم على طاعته وفي مواجهة الشدائد.",
+        "cites": [
+         "tafsir:muyassar:8:46",
+         "tafsir:muyassar:8:66"
+        ],
+        "best_id": "tafsir:muyassar:8:46",
+        "score": 0.7074
+       },
+       {
+        "text": "فالمقصود ليس أن الصابر لا تصيبه مشقة، بل أن الله يمدّه بالعون والتأييد حال صبره.",
+        "cites": [
+         "quran:8:46",
+         "tafsir:muyassar:8:46"
+        ],
+        "best_id": "quran:8:46",
+        "score": 0.6826
+       }
+      ]
+     }
+    ],
+    "canonical_question": "ما معنى قوله تعالى ﴿إن الله مع الصابرين دائما﴾؟",
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما معنى قوله تعالى ﴿إن الله مع الصابرين دائما﴾؟",
+     "claim": null
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "اللفظ الوارد في الآية لا يتضمن كلمة دائمًا، وإنما يوجّه المؤمنين إلى الاستعانة بالصبر والصلاة، ثم يبيّن أن الله مع الصابرين. [1]\n\n﴿يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ ٱسۡتَعِينُواْ بِٱلصَّبۡرِ وَٱلصَّلَوٰةِۚ إِنَّ ٱللَّهَ مَعَ ٱلصَّٰبِرِينَ﴾ [البَقَرَةِ: 153]\n\nومعنى معية الله للصابرين هنا: أنه يعينهم ويؤيدهم وينصرهم، فلا يخذلهم. وهي معية خاصة مرتبطة بصبرهم وثباتهم على طاعته وفي مواجهة الشدائد. [2][3]\n\nفالمقصود ليس أن الصابر لا تصيبه مشقة، بل أن الله يمدّه بالعون والتأييد حال صبره. [4][2]",
+    "blocks": [
+     {
+      "kind": "verse_correction",
+      "verdict": "misquoted",
+      "claimed": "إن الله مع الصابرين دائما",
+      "message": "تنبيه لطيف: الآية التي ذكرتَها وردت بصياغة تختلف قليلًا عن نص المصحف. هذا هو النص الصحيح، وسأبني الإجابة عليه:",
+      "ref": "2:153",
+      "surah_name_ar": "البَقَرَةِ",
+      "text_ar": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ ٱسۡتَعِينُواْ بِٱلصَّبۡرِ وَٱلصَّلَوٰةِۚ إِنَّ ٱللَّهَ مَعَ ٱلصَّٰبِرِينَ",
+      "diff": [
+       {
+        "op": "equal",
+        "text": "إن الله مع الصابرين"
+       },
+       {
+        "op": "extra",
+        "claimed": "دايما"
+       }
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/2#153"
+     },
+     {
+      "kind": "explanation",
+      "text": "اللفظ الوارد في الآية لا يتضمن كلمة دائمًا، وإنما يوجّه المؤمنين إلى الاستعانة بالصبر والصلاة، ثم يبيّن أن الله مع الصابرين. [1]"
+     },
+     {
+      "kind": "quran",
+      "ref": "2:153",
+      "surah_name_ar": "البَقَرَةِ",
+      "text_ar": "يَٰٓأَيُّهَا ٱلَّذِينَ ءَامَنُواْ ٱسۡتَعِينُواْ بِٱلصَّبۡرِ وَٱلصَّلَوٰةِۚ إِنَّ ٱللَّهَ مَعَ ٱلصَّٰبِرِينَ",
+      "text_en": "O you who have believed, seek help through patience and prayer. Indeed, Allāh is with the patient.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:2:153"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/2#153"
+     },
+     {
+      "kind": "explanation",
+      "text": "ومعنى معية الله للصابرين هنا: أنه يعينهم ويؤيدهم وينصرهم، فلا يخذلهم. وهي معية خاصة مرتبطة بصبرهم وثباتهم على طاعته وفي مواجهة الشدائد. [2][3]\n\nفالمقصود ليس أن الصابر لا تصيبه مشقة، بل أن الله يمدّه بالعون والتأييد حال صبره. [4][2]"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "quran:2:153",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "البَقَرَةِ 153",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/2#153",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "tafsir:muyassar:8:46",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 8:46",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/8#46",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "tafsir:muyassar:8:66",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 8:66",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/8#66",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "quran:8:46",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الأَنفَالِ 46",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/8#46",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 526,
+     "output": 45
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 3802,
+     "output": 276
+    }
+   },
+   "secs": 27.1
+  },
+  {
+   "id": "v-05",
+   "input": "رسالة واتساب: قال الله تعالى: ﴿إن الله مع الصابرين دائما وأبدا﴾ وقال ﷺ: «إنما الأعمال بالنيات»",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "verify",
+    "expected_behavior": "verify"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "verify",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "verified",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 0,
+   "trace": {
+    "retrieved_ids": [],
+    "attempts": [],
+    "route": {
+     "level": "أ",
+     "intent": "verify",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "هل هذه النصوص المنسوبة إلى القرآن والحديث صحيحة؟",
+     "claim": "قال الله تعالى: ﴿إن الله مع الصابرين دائما وأبدا﴾ وقال ﷺ: «إنما الأعمال بالنيات»"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "verified",
+    "level": "أ",
+    "answer_text": "",
+    "blocks": [],
+    "sources": [],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "verdicts": [
+    "misquoted",
+    "sound"
+   ],
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 2,
+     "input": 769,
+     "output": 165
+    }
+   },
+   "secs": 3.8
+  },
+  {
+   "id": "u-01",
+   "input": "هل هذا الحكم \"حكم اذكار الصباح واجبه\" صحيح؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "العبارة: **أذكار الصباح واجبة** لا تثبتها النصوص المتاحة هنا ولا تنفيها؛ فالمصدر المتعلق بها يذكر ما يُقال من الأذكار صباحًا ومساءً، مثل قراءة آية الكرسي وسورة الإخلاص ثلاث مرات، لكنه لا يبيّن أن هذه الأذكار واجبة. [1]\n\nملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:37:177",
+     "quran:17:78",
+     "quran:20:9",
+     "quran:54:38",
+     "hadith:hadeethenc:5320",
+     "hadith:hadeethenc:65260",
+     "hadith:hadeethenc:10602",
+     "hadith:hadeethenc:66259",
+     "qa:icadb:26239",
+     "qa:icadb:26082",
+     "qa:icadb:26070",
+     "qa:icadb:26397",
+     "tafsir:muyassar:68:21",
+     "tafsir:muyassar:15:83",
+     "term:icadb:1680",
+     "term:icadb:1648",
+     "quran:68:21",
+     "quran:15:83",
+     "quran:15:66",
+     "quran:19:12",
+     "quran:74:34"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "العبارة: **أذكار الصباح واجبة** لا تثبتها النصوص المتاحة هنا ولا تنفيها؛ فالمصدر المتعلق بها يذكر ما يُقال من الأذكار صباحًا ومساءً، مثل قراءة آية الكرسي وسورة الإخلاص ثلاث مرات، لكنه لا يبيّن أن هذه الأذكار واجبة. [[qa:icadb:26239]]\n\n{{note:no_ruling}}",
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "العبارة: أذكار الصباح واجبة لا تثبتها النصوص المتاحة هنا ولا تنفيها؛ فالمصدر المتعلق بها يذكر ما يُقال من الأذكار صباحًا ومساءً، مثل قراءة آية الكرسي وسورة الإخلاص ثلاث مرات، لكنه لا يبيّن أن هذه الأذكار واجبة.",
+        "cites": [
+         "qa:icadb:26239"
+        ],
+        "best_id": "qa:icadb:26239",
+        "score": 0.6476
+       }
+      ]
+     }
+    ],
+    "canonical_question": "ما حكم أذكار الصباح، وهل هي واجبة؟",
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما حكم أذكار الصباح، وهل هي واجبة؟",
+     "claim": "حكم اذكار الصباح واجبه",
+     "fallback": "verify_found_no_claims",
+     "original": "هل هذا الحكم \"حكم اذكار الصباح واجبه\" صحيح؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "العبارة: **أذكار الصباح واجبة** لا تثبتها النصوص المتاحة هنا ولا تنفيها؛ فالمصدر المتعلق بها يذكر ما يُقال من الأذكار صباحًا ومساءً، مثل قراءة آية الكرسي وسورة الإخلاص ثلاث مرات، لكنه لا يبيّن أن هذه الأذكار واجبة. [1]\n\nملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "العبارة: **أذكار الصباح واجبة** لا تثبتها النصوص المتاحة هنا ولا تنفيها؛ فالمصدر المتعلق بها يذكر ما يُقال من الأذكار صباحًا ومساءً، مثل قراءة آية الكرسي وسورة الإخلاص ثلاث مرات، لكنه لا يبيّن أن هذه الأذكار واجبة. [1]"
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+      "note": "no_ruling"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:26239",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ماذا تقول في الصباح والمساء من الأذكار؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26239/version/1.0/sentences/",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 2,
+     "input": 731,
+     "output": 52
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 4842,
+     "output": 94
+    }
+   },
+   "secs": 24.2
+  },
+  {
+   "id": "u-02",
+   "input": "ما حكم اذكار الصباح؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "أذكار الصباح من الذكر المشروع الذي يُقال في الصباح؛ ومن المذكور فيها قراءة آية الكرسي، وسورة الإخلاص ثلاث مرات. [1]\n\nلكن المصدر المتاح يذكر الأذكار ولا يبيّن حكمها من حيث الوجوب أو الاستحباب. [1]\n\nملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:37:177",
+     "quran:17:78",
+     "quran:19:12",
+     "quran:74:34",
+     "hadith:hadeethenc:65260",
+     "hadith:hadeethenc:10602",
+     "hadith:hadeethenc:66004",
+     "hadith:hadeethenc:10601",
+     "qa:icadb:26239",
+     "qa:icadb:26079",
+     "qa:icadb:26082",
+     "qa:icadb:26070",
+     "tafsir:muyassar:68:21",
+     "tafsir:muyassar:15:83",
+     "term:icadb:1643",
+     "term:icadb:1648",
+     "quran:68:21",
+     "quran:15:83",
+     "term:icadb:1673",
+     "term:icadb:1638"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "أذكار الصباح من الذكر المشروع الذي يُقال في الصباح؛ ومن المذكور فيها قراءة آية الكرسي، وسورة الإخلاص ثلاث مرات. [[qa:icadb:26239]]\n\nلكن المصدر المتاح يذكر الأذكار ولا يبيّن حكمها من حيث الوجوب أو الاستحباب. [[qa:icadb:26239]]\n\n{{note:no_ruling}}",
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "أذكار الصباح من الذكر المشروع الذي يُقال في الصباح؛ ومن المذكور فيها قراءة آية الكرسي، وسورة الإخلاص ثلاث مرات.",
+        "cites": [
+         "qa:icadb:26239"
+        ],
+        "best_id": "qa:icadb:26239",
+        "score": 0.6337
+       },
+       {
+        "text": "لكن المصدر المتاح يذكر الأذكار ولا يبيّن حكمها من حيث الوجوب أو الاستحباب.",
+        "cites": [
+         "qa:icadb:26239"
+        ],
+        "best_id": "qa:icadb:26239",
+        "score": 0.4907
+       }
+      ]
+     }
+    ],
+    "canonical_question": "ما حكم أذكار الصباح؟",
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما حكم أذكار الصباح؟",
+     "claim": null,
+     "original": "ما حكم اذكار الصباح؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "أذكار الصباح من الذكر المشروع الذي يُقال في الصباح؛ ومن المذكور فيها قراءة آية الكرسي، وسورة الإخلاص ثلاث مرات. [1]\n\nلكن المصدر المتاح يذكر الأذكار ولا يبيّن حكمها من حيث الوجوب أو الاستحباب. [1]\n\nملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "أذكار الصباح من الذكر المشروع الذي يُقال في الصباح؛ ومن المذكور فيها قراءة آية الكرسي، وسورة الإخلاص ثلاث مرات. [1]\n\nلكن المصدر المتاح يذكر الأذكار ولا يبيّن حكمها من حيث الوجوب أو الاستحباب. [1]"
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+      "note": "no_ruling"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:26239",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ماذا تقول في الصباح والمساء من الأذكار؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26239/version/1.0/sentences/",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 516,
+     "output": 36
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 5002,
+     "output": 245
+    }
+   },
+   "secs": 26.3
+  },
+  {
+   "id": "v-06",
+   "input": "عن عدي بن حاتم رضي الله عنه قال: سمعت النبي صلى الله عليه وسلم يقول: «اتقوا النار ولو  تمرة»",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "verify",
+    "expected_behavior": "verify"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "verify",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "verified",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 0,
+   "trace": {
+    "retrieved_ids": [],
+    "attempts": [],
+    "route": {
+     "level": "أ",
+     "intent": "verify",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "هل حديث «اتقوا النار ولو تمرة» صحيح؟",
+     "claim": "اتقوا النار ولو تمرة"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "verified",
+    "level": "أ",
+    "answer_text": "",
+    "blocks": [],
+    "sources": [],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "verdicts": [
+    "misquoted"
+   ],
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 2,
+     "input": 763,
+     "output": 85
+    }
+   },
+   "secs": 2.6
+  }
+ ]
+}

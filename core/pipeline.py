@@ -17,6 +17,7 @@ REFERRALS = [
     {"name": "موقع الشيخ ابن عثيمين", "url": "https://binothaimeen.net"},
 ]
 MIN_GENERAL_SCORE = 0.026  # general-info cards must be found by BOTH keyword and vector search (RRF of two top-10 ranks)
+EXTRA_FROM_ORIGINAL = 3  # extra passages taken from a search with the user's own wording
 PER_TYPE_ASK = {"quran": 4, "hadith": 4, "qa": 4, "tafsir": 2, "term": 2}
 
 TEXT = {
@@ -147,18 +148,31 @@ def _ask(question: str, lang: str | None = None, trace: dict | None = None) -> d
     if info["intent"] == "verify":
         from core.verifier_mode import verify_text
         out = verify_text(question)
-        return _resp("verified", info, lang, verify=out, answer_text="", blocks=[])
+        if out["claims"]:
+            return _resp("verified", info, lang, verify=out, answer_text="", blocks=[])
+        # Nothing to verify (no verse, hadith or attributed saying): this is a question about a topic, e.g. 'is this ruling
+        # correct?', not a pasted message. Answer it like any question instead of dead-ending with "nothing found".
+        info["intent"], info["fallback"] = "ask", "verify_found_no_claims"
     if info["level"] == "د":
         return personal_response(question, info, lang)
+    if info.get("claim") and info["level"] == "أ":
+        info["level"] = "ب"  # judging whether a statement/ruling is right is explanation-level at least, never "stable basics"
 
+    search_q = info.get("canonical_question") or question  # the model's clean restatement of what is asked
+    if search_q != question:
+        info["original"] = question
+    trace["canonical_question"] = search_q
     fix_blocks, fix_ids = _corrections(question, lang)
-    passages = R.retrieve(question, per_type=PER_TYPE_ASK)
+    passages = R.retrieve(search_q, per_type=PER_TYPE_ASK)
+    if search_q != question:  # the user's own wording can find sources the restatement misses: add a few new ones
+        have = {p["id"] for p in passages}
+        passages += [p for p in R.retrieve(question, per_type=PER_TYPE_ASK) if p["id"] not in have][:EXTRA_FROM_ORIGINAL]
     have = {p["id"] for p in passages}
     for pid in fix_ids:
         if pid not in have and R.get_passage(pid):
             passages.insert(0, R.get_passage(pid))
     trace["retrieved_ids"] = [p["id"] for p in passages]
-    resp = _answer(question, info, lang, passages, trace)
+    resp = _answer(search_q, info, lang, passages, trace)
     if fix_blocks:
         resp["blocks"] = fix_blocks + resp["blocks"]
         resp["corrections"] = fix_blocks
@@ -176,7 +190,8 @@ def _answer(question, info, lang, passages, trace):
     errors, attempts, last, raw = None, 0, None, None
     for attempts in (1, 2):
         try:
-            raw = generate(question, info["level"], lang, passages, error=errors, previous=raw)
+            raw = generate(question, info["level"], lang, passages, error=errors, previous=raw,
+                           claim=info.get("claim"), original=info.get("original"))
         except Exception as e:  # API outage, rate limit, ...: fail closed with a warm abstain, never fabricate
             trace["attempts"].append({"n": attempts, "raw": None, "errors": [str(e)[:200]], "ok": False})
             return abstain_response(info, lang, "llm_error", errors=[str(e)[:200]])

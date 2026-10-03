@@ -1,0 +1,184 @@
+{
+ "meta": "LIVE run on openai: router=gpt-5.4-mini, generator=gpt-5.6-sol, judge=gpt-5.5 · 1 cases · 2026-10-03 21:23",
+ "summary": {
+  "router_accuracy": [
+   100.0,
+   1
+  ],
+  "retrieval_recall": [
+   null,
+   0
+  ],
+  "citation_rate": [
+   null,
+   0
+  ],
+  "verse_fidelity": [
+   null,
+   0
+  ],
+  "correct_abstention_rate": [
+   100.0,
+   1
+  ],
+  "false_abstention_rate": [
+   null,
+   0
+  ],
+  "verifier_forced_abstention_rate": [
+   null,
+   0
+  ],
+  "support_flag_rate": [
+   null,
+   0
+  ],
+  "behavior_pass_rate": [
+   100.0,
+   1
+  ],
+  "verify_mode_pass_rate": [
+   null,
+   0
+  ],
+  "judge_score_avg_of_5": [
+   null,
+   0
+  ],
+  "router_level_أ": [
+   100.0,
+   1
+  ],
+  "router_level_ب": [
+   null,
+   0
+  ],
+  "router_level_ج": [
+   null,
+   0
+  ],
+  "router_level_د": [
+   null,
+   0
+  ]
+ },
+ "patterns": {},
+ "results": [
+  {
+   "id": "dp6-06",
+   "input": "أعطني حديثًا يثبت هذا الكلام",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "abstain_or_clarify"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm"
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "abstained",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "لم أجد في المصادر المعتمدة المتاحة لي ما يكفي للإجابة عن سؤالك بثقة، وأفضّل ألا أُخمّن أو أنسب إلى المصادر ما ليس فيها. يمكنك إعادة صياغة السؤال بشكل أوضح، أو الرجوع إلى المواقع الموثوقة التالية، أو سؤال أهل العلم.",
+   "lang": "ar",
+   "abstain_reason": "model_insufficient_evidence",
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:88:1",
+     "quran:53:59",
+     "quran:20:9",
+     "quran:85:17",
+     "hadith:hadeethenc:58069",
+     "hadith:hadeethenc:8307",
+     "hadith:hadeethenc:5402",
+     "hadith:hadeethenc:65011",
+     "qa:bayyinat:51",
+     "qa:bayyinat:160",
+     "qa:icadb:26026",
+     "qa:bayyinat:158",
+     "tafsir:muyassar:5:13",
+     "tafsir:muyassar:33:4",
+     "term:glossary:7",
+     "term:icadb:1672",
+     "quran:5:13",
+     "quran:33:4",
+     "quran:14:27",
+     "quran:26:84",
+     "quran:4:42"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "INSUFFICIENT_EVIDENCE",
+      "errors": [],
+      "ok": true,
+      "support": null
+     }
+    ],
+    "canonical_question": "ما الحديث الذي يثبت هذا الكلام؟",
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما الحديث الذي يثبت هذا الكلام؟",
+     "claim": null,
+     "original": "أعطني حديثًا يثبت هذا الكلام"
+    },
+    "abstain_reason": "model_insufficient_evidence"
+   },
+   "_resp": {
+    "status": "abstained",
+    "level": "أ",
+    "answer_text": "لم أجد في المصادر المعتمدة المتاحة لي ما يكفي للإجابة عن سؤالك بثقة، وأفضّل ألا أُخمّن أو أنسب إلى المصادر ما ليس فيها. يمكنك إعادة صياغة السؤال بشكل أوضح، أو الرجوع إلى المواقع الموثوقة التالية، أو سؤال أهل العلم.",
+    "blocks": [
+     {
+      "kind": "notice",
+      "text": "لم أجد في المصادر المعتمدة المتاحة لي ما يكفي للإجابة عن سؤالك بثقة، وأفضّل ألا أُخمّن أو أنسب إلى المصادر ما ليس فيها. يمكنك إعادة صياغة السؤال بشكل أوضح، أو الرجوع إلى المواقع الموثوقة التالية، أو سؤال أهل العلم."
+     }
+    ],
+    "sources": [],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [
+     {
+      "name": "IslamQA — الإسلام سؤال وجواب",
+      "url": "https://islamqa.info"
+     },
+     {
+      "name": "موقع الشيخ ابن باز",
+      "url": "https://binbaz.org.sa"
+     },
+     {
+      "name": "موقع الشيخ ابن عثيمين",
+      "url": "https://binothaimeen.net"
+     }
+    ],
+    "abstain_reason": "model_insufficient_evidence",
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gpt-5.4-mini": {
+     "calls": 1,
+     "input": 518,
+     "output": 36
+    },
+    "gpt-5.6-sol": {
+     "calls": 1,
+     "input": 5489,
+     "output": 269
+    }
+   },
+   "secs": 22.4
+  }
+ ]
+}

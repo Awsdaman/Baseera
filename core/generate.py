@@ -20,7 +20,9 @@ HARD RULES (they are checked by code; violations are rejected):
 3. Do not put Arabic text in quotation marks («», "") unless it is a verbatim quote from a qa/tafsir/term passage, with its [[id]] right after it.
    Prefer paraphrasing scholars' passages in your own words, with the citation.
 4. Hadith grades come only from the passage data. Never state or guess a grade yourself; show the hadith by placeholder (the grade is displayed by the system).
-5. If the PASSAGES do not support an answer, output exactly {NO_EVIDENCE} and nothing else. Never invent a source, a ruling or a quote.
+5. If NO passage is relevant to the topic at all, output exactly {NO_EVIDENCE} and nothing else. If passages ARE relevant to the topic but do not state the specific
+   ruling or answer that was asked (for example they describe how to do something but do not say whether it is obligatory or recommended), do NOT refuse: answer with what
+   they do say, cited as usual, and put {{{{note:no_ruling}}}} on its own line. Never invent a source, a ruling or a quote.
 6. Separate clearly: your explanation is generated text; Quran, hadith and tafsir appear only through placeholders.
 7. Answer in the language of the user's question ({{lang}}). Keep Arabic Islamic terms, and when answering in English use the APPROVED GLOSSARY translations below (they override your own translation).
 8. Be warm and clear; correct a misconception gently without scolding the asker; start from the principle, then the detail.
@@ -30,6 +32,7 @@ HARD RULES (they are checked by code; violations are rejected):
     {{{{note:partial}}}}   the answer covers only what the approved sources provided / is not exhaustive (use it when a list or topic is only partly covered)
     {{{{note:refer}}}}     for the detailed rulings, consult a qualified scholar
     {{{{note:disputed}}}}  scholars differ on this matter and the answer does not choose between the views
+    {{{{note:no_ruling}}}} the passages discuss the topic but do not state the specific ruling asked (obligatory / recommended / permitted ...); see rule 5
     A note never counts as a citation, so an answer always also needs real citations.
 11. Write in one language: when answering in Arabic do not insert English words (except an approved glossary term in parentheses); when answering in English do not insert Arabic words except transliterated terms.
 
@@ -75,10 +78,17 @@ def format_passages(passages: list[dict], max_chars: int = 900) -> str:
 
 
 def build_prompts(question: str, level: str, lang: str, passages: list[dict], error: str | None = None,
-                  previous: str | None = None):
+                  previous: str | None = None, claim: str | None = None, original: str | None = None):
     system = RULES.replace("{lang}", "Arabic" if lang == "ar" else "English" if lang == "en" else "the user's language")
     system += "\n\n" + LEVEL_NOTES.get(level, LEVEL_NOTES["ب"]) + "\n\nAPPROVED GLOSSARY:\n" + glossary_block([])
-    user = f"QUESTION:\n{question}\n\nPASSAGES (the only allowed sources):\n{format_passages(passages)}"
+    user = f"QUESTION:\n{question}"
+    if original:
+        user += f"\n\nTHE USER'S ORIGINAL WORDING (the question above is a clean restatement of it):\n{original}"
+    if claim:
+        user += (f"\n\nTHE USER ASKS WHETHER THIS STATEMENT IS CORRECT: {claim}\n"
+                 "Say, using only the passages, whether they support it, contradict it, or do not address it; never judge it from memory. "
+                 "If the passages do not address the exact point, say what they do say and use {{note:no_ruling}}.")
+    user += f"\n\nPASSAGES (the only allowed sources):\n{format_passages(passages)}"
     if error:
         user += "\n\nYour previous answer was:\n<<<\n" + (previous or "(not available)") + "\n>>>\n"
         user += (f"\nIt was REJECTED by the verifier for these reasons:\n{error}\n"
@@ -87,6 +97,6 @@ def build_prompts(question: str, level: str, lang: str, passages: list[dict], er
 
 
 def generate(question: str, level: str, lang: str, passages: list[dict], error: str | None = None,
-             previous: str | None = None) -> str:
-    system, user = build_prompts(question, level, lang, passages, error, previous)
+             previous: str | None = None, claim: str | None = None, original: str | None = None) -> str:
+    system, user = build_prompts(question, level, lang, passages, error, previous, claim, original)
     return L.get_llm().complete(L.GENERATE_MODEL, system, user, max_tokens=6000, effort="medium")

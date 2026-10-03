@@ -28,6 +28,8 @@ NOTES = {
                 "en": "Note: this answer covers only what Baseera's approved sources provide; it is not exhaustive."},
     "refer": {"ar": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
               "en": "For the detailed rulings on this matter, please consult a qualified scholar or fatwa authority."},
+    "no_ruling": {"ar": "ملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+                  "en": "Note: the approved sources available to me do not state the specific ruling on this point (for example whether it is obligatory or recommended); what is above is what they contain. Please ask a qualified scholar."},
     "disputed": {"ar": "هذه مسألة اختلف فيها أهل العلم؛ وما سبق عرضٌ لما ورد في المصادر المتاحة دون ترجيح بينها.",
                  "en": "Scholars differ on this matter; the above presents what the available sources say, without choosing between the views."},
 }
@@ -175,6 +177,13 @@ def verify_answer(text: str, retrieved: list[dict], lang: str = "ar") -> VerifyR
     if "﴿" in text or "﴾" in text:
         errors.append("Ornate verse brackets are reserved for code-inserted Quran text; use a {{quran:S:A}} placeholder")
 
+    if lang == "ar":  # one language per answer: Latin words are allowed only inside parentheses (approved glossary terms)
+        plain = re.sub(r"\([^)]*\)", " ", CITE.sub(" ", PLACEHOLDER.sub(" ", text)))
+        stray = re.findall(r"[A-Za-z]{3,}", plain)
+        if stray:
+            errors.append(f"English word(s) inside an Arabic answer: {', '.join(dict.fromkeys(stray))[:80]}. Write the whole answer in Arabic "
+                          "(a glossary term may appear in parentheses).")
+
     valid_spans = {m.span() for m in PLACEHOLDER.finditer(text)}
     for m in ANY_BRACES.finditer(text):
         if m.span() not in valid_spans:
@@ -183,7 +192,7 @@ def verify_answer(text: str, retrieved: list[dict], lang: str = "ar") -> VerifyR
     for m in PLACEHOLDER.finditer(text):
         if m.group(1) == "note":
             if m.group(2).strip() not in NOTES:
-                errors.append(f"Unknown note {m.group(0)}: the only notes are {{{{note:partial}}}}, {{{{note:refer}}}}, {{{{note:disputed}}}}")
+                errors.append(f"Unknown note {m.group(0)}: the only notes are {{{{note:partial}}}}, {{{{note:refer}}}}, {{{{note:disputed}}}}, {{{{note:no_ruling}}}}")
             continue
         ids = _ids_for_placeholder(m.group(1), m.group(2))
         if ids is None:

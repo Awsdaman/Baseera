@@ -103,7 +103,7 @@ const I18N = {
      viral:'وصلتني هذه الرسالة، انشرها ولك الأجر:\nقال رسول الله ﷺ: «اطلبوا العلم ولو في الصين»\nوقال الله تعالى: ﴿إن الله مع الصابرين دائما وأبدا﴾\nوقال ﷺ: «إنما الأعمال بالنيات»'},
    st:{answered:'', abstained:'لم أجد ما يكفي في المصادر — بدل التخمين، هذه مراجع تساعدك:', referral:'سؤالك يخص حالة شخصية — معلومات عامة فقط وإحالة لمختص:', retrieval_only:'خدمة التوليد غير مفعّلة — هذه أقرب المصادر:'},
    verdicts:{verified:'نص صحيح', misquoted:'منقول بخطأ', fabricated:'غير موجود في المصحف', sound:'حديث ثابت', weak:'حديث ضعيف', mixed:'أحكام متفاوتة', not_found:'غير موجود في المصادر المعتمدة', graded:'درجته غير مصنّفة آليًا', unverifiable:'لا يمكن التحقق'},
-   hadithFab:'موضوع / لا أصل له', claim:'المنقول', correct:'النص الصحيح', grader:'الحاكم', book:'المصدر', gradeCol:'الحكم', none:'لم نعثر على آيات أو أحاديث في النص.', err:'حدث خطأ، حاول مرة أخرى.',
+   hadithFab:'موضوع / لا أصل له', claim:'المنقول', correct:'النص الصحيح', correctHadith:'اللفظ الصحيح للحديث (كما ورد في المصادر)', grader:'الحاكم', book:'المصدر', gradeCol:'الحكم', none:'لم نعثر على آيات أو أحاديث في النص.', err:'حدث خطأ، حاول مرة أخرى.',
    credit:'المصادر: مجمع الملك فهد (المصحف والتفسير الميسر) · QuranEnc · HadeethEnc.com · بينات · icadb · الدرر السنية · mp3quran.' },
  en: { tagline:'Ask • Verify • Know the source', disclosure:'⚠️ Baseera is an AI-powered tool, not a scholar or mufti. It answers from approved sources, shows its references, and stores no personal data.',
    tabAsk:'Ask', tabVerify:'Verify a message', ask:'Ask', verify:'Verify', examples:'Try:', askPh:'Type your question in Arabic or English …', verifyPh:'Paste a message (e.g. from WhatsApp) containing verses or hadiths to check …',
@@ -114,7 +114,7 @@ const I18N = {
      viral:'وصلتني هذه الرسالة، انشرها ولك الأجر:\nقال رسول الله ﷺ: «اطلبوا العلم ولو في الصين»\nوقال الله تعالى: ﴿إن الله مع الصابرين دائما وأبدا﴾\nوقال ﷺ: «إنما الأعمال بالنيات»'},
    st:{answered:'', abstained:'I did not find enough in the approved sources — rather than guess, here are places to look:', referral:'Your question is a personal case — general information only, plus a referral:', retrieval_only:'Answer generation is not enabled — here are the closest sources:'},
    verdicts:{verified:'Correct text', misquoted:'Misquoted', fabricated:'Not in the Mushaf', sound:'Sound hadith', weak:'Weak hadith', mixed:'Mixed grades', not_found:'Not found in approved sources', graded:'Grade not auto-classified', unverifiable:'Cannot verify'},
-   hadithFab:'Fabricated / no basis', claim:'As quoted', correct:'Correct text', grader:'Grader', book:'Source', gradeCol:'Grade', none:'No verses or hadiths found in the text.', err:'Something went wrong, please try again.',
+   hadithFab:'Fabricated / no basis', claim:'As quoted', correct:'Correct text', correctHadith:'Correct wording of the hadith (as in the sources)', grader:'Grader', book:'Source', gradeCol:'Grade', none:'No verses or hadiths found in the text.', err:'Something went wrong, please try again.',
    credit:'Sources: King Fahd Complex (Mushaf, Muyassar tafsir) · QuranEnc · HadeethEnc.com · Bayyinat · icadb · Dorar · mp3quran.' }
 };
 let L = 'ar'; try { L = localStorage.getItem('bs-lang') || 'ar'; } catch (e) {}
@@ -209,6 +209,11 @@ function claimCard(c) {
     h += `<div class="label">${esc(t.correct)} — ${esc(c.match.surah_name_ar)} ${esc(c.match.ref)}</div><div class="verse">﴿${esc(c.match.text_ar)}﴾</div>`;
     if (c.diff && c.diff.length) h += `<div class="diff claimtxt">${diffHtml(c.diff)}</div>`;
     h += `<div class="meta">${link(c.match.reference_url, '↗ ' + c.match.ref)}</div>${audioBtn(c.match.ref)}`;
+  }
+  if (c.correct) {  // hadith whose wording differs from the sources: show the correct wording, its grade and what differs
+    h += `<div class="label">${esc(t.correctHadith)}</div><div class="htext">«${esc(c.correct.text_ar)}»</div>
+      <div class="meta"><span class="badge grade">${esc(t.grade)}: ${esc(c.correct.grade)}</span>${esc(c.correct.book || '')} · ${esc(c.correct.source === 'hadeethenc' ? 'HadeethEnc.com' : 'Dorar')} · ${link(c.correct.reference_url, '↗')}</div>`;
+    if (c.diff && c.diff.length) h += `<div class="diff claimtxt">${diffHtml(c.diff)}</div>`;
   }
   if (c.matches && c.matches.length) {
     h += `<table class="m"><tr><th>${esc(t.gradeCol)}</th><th>${esc(t.grader)}</th><th>${esc(t.book)}</th><th></th></tr>` +

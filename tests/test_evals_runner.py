@@ -147,3 +147,11 @@ def test_resume_reruns_only_tainted_cases_and_merges_in_golden_order(tmp_path, m
     assert [r["id"] for r in out["results"]] == ids                      # golden order preserved
     assert [r.get("marker") for r in out["results"]] == [None, "rerun", None, "rerun"]
     assert "RESUMED" in out["meta"] and "re-ran 2" in out["meta"]
+
+
+def test_abstain_or_clarify_accepts_abstention_or_a_scripture_free_answer_and_rejects_invented_hadith():
+    g = {"expected_behavior": "abstain_or_clarify"}
+    assert E.behavior_ok(g, {"status": "abstained", "blocks": []})
+    assert E.behavior_ok(g, {"status": "answered", "blocks": [{"kind": "explanation", "text": "أرسل لي الكلام المقصود"}]})
+    assert not E.behavior_ok(g, {"status": "answered", "blocks": [{"kind": "hadith", "text_ar": "..."}]})
+    assert not E.behavior_ok(g, {"status": "answered", "blocks": [{"kind": "quran", "text_ar": "..."}]})
