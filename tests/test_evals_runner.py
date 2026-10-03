@@ -101,3 +101,49 @@ def test_run_one_works_in_parallel_threads(fake_llm):
     with ThreadPoolExecutor(3) as ex:
         rs = list(ex.map(lambda g: E.run_one(g, live=True, do_judge=False), gs))
     assert all(r["behavior_ok"] and r["router_ok"] for r in rs)
+
+
+def _res(i, status="answered", errors=(), source="llm", behavior="answer", judge=None):
+    return {"id": i, "status": status, "verification_errors": list(errors), "trace": {"attempts": [], "retrieved_ids": []},
+            "route": {"level": "أ", "intent": "ask", "source": source}, "expected": {"expected_behavior": behavior}, "judge": judge}
+
+
+def test_is_tainted_detects_provider_outages_judge_failures_and_router_fallback():
+    out_of_credit = "Error code: 429 - {'error': {'message': 'You have no credits remaining.'}}"
+    assert E.is_tainted(_res("a", "abstained", [out_of_credit]))
+    assert E.is_tainted(_res("b", "abstained", ["Error code: 503 - overloaded"]))
+    assert E.is_tainted(_res("c", judge={"error": "429"}))
+    assert E.is_tainted(_res("d", source="heuristic"))                      # model router failed, rules stood in
+    assert E.is_tainted(_res("e", "error"))
+    assert not E.is_tainted(_res("f"))
+    assert not E.is_tainted(_res("g", source="heuristic", behavior="referral"))   # level-د / term / verify never need the model router
+    assert not E.is_tainted(_res("h", "abstained", ["Explanation without an explicit [[passage-id]] citation"]))  # a real verdict, keep it
+
+
+def test_resume_reruns_only_tainted_cases_and_merges_in_golden_order(tmp_path, monkeypatch, fake_llm):
+    import json as _json
+    fake_llm()
+    args = type("A", (), {"only": None, "limit": 4, "workers": 2, "no_judge": True})()
+    ids = [g["id"] for g in E.load_golden(args)]
+    results = {i: _res(i) for i in ids}
+    results[ids[1]] = _res(ids[1], "abstained", ["Error code: 429 - no credits remaining"])
+    results[ids[3]] = _res(ids[3], source="heuristic")
+    old = tmp_path / "results-old.json"
+    old.write_text(_json.dumps({"meta": "LIVE run", "results": [results[i] for i in ids]}, ensure_ascii=False), encoding="utf-8")
+    ran = []
+
+    def fake_run_cases(todo, live, do_judge, workers):
+        ran.extend(g["id"] for g in todo)
+        return [dict(_res(g["id"]), marker="rerun") for g in todo]
+
+    monkeypatch.setattr(E, "run_cases", fake_run_cases)
+    monkeypatch.setattr(E, "REPORTS", tmp_path)
+    monkeypatch.setattr(E, "summarize", lambda rs: {"x": (1, len(rs))})
+    monkeypatch.setattr(E, "failure_patterns", lambda rs: {})
+    monkeypatch.setattr(E, "html_report", lambda *a: "<html></html>")
+    E.resume(str(old), args)
+    assert ran == [ids[1], ids[3]]                                       # only the tainted ones were re-run
+    out = _json.loads(next(tmp_path.glob("results-2*.json")).read_text(encoding="utf-8"))
+    assert [r["id"] for r in out["results"]] == ids                      # golden order preserved
+    assert [r.get("marker") for r in out["results"]] == [None, "rerun", None, "rerun"]
+    assert "RESUMED" in out["meta"] and "re-ran 2" in out["meta"]

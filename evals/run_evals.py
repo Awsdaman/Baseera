@@ -3,6 +3,7 @@
     python evals/run_evals.py                 # live if an LLM is configured in .env (see core/llm.py), else offline subset
     python evals/run_evals.py --offline       # force offline (no LLM): routing heuristics, retrieval, referral, term, verify
     python evals/run_evals.py --no-judge --limit 10 --only dp6-01,a-02
+    python evals/run_evals.py --resume evals/reports/results-<ts>.json     # re-run only the tainted cases of an interrupted live run
     python evals/run_evals.py --rejudge evals/reports/results-<ts>.json    # re-score saved answers with the current judge
     python evals/run_evals.py --reverify evals/reports/results-<ts>.json   # re-run the verifier on saved raw outputs (free)
 
@@ -290,53 +291,44 @@ def reverify(path):
     print("cases that abstained on verification:", still or "none")
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--offline", action="store_true")
-    ap.add_argument("--no-judge", action="store_true")
-    ap.add_argument("--limit", type=int)
-    ap.add_argument("--only")
-    ap.add_argument("--workers", type=int, help="cases run in parallel (default 4; 1 for a local model server)")
-    ap.add_argument("--rejudge", help="results-*.json: re-score the saved answers with the current judge (no regeneration)")
-    ap.add_argument("--reverify", help="results-*.json: re-run the current verifier on the saved raw model outputs (free)")
-    args = ap.parse_args()
-    if args.reverify:
-        return reverify(args.reverify)
-    if args.offline:
-        import os
-        for k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "LLM_PROVIDER"):
-            os.environ.pop(k, None)
-        L.set_llm(None)
-    if args.rejudge:
-        return rejudge(args.rejudge)
-    live = L.llm_available() and not args.offline
-    gold = load_golden(args)
-    d = L.describe()
-    meta = (f"{('LIVE run on ' + str(d['provider']) + ': router=' + d['router'] + ', generator=' + d['generate'] + ', judge=' + d['judge']) if live else 'OFFLINE run: no LLM configured, so generation / citation / fidelity / judge metrics are NOT measured; heuristic router, retrieval, level-د referral, glossary and verify-mode are'}"
-            f" · {len(gold)} cases · {time.strftime('%Y-%m-%d %H:%M')}")
-    print(meta)
-    workers = args.workers or (1 if d["provider"] == "local" else 4)
+def is_tainted(r) -> bool:
+    """True when a result was produced while the provider was failing (no credit, rate limit, 5xx), when the judge failed, or when
+    the rule-based router had to stand in for the model: such a case measures the outage, not the pipeline, and should be re-run."""
+    t = r.get("trace") or {}
+    errs = list(r.get("verification_errors") or []) + [e for a in t.get("attempts", []) for e in a.get("errors", [])]
+    api_failure = any(re.search(r"Error code: (429|5\d\d)", e) or "no credits" in e or "insufficient_quota" in e for e in errs)
+    judge_failure = "error" in (r.get("judge") or {})
+    fell_back = (r.get("route") or {}).get("source") == "heuristic" and r["expected"]["expected_behavior"] not in ("referral", "term", "verify")
+    return api_failure or judge_failure or fell_back or r.get("status") == "error"
+
+
+def show(r):
+    flag = "OK " if r["behavior_ok"] in (True, None) and r["router_ok"] else "BAD"
+    why = f" why={r['abstain_reason']}" if r.get("abstain_reason") else ""
+    print(f"[{flag}] {r['id']:7} route={r['route']['level']}/{r['route']['intent']:14} status={r['status']:15} behavior={r['behavior_ok']} retr={r['retrieval_ok']} attempts={r['attempts']}{why} ({r['secs']}s)", flush=True)
+
+
+def run_cases(gold, live, do_judge, workers):
+    """Run golden cases (in parallel when workers > 1); results keep golden-set order, progress prints in completion order."""
     rs = [None] * len(gold)
     t_start = time.time()
-
-    def show(r):
-        flag = "OK " if r["behavior_ok"] in (True, None) and r["router_ok"] else "BAD"
-        why = f" why={r['abstain_reason']}" if r.get("abstain_reason") else ""
-        print(f"[{flag}] {r['id']:7} route={r['route']['level']}/{r['route']['intent']:14} status={r['status']:15} behavior={r['behavior_ok']} retr={r['retrieval_ok']} attempts={r['attempts']}{why} ({r['secs']}s)", flush=True)
-
     if workers <= 1:
         for i, g in enumerate(gold):
-            rs[i] = run_one(g, live, not args.no_judge)
+            rs[i] = run_one(g, live, do_judge)
             show(rs[i])
     else:
         from concurrent.futures import ThreadPoolExecutor, as_completed
         print(f"running {len(gold)} cases on {workers} parallel workers", flush=True)
         with ThreadPoolExecutor(max_workers=workers) as ex:
-            futs = {ex.submit(run_one, g, live, not args.no_judge): i for i, g in enumerate(gold)}
+            futs = {ex.submit(run_one, g, live, do_judge): i for i, g in enumerate(gold)}
             for f in as_completed(futs):
-                rs[futs[f]] = f.result()  # results keep golden-set order; progress prints in completion order
+                rs[futs[f]] = f.result()
                 show(rs[futs[f]])
     print(f"wall time {time.time() - t_start:.0f}s", flush=True)
+    return rs
+
+
+def finish(rs, meta):
     summary, patterns = summarize(rs), failure_patterns(rs)
     REPORTS.mkdir(exist_ok=True)
     stamp = time.strftime("%Y%m%d-%H%M%S")
@@ -350,10 +342,65 @@ def main():
     print("\n== FAILURE PATTERNS ==")
     for k, v in patterns.items():
         print(f"  {k}: {', '.join(dict.fromkeys(v))}")
-    print("\n== TOKEN USAGE (this run) ==")
+    print("\n== TOKEN USAGE (this run only) ==")
     for m, u in L.USAGE.items():
         print(f"  {m:22} calls={u['calls']:4} input={u['input']:8} output={u['output']:8}  (output includes hidden reasoning tokens)")
     print(f"\nreport: {REPORTS / 'latest.html'}")
+
+
+def resume(path, args):
+    """Re-run only the tainted cases of an earlier (interrupted / out-of-credit) live run and merge them with its clean results."""
+    if not L.llm_available():
+        sys.exit("--resume needs a configured LLM (it re-runs live cases)")
+    old_run = json.loads(Path(path).read_text(encoding="utf-8"))
+    old = {r["id"]: r for r in old_run["results"]}
+    gold = load_golden(args)
+    todo = [g for g in gold if g["id"] not in old or is_tainted(old[g["id"]])]
+    kept = len(gold) - len(todo)
+    ids = [g["id"] for g in todo]
+    print(f"{kept} clean results kept from {Path(path).name}; re-running {len(todo)} tainted/missing cases: {', '.join(ids) or 'none'}", flush=True)
+    d = L.describe()
+    workers = args.workers or (1 if d["provider"] == "local" else 4)
+    new = {r["id"]: r for r in run_cases(todo, True, not args.no_judge, workers)} if todo else {}
+    merged = [new.get(g["id"]) or old[g["id"]] for g in gold]
+    meta = (old_run.get("meta", "") + f" · RESUMED {time.strftime('%Y-%m-%d %H:%M')}: kept {kept} clean results, re-ran {len(todo)} "
+            f"on {d['provider']} (router={d['router']}, generator={d['generate']}, judge={d['judge']})")
+    still = [r["id"] for r in merged if is_tainted(r)]
+    if still:
+        print(f"WARNING: {len(still)} cases are still tainted (provider failing again?): {', '.join(still)}")
+    finish(merged, meta)
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--offline", action="store_true")
+    ap.add_argument("--no-judge", action="store_true")
+    ap.add_argument("--limit", type=int)
+    ap.add_argument("--only")
+    ap.add_argument("--workers", type=int, help="cases run in parallel (default 4; 1 for a local model server)")
+    ap.add_argument("--resume", help="results-*.json of an interrupted live run: re-run only its tainted cases (provider errors, rule-router fallback) and merge")
+    ap.add_argument("--rejudge", help="results-*.json: re-score the saved answers with the current judge (no regeneration)")
+    ap.add_argument("--reverify", help="results-*.json: re-run the current verifier on the saved raw model outputs (free)")
+    args = ap.parse_args()
+    if args.reverify:
+        return reverify(args.reverify)
+    if args.offline:
+        import os
+        for k in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "LLM_PROVIDER"):
+            os.environ.pop(k, None)
+        L.set_llm(None)
+    if args.rejudge:
+        return rejudge(args.rejudge)
+    if args.resume:
+        return resume(args.resume, args)
+    live = L.llm_available() and not args.offline
+    gold = load_golden(args)
+    d = L.describe()
+    meta = (f"{('LIVE run on ' + str(d['provider']) + ': router=' + d['router'] + ', generator=' + d['generate'] + ', judge=' + d['judge']) if live else 'OFFLINE run: no LLM configured, so generation / citation / fidelity / judge metrics are NOT measured; heuristic router, retrieval, level-د referral, glossary and verify-mode are'}"
+            f" · {len(gold)} cases · {time.strftime('%Y-%m-%d %H:%M')}")
+    print(meta)
+    workers = args.workers or (1 if d["provider"] == "local" else 4)
+    finish(run_cases(gold, live, not args.no_judge, workers), meta)
 
 
 if __name__ == "__main__":

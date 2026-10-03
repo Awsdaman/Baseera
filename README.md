@@ -105,22 +105,27 @@ Full report: `evals/reports/latest.html` (per-case traces are in the matching `r
 
 | Metric | First live run | Final live run |
 |---|---|---|
-| Verse fidelity (no model-typed Quran text) | 100% | **100%** (38/38) |
-| Citation rate | 89.7% | **100%** (37/37) |
+| Verse fidelity (no model-typed Quran text) | 100% | **100%** (40/40) |
+| Citation rate | 89.7% | **100%** (39/39) |
 | Correct abstention / referral (level د etc.) | 85.7% | **100%** (7/7) |
 | Verify mode (viral messages) | 100% | **100%** (5/5) |
 | Retrieval recall (cases with known targets) | 100% (8) | **100%** (12/12) |
 | Router accuracy | 86.5% | **100%** (52/52) |
-| False abstention on answerable questions | 0% | 3.3% (1/30) |
-| Verifier-forced abstention (target 0) | not measured | 2.6% (1/39) |
-| Behaviour pass rate | 98.1% | 98.1% |
+| False abstention on answerable questions | 0% | **0%** (0/30) |
+| Verifier-forced abstention (target 0) | not measured | **0%** (0/39) |
+| Behaviour pass rate | 98.1% | **100%** (52/52) |
 | LLM-judge score (1-5) | 4.71 | 4.71 |
+| Cited stretches flagged by the support check (log mode) | not measured | 2.3% (3/130) |
 
-The single failure (dp6-07, "what does Tawhid mean for someone who never heard the term") was a verifier false positive: the model quoted the shahada «لا إله إلا الله», whose words occur inside several verses. The verifier now treats a short formula inside a longer verse as a stock phrase (a quote is rejected only if it is a long run or covers most of a verse); replaying the saved raw outputs with `--reverify` shows that attempt now passes and the other 45 attempts are unchanged. This fix has not been re-measured with a new live run.
+Outcomes: 40 answered, 6 referred (level د), 5 verified (verify mode), 1 abstained (dp6-06, the expected abstention). Three answers needed the retry (dp6-07, b-08, b-09); none needed more. dp6-07, the verifier false positive on the quoted shahada «لا إله إلا الله», now answers live.
 
-Caveats: one run on 52 cases; the router number is a little optimistic (the router rules were tuned while looking at this set); the judge is from the same vendor as the generator, so a Claude judge (`JUDGE_PROVIDER=anthropic` then `--rejudge`) would be a useful second opinion. Token use for one full run: generator 220k in / 20k out, judge 40k / 16k, router 19k / 1k.
+How this run was produced: the first pass ran out of API credit part-way (27 cases clean, 25 hit HTTP 429). `python evals/run_evals.py --resume <results.json>` re-ran only the 25 tainted cases and merged them with the 27 clean ones (`is_tainted`: provider errors, judge failures, or the rule router standing in for the model). The meta line of the results file records this.
 
-Unit/integration tests: **171 pass** (`python -m pytest -q`), including adversarial verifier cases, pipeline retry/abstain paths with a fake LLM, the OpenAI/Anthropic/local wrappers against stubs, API privacy checks, the eval runner, data-integrity assertions (6,236 verses) and retrieval on real questions. Tests need the ingested database (`python ingest/build_all.py`).
+What the judge and the support check still point at (not fixed): the judge scores the contested-fiqh group lowest (c: 4.48) and flags a-15 (3.83: partial list of Quran prophets, flagged as non-exhaustive by the system note) and b-02 / c-03 (sensitive claims phrased too definitively). The support check flagged 3 stretches; one (dp6-02, a tafsir citation) is the same citation the judge called weakly related, the other two are loose framing sentences.
+
+Caveats: one run on 52 cases; the router number is a little optimistic (the router rules were tuned while looking at this set); the judge is from the same vendor as the generator, so a Claude judge (`JUDGE_PROVIDER=anthropic` then `--rejudge`) would be a useful second opinion. Token use for a full run is roughly: generator 220k in / 20k out, judge 40k / 16k, router 19k / 1k; cases run in parallel (`--workers`, default 4), a full run takes about 5 minutes.
+
+Unit/integration tests: **187 pass** (`python -m pytest -q`, plus one slow synthetic check with `-m slow`), including adversarial verifier cases, pipeline retry/abstain paths with a fake LLM, the OpenAI/Anthropic/local wrappers against stubs, API privacy checks, the eval runner (parallelism, resume), data-integrity assertions (6,236 verses) and retrieval on real questions. Tests need the ingested database (`python ingest/build_all.py`).
 
 ### Verify-mode calibration on synthetic data (`evals/synth_verify.py`, free, no LLM)
 

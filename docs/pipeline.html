@@ -138,23 +138,26 @@
       <h3>Evaluation: live run, 52 cases (router gpt-5.4-mini · generator gpt-5.6-sol · judge gpt-5.5)</h3>
       <table>
         <tr><th>Metric</th><th>First run</th><th>Final run</th></tr>
-        <tr><td>Verse fidelity (no model-typed Quran text)</td><td class="n">100%</td><td class="n ok">100%</td></tr>
-        <tr><td>Citation rate</td><td class="n mid">89.7%</td><td class="n ok">100%</td></tr>
+        <tr><td>Verse fidelity (no model-typed Quran text)</td><td class="n">100%</td><td class="n ok">100% (40/40)</td></tr>
+        <tr><td>Citation rate</td><td class="n mid">89.7%</td><td class="n ok">100% (39/39)</td></tr>
         <tr><td>Correct abstention / referral</td><td class="n mid">85.7%</td><td class="n ok">100% (7/7)</td></tr>
         <tr><td>Verify mode (viral messages)</td><td class="n">100%</td><td class="n ok">100% (5/5)</td></tr>
         <tr><td>Retrieval recall (targeted cases)</td><td class="n">100% (8)</td><td class="n ok">100% (12/12)</td></tr>
-        <tr><td>Router accuracy</td><td class="n mid">86.5%</td><td class="n ok">100%*</td></tr>
-        <tr><td>False abstention on answerable questions</td><td class="n ok">0%</td><td class="n mid">3.3% (1/30)</td></tr>
+        <tr><td>Router accuracy</td><td class="n mid">86.5%</td><td class="n ok">100%* (52/52)</td></tr>
+        <tr><td>False abstention on answerable questions</td><td class="n ok">0%</td><td class="n ok">0% (0/30)</td></tr>
+        <tr><td>Verifier-forced abstention (target 0)</td><td class="n">n/a</td><td class="n ok">0% (0/39)</td></tr>
+        <tr><td>Behaviour pass rate</td><td class="n mid">98.1%</td><td class="n ok">100% (52/52)</td></tr>
         <tr><td>LLM-judge score (1-5)</td><td class="n">4.71</td><td class="n">4.71</td></tr>
+        <tr><td>Cited stretches flagged by the support check (log mode)</td><td class="n">n/a</td><td class="n">2.3% (3/130)</td></tr>
       </table>
-      <p class="legend" style="text-align:left;margin:8px 0 0">*optimistic: router rules were tuned while looking at this set. The 1 false abstention (a quoted shahada) was fixed afterwards and confirmed by replaying the saved outputs; not yet re-run live. 187 tests pass.</p>
+      <p class="legend" style="text-align:left;margin:8px 0 0">*optimistic: router rules were tuned while looking at this set. Outcomes: 40 answered, 6 referred, 5 verified, 1 expected abstention. The first pass ran out of API credit (27 clean cases); <code>--resume</code> re-ran only the 25 tainted ones and merged them. 187 tests pass.</p>
     </div>
     <div class="panel">
       <h3>Design choices that produced those numbers</h3>
       <ul>
         <li>Verifier is deterministic code: invented ids, unretrieved citations and model-written verses cannot pass (adversarial tests).</li>
         <li>Scope remarks ("not exhaustive", "ask a scholar") are code-owned notes, so the model is never asked for an uncitable sentence.</li>
-        <li>Retry shows the model its rejected answer and a fix recipe; 5 of 38 answers needed it, none needed a third try.</li>
+        <li>Retry shows the model its rejected answer and a fix recipe; 3 of 40 answers needed it, none needed a third try.</li>
         <li>Stock phrases (shahada, <i>bismillah</i>) are allowed; a long run or most of a verse is not.</li>
         <li>Verify mode was calibrated on 2,856 synthetic verse cases (misquote recall 73% to 99.8% after a bug it exposed) and 1,000 hadith cases.</li>
         <li>Evals run in parallel (3.7x faster); a rejected-answer trace and per-case token use are stored.</li>
