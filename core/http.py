@@ -2,6 +2,7 @@
 import hashlib
 import json
 import ssl
+import threading
 import time
 from pathlib import Path
 
@@ -17,6 +18,7 @@ _client = httpx.Client(verify=truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT),
                        headers={"User-Agent": UA, "Accept": "application/json"},
                        follow_redirects=True, timeout=60)
 _last = {}
+_lock = threading.Lock()
 
 
 def get_json(url: str, params: dict | None = None, delay: float = 0.3, retries: int = 4):
@@ -27,10 +29,12 @@ def get_json(url: str, params: dict | None = None, delay: float = 0.3, retries: 
         return json.loads(f.read_text(encoding="utf-8"))
     host = httpx.URL(url).host
     for attempt in range(retries):
-        wait = delay - (time.time() - _last.get(host, 0))
+        with _lock:  # reserve the next free slot for this host so parallel callers stay `delay` apart
+            slot = max(time.time(), _last.get(host, 0) + delay)
+            _last[host] = slot
+        wait = slot - time.time()
         if wait > 0:
             time.sleep(wait)
-        _last[host] = time.time()
         try:
             r = _client.get(url, params=params)
             if r.status_code == 200:

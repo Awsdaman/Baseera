@@ -142,7 +142,7 @@ def judge(question, resp):
 def run_one(g, live, do_judge):
     t0 = time.time()
     q = g["input"]
-    usage0 = {m: dict(u) for m, u in L.USAGE.items()}
+    L.thread_usage_reset()  # per-thread counters: correct per-case usage even when cases run in parallel
     try:
         resp = pipeline.ask(q, debug=True)  # ONE call: the route scored is the route that produced the answer
     except Exception as e:
@@ -171,8 +171,6 @@ def run_one(g, live, do_judge):
     r["abstain_reason"] = resp.get("abstain_reason")
     r["attempts"] = len(trace["attempts"])
     r["trace"] = trace  # raw model output + verifier errors per attempt, retrieved ids (needed for --reverify)
-    r["tokens"] = {m: {k: u[k] - usage0.get(m, {}).get(k, 0) for k in u} for m, u in L.USAGE.items()
-                   if u != usage0.get(m)}
     r["_resp"] = {k: resp.get(k) for k in ("status", "level", "answer_text", "blocks", "sources", "ai_disclosure", "referrals",
                                            "abstain_reason", "language")}
     r["verification_errors"] = resp.get("verification_errors", [])
@@ -180,6 +178,7 @@ def run_one(g, live, do_judge):
         r["verdicts"] = [c["verdict"] for c in resp["verify"]["claims"]]
     if do_judge and live and resp["status"] in ("answered", "abstained", "referral"):
         r["judge"] = judge(q, resp)
+    r["tokens"] = L.thread_usage()  # router + generator (+ judge) tokens of THIS case
     r["secs"] = round(time.time() - t0, 1)
     return r
 
@@ -297,6 +296,7 @@ def main():
     ap.add_argument("--no-judge", action="store_true")
     ap.add_argument("--limit", type=int)
     ap.add_argument("--only")
+    ap.add_argument("--workers", type=int, help="cases run in parallel (default 4; 1 for a local model server)")
     ap.add_argument("--rejudge", help="results-*.json: re-score the saved answers with the current judge (no regeneration)")
     ap.add_argument("--reverify", help="results-*.json: re-run the current verifier on the saved raw model outputs (free)")
     args = ap.parse_args()
@@ -315,13 +315,28 @@ def main():
     meta = (f"{('LIVE run on ' + str(d['provider']) + ': router=' + d['router'] + ', generator=' + d['generate'] + ', judge=' + d['judge']) if live else 'OFFLINE run: no LLM configured, so generation / citation / fidelity / judge metrics are NOT measured; heuristic router, retrieval, level-د referral, glossary and verify-mode are'}"
             f" · {len(gold)} cases · {time.strftime('%Y-%m-%d %H:%M')}")
     print(meta)
-    rs = []
-    for g in gold:
-        r = run_one(g, live, not args.no_judge)
-        rs.append(r)
+    workers = args.workers or (1 if d["provider"] == "local" else 4)
+    rs = [None] * len(gold)
+    t_start = time.time()
+
+    def show(r):
         flag = "OK " if r["behavior_ok"] in (True, None) and r["router_ok"] else "BAD"
         why = f" why={r['abstain_reason']}" if r.get("abstain_reason") else ""
         print(f"[{flag}] {r['id']:7} route={r['route']['level']}/{r['route']['intent']:14} status={r['status']:15} behavior={r['behavior_ok']} retr={r['retrieval_ok']} attempts={r['attempts']}{why} ({r['secs']}s)", flush=True)
+
+    if workers <= 1:
+        for i, g in enumerate(gold):
+            rs[i] = run_one(g, live, not args.no_judge)
+            show(rs[i])
+    else:
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+        print(f"running {len(gold)} cases on {workers} parallel workers", flush=True)
+        with ThreadPoolExecutor(max_workers=workers) as ex:
+            futs = {ex.submit(run_one, g, live, not args.no_judge): i for i, g in enumerate(gold)}
+            for f in as_completed(futs):
+                rs[futs[f]] = f.result()  # results keep golden-set order; progress prints in completion order
+                show(rs[futs[f]])
+    print(f"wall time {time.time() - t_start:.0f}s", flush=True)
     summary, patterns = summarize(rs), failure_patterns(rs)
     REPORTS.mkdir(exist_ok=True)
     stamp = time.strftime("%Y%m%d-%H%M%S")

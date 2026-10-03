@@ -49,3 +49,55 @@ def test_reverify_replays_saved_outputs_with_the_current_verifier(fake_llm, tmp_
     E.reverify(str(p))
     out = capsys.readouterr().out
     assert "re-verified" in out and "attempt 1: pass -> reject" in out and "t3" in out
+
+
+def test_token_usage_is_attributed_per_thread_and_totals_are_exact():
+    """Parallel evals: each case must see only its own tokens, and the global counter must not lose updates."""
+    import threading
+
+    from core import llm as L
+    L.USAGE.clear()
+    seen = {}
+
+    class U:
+        prompt_tokens, completion_tokens = 10, 3
+
+    def work(k):
+        L.thread_usage_reset()
+        for _ in range(200):
+            L._count("m", U, "prompt_tokens", "completion_tokens")
+        seen[k] = L.thread_usage()["m"]
+
+    ts = [threading.Thread(target=work, args=(k,)) for k in range(8)]
+    [t.start() for t in ts]
+    [t.join() for t in ts]
+    assert all(v == {"calls": 200, "input": 2000, "output": 600} for v in seen.values())
+    assert L.USAGE["m"] == {"calls": 1600, "input": 16000, "output": 4800}
+
+
+def test_retrieval_connection_is_per_thread():
+    import threading
+
+    from core import retrieve as R
+    errs, ids = [], []
+
+    def work():
+        try:
+            ids.append(R.get_passage("quran:2:255")["id"])
+        except Exception as e:  # sqlite3.ProgrammingError if a connection leaked across threads
+            errs.append(e)
+
+    ts = [threading.Thread(target=work) for _ in range(6)]
+    [t.start() for t in ts]
+    [t.join() for t in ts]
+    assert not errs and ids == ["quran:2:255"] * 6
+
+
+def test_run_one_works_in_parallel_threads(fake_llm):
+    from concurrent.futures import ThreadPoolExecutor
+    fake_llm(router=['{"level": "د", "intent": "ask", "language": "ar"}'])
+    gs = [{"id": f"p{i}", "input": "طلقت زوجتي ثلاث مرات في لحظة غضب، فهل وقع الطلاق؟", "expected_level": "د",
+           "expected_intent": "ask", "expected_behavior": "referral"} for i in range(6)]
+    with ThreadPoolExecutor(3) as ex:
+        rs = list(ex.map(lambda g: E.run_one(g, live=True, do_judge=False), gs))
+    assert all(r["behavior_ok"] and r["router_ok"] for r in rs)

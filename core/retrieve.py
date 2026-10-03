@@ -4,6 +4,8 @@ Every result: {source, id, text, text_en, title, reference_url, grade, type, met
 """
 import json
 import re
+import sqlite3
+import threading
 
 from core.db import connect
 from core.normalize import light_stem, normalize_ar, search_form
@@ -16,15 +18,17 @@ the a an of to in is are was be and or for on with what why how does do did can 
 who which when where about""".split())
 _REF = re.compile(r"(?<!\d)(\d{1,3})\s*[:：]\s*(\d{1,3})(?:\s*-\s*(\d{1,3}))?(?!\d)")
 
-_con = None
+_tls = threading.local()
 
 
 def con():
-    global _con
-    if _con is None:
-        _con = connect()
-        _con.row_factory = __import__("sqlite3").Row
-    return _con
+    """One SQLite connection per thread (a connection cannot be shared across threads; evals run cases in parallel)."""
+    c = getattr(_tls, "con", None)
+    if c is None:
+        c = connect()
+        c.row_factory = sqlite3.Row
+        _tls.con = c
+    return c
 
 
 def _fts_query(query: str) -> str:

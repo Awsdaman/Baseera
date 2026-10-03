@@ -12,6 +12,7 @@ Tests inject a fake with set_llm(); callers only ever use .complete(model, syste
 import json
 import os
 import re
+import threading
 
 from dotenv import load_dotenv
 
@@ -28,11 +29,31 @@ class LLMUnavailable(RuntimeError):
 USAGE: dict[str, dict[str, int]] = {}  # model -> {"calls", "input", "output"}; printed by the eval runner (cost visibility)
 
 
-def _count(model: str, usage, in_attr: str, out_attr: str):
-    u = USAGE.setdefault(model, {"calls": 0, "input": 0, "output": 0})
+_usage_lock = threading.Lock()
+_tls_usage = threading.local()
+
+
+def _add(table: dict, model: str, i: int, o: int):
+    u = table.setdefault(model, {"calls": 0, "input": 0, "output": 0})
     u["calls"] += 1
-    u["input"] += int(getattr(usage, in_attr, 0) or 0)
-    u["output"] += int(getattr(usage, out_attr, 0) or 0)  # for reasoning models this includes hidden reasoning tokens
+    u["input"] += i
+    u["output"] += o
+
+
+def _count(model: str, usage, in_attr: str, out_attr: str):
+    i, o = int(getattr(usage, in_attr, 0) or 0), int(getattr(usage, out_attr, 0) or 0)  # o includes hidden reasoning tokens
+    with _usage_lock:
+        _add(USAGE, model, i, o)
+    _add(_tls_usage.__dict__.setdefault("u", {}), model, i, o)
+
+
+def thread_usage_reset():
+    """Start counting usage for the CURRENT thread (evals: one case per call, even when cases run in parallel)."""
+    _tls_usage.u = {}
+
+
+def thread_usage() -> dict:
+    return {m: dict(u) for m, u in getattr(_tls_usage, "u", {}).items()}
 
 
 def provider_name() -> str | None:

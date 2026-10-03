@@ -1,6 +1,7 @@
 """Embedding model + Chroma access, shared by ingestion and retrieval."""
 import json
 import os
+import threading
 from functools import lru_cache
 from pathlib import Path
 
@@ -13,6 +14,9 @@ MODEL_NAME = os.environ.get("EMBED_MODEL", "BAAI/bge-m3")
 MAX_LEN = int(os.environ.get("EMBED_MAXLEN", 160))
 # e5 models need "query: " / "passage: " prefixes; bge-m3 does not.
 _E5 = "e5" in MODEL_NAME.lower()
+
+
+_ENCODE_LOCK = threading.Lock()
 
 
 @lru_cache(maxsize=1)
@@ -28,9 +32,11 @@ def model():
 def embed_texts(texts: list[str], query: bool = False) -> list[list[float]]:
     if _E5:
         texts = [("query: " if query else "passage: ") + t for t in texts]
-    return model().encode(texts, batch_size=16, normalize_embeddings=True, show_progress_bar=False).tolist()
+    with _ENCODE_LOCK:  # one encode at a time: torch inference is fast next to LLM calls, and this avoids CPU thrash
+        return model().encode(texts, batch_size=16, normalize_embeddings=True, show_progress_bar=False).tolist()
 
 
+@lru_cache(maxsize=1)
 def chroma_client():
     import chromadb
     CHROMA_DIR.mkdir(parents=True, exist_ok=True)
