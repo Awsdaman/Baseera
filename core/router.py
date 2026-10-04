@@ -39,8 +39,21 @@ _PERSONAL = re.compile(
 _PERSONAL_EN = re.compile(
     r"\b(am i allowed|can i|should i|my (?:wife|husband|marriage|divorce|contract|landlord|boss|father|mother|case)|"
     r"i live in|i am in (?:the )?[a-z]+ and|is my (?:marriage|contract|prayer|fast) valid)\b", re.I)
+# Level د needs a real personal case: a family / marriage / money-contract / legal / medical situation OF THE ASKER, or an explicit "my case".
+# A model router sometimes sends ordinary worship-practice questions ("a person forgot a pillar of Hajj, what must he do?", "does an injection
+# break the fast?") to د, which would hide a perfectly answerable general question behind a referral. Such a د is demoted to ج (attributed
+# positions + a scholar-referral note, never a personal ruling) unless the text shows a strong personal marker.
+_STRONG_PERSONAL = re.compile(
+    r"(زوج|طلاق|طلقت|خلع|ميراث|ورثه|وصيه|عقد|شركه|قرض|ديني|راتبي|وظيفتي|مديري|كفيلي|محكمه|قضيتي|سجن|حامل|حملي|ادويتي|طبيبي|مرضي|ابني|ابنتي|امي|ابي|اخي|اختي|جاري|حالتي|مشكلتي|عندي|لدي)")
+_STRONG_PERSONAL_EN = re.compile(r"(my (?:wife|husband|marriage|divorce|contract|landlord|boss|father|mother|son|daughter|brother|sister|case|doctor|job|salary)|i live in|am i allowed)", re.I)
+
+
+def strong_personal(text: str) -> bool:
+    return bool(_STRONG_PERSONAL.search(normalize_ar(text or "")) or _STRONG_PERSONAL_EN.search(text or ""))
+
+
 _DISPUTE = re.compile(r"(اختلاف(?: العلماء| الفقهاء)?|ترجيح|المذاهب|اصح الاقوال|هل كل المسلمين|do all muslims agree|differ(?:ence|ent)? (?:between|among) (?:the )?(?:scholars|schools))", re.I)
-_CONTESTED = re.compile(r"(الراجح|ايهما علي حق|الشيعه|معاويه|صفين|وقعه الجمل|المولد النبوي|الموسيقي|المعازف|الغناء|تصوير ذوات|تكفير|الخلاف بين)")
+_CONTESTED = re.compile(r"(البسمله (?:ايه|اية|من الفاتحه)|هل البسمله|الراجح|ايهما علي حق|الشيعه|معاويه|صفين|وقعه الجمل|المولد النبوي|الموسيقي|المعازف|الغناء|تصوير ذوات|تكفير|الخلاف بين)")
 _BASIC = re.compile(r"(ما معني (?:ايه|اية|سوره|حديث|قوله تعالي|لا اله)|ما فضل|ما هي (?:سوره|اركان|الصلوات)|كم عدد|من هو النبي|اركان|ما هي سوره)")
 _SENSITIVE = re.compile(r"(جهاد|قتال|الحدود|الرده|الرق|الاسترقاق|jihad|apostasy|slavery)")
 _CONCEPT = re.compile(r"(مقاصد|الحكمه|لماذا|هل الاسلام|هل يتعارض|هل يظلم|ارهاب|عنف|تاليف (?:محمد|النبي|بشر)|(?:القران|الوحي) (?:مختلق|مفتري|من صنع)|do muslims|why do|is islam|did (?:muhammad|the prophet) (?:write|invent|make up)|(?:man-?made|written by (?:muhammad|a man)))")
@@ -159,6 +172,8 @@ def route(text: str) -> dict:
     # Safety: code can only escalate the model's level (to د for personal cases, to ج for known contested topics).
     if h["level"] == "د":
         out["level"] = "د"
+    elif out["level"] == "د" and not strong_personal(text):
+        out["level"], out["demoted_from"] = "ج", "د"  # a general worship / fiqh question, not a personal case: answer with attribution + referral note
     elif _CONTESTED.search(normalize_ar(text)) and out["level"] in ("أ", "ب"):
         out["level"] = "ج"
     elif out["level"] == "أ" and (_CONCEPT.search(normalize_ar(text)) or _CONCEPT.search(text.lower())

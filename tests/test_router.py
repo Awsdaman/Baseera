@@ -123,3 +123,35 @@ def test_authorship_doubt_about_the_quran_is_never_level_alef(fake_llm):
     fake_llm(router=['{"level": "أ", "intent": "ask", "language": "ar", "term": null}'])
     assert route("هل القرآن من تأليف محمد ﷺ؟")["level"] == "ب"          # the model said أ: code escalates doubts to ب
     assert route("ما هي أركان الإسلام؟")["level"] == "أ"                   # basics stay أ
+
+
+GENERAL_D_QUESTIONS = [
+    "هل أخذ إبرة في نهار رمضان يبطل الصيام؟", "شخص أدرك ركعة واحدة من صلاة الجمعة، هل يتمها جمعة أم ظهرًا؟",
+    "نسيت أصلي العصر وتذكرت بعد المغرب، ماذا أفعل؟", "حاج نسي رمي جمرة من الجمرات ولم يتذكر إلا بعد عودته إلى بلده، ماذا يفعل؟",
+    "هل بخاخ الربو يفطر الصائم؟", "انا حاج، ماذا افعل في يوم التروية؟",
+]
+
+
+def test_model_router_d_is_demoted_for_general_worship_questions(fake_llm):
+    from core.router import route
+    fake_llm(router=['{"level": "د", "intent": "ask", "language": "ar", "term": null}'] * len(GENERAL_D_QUESTIONS))
+    for q in GENERAL_D_QUESTIONS:
+        r = route(q)
+        assert r["level"] == "ج" and r["demoted_from"] == "د", q
+
+
+def test_genuine_personal_cases_stay_level_d_even_if_the_model_says_so(fake_llm):
+    import json
+    from core.router import route
+    cases = [json.loads(line) for line in open("evals/golden.jsonl", encoding="utf-8") if line.strip()]
+    d_cases = [c["input"] for c in cases if c.get("expected_level") == "د"]
+    assert len(d_cases) >= 5
+    fake_llm(router=['{"level": "د", "intent": "ask", "language": "ar", "term": null}'] * len(d_cases))
+    for q in d_cases:
+        assert route(q)["level"] == "د", q
+
+
+def test_basmala_question_is_contested_not_level_alef(fake_llm):
+    from core.router import route
+    fake_llm(router=['{"level": "أ", "intent": "ask", "language": "ar", "term": null}'])
+    assert route("هل البسملة آية من سورة الفاتحة؟")["level"] == "ج"
