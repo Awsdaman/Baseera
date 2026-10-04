@@ -114,3 +114,12 @@ def test_dangling_proof_request_is_detected_but_real_questions_are_not():
         assert needs_context(q), q
     for q in ("أعطني حديثًا يثبت أن الصلاة واجبة", "ما حكم أذكار الصباح؟", "هل هذا الحديث يثبت هذا الحكم في الزكاة؟", ""):
         assert not needs_context(q), q
+
+
+def test_authorship_doubt_about_the_quran_is_never_level_alef(fake_llm):
+    from core.router import heuristic_route, route
+    for q in ("هل القرآن من تأليف محمد ﷺ؟", "did Muhammad write the Quran?"):
+        assert heuristic_route(q)["level"] == "ب", q
+    fake_llm(router=['{"level": "أ", "intent": "ask", "language": "ar", "term": null}'])
+    assert route("هل القرآن من تأليف محمد ﷺ؟")["level"] == "ب"          # the model said أ: code escalates doubts to ب
+    assert route("ما هي أركان الإسلام؟")["level"] == "أ"                   # basics stay أ

@@ -1,0 +1,649 @@
+{
+ "meta": "LIVE run on local: router=gemma-4-12b-it, generator=gemma-4-12b-it, judge=gemma-4-12b-it · 3 cases · 2026-10-04 13:32",
+ "summary": {
+  "router_accuracy": [
+   66.7,
+   3
+  ],
+  "retrieval_recall": [
+   100.0,
+   1
+  ],
+  "citation_rate": [
+   100.0,
+   2
+  ],
+  "verse_fidelity": [
+   100.0,
+   2
+  ],
+  "correct_abstention_rate": [
+   100.0,
+   1
+  ],
+  "false_abstention_rate": [
+   0.0,
+   2
+  ],
+  "verifier_forced_abstention_rate": [
+   0.0,
+   2
+  ],
+  "support_flag_rate": [
+   0.0,
+   7
+  ],
+  "behavior_pass_rate": [
+   100.0,
+   3
+  ],
+  "router_llm_rate": [
+   100.0,
+   3
+  ],
+  "runtime_abstentions": [
+   0,
+   3
+  ],
+  "first_attempt_pass_rate": [
+   50.0,
+   2
+  ],
+  "gen_output_tokens_mean": [
+   142,
+   3
+  ],
+  "verify_mode_pass_rate": [
+   null,
+   0
+  ],
+  "judge_score_avg_of_5": [
+   null,
+   0
+  ],
+  "router_level_أ": [
+   100.0,
+   1
+  ],
+  "router_level_ب": [
+   50.0,
+   2
+  ],
+  "router_level_ج": [
+   null,
+   0
+  ],
+  "router_level_د": [
+   null,
+   0
+  ]
+ },
+ "patterns": {
+  "router_ok": [
+   "dp6-02"
+  ]
+ },
+ "results": [
+  {
+   "id": "dp6-02",
+   "input": "هل القرآن من تأليف محمد ﷺ؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": false,
+   "router_intent_ok": true,
+   "router_ok": false,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "القرآن الكريم ليس من تأليف النبي محمد ﷺ، بل هو تنزيل من الله عز وجل [1][2][3]. يوضح القرآن الكريم أنه كلام رسول كريم وليس من وضع البشر [4][5].\n\n﴿تَنزِيلُ ٱلۡكِتَٰبِ مِنَ ٱللَّهِ ٱلۡعَزِيزِ ٱلۡحَكِيمِ﴾ [الزُّمَرِ: 1]\n\n﴿تَنزِيلُ ٱلۡكِتَٰبِ مِنَ ٱللَّهِ ٱلۡعَزِيزِ ٱلۡعَلِيمِ﴾ [غَافِرٍ: 2]\n\n﴿إِنَّهُۥ لَقَوۡلُ رَسُولࣲ كَرِيمࣲ﴾ [الحَاقَّةِ: 40]\n\n﴿إِنَّهُۥ لَقَوۡلُ رَسُولࣲ كَرِيمࣲ﴾ [التَّكۡوِيرِ: 19]\n\nهن",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:81:19",
+     "quran:69:40",
+     "quran:56:77",
+     "quran:47:24",
+     "hadith:hadeethenc:8265",
+     "hadith:hadeethenc:65239",
+     "hadith:hadeethenc:65235",
+     "hadith:hadeethenc:5907",
+     "qa:bayyinat:27",
+     "qa:bayyinat:26",
+     "qa:bayyinat:42",
+     "qa:icadb:36098",
+     "tafsir:muyassar:41:2",
+     "tafsir:muyassar:5:81",
+     "term:glossary:8",
+     "term:icadb:1668",
+     "quran:41:2",
+     "quran:5:81",
+     "quran:39:1",
+     "quran:73:4",
+     "quran:40:2"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "القرآن الكريم ليس من تأليف النبي محمد ﷺ، بل هو تنزيل من الله عز وجل [[tafsir:muyassar:41:2, quran:39:1, quran:40:2]]. يوضح القرآن الكريم أنه كلام رسول كريم وليس من وضع البشر [[quran:69:40, quran:81:19]].\n\n{{quran:39:1}}\n\n{{quran:40:2}}\n\n{{quran:69:40}}\n\n{{quran:81:19}}\n\nهناك أدلة كثيرة تنفي أن يكون القرآن من صنع البشر أو تأليف النبي ﷺ، منها وجود الإعجاز العلمي والتشريعي والبلاغي الذي لا يمكن لبشر في ذلك الزمان أن يأتي به [[qa:bayyinat:27]]. كما أن القرآن يحتوي على أخبار غيبية وتنبؤات مستقبلية تحققت بالفعل، وهو ما لا يمكن لإنسان أن يعرفه من وثائق قديمة أو غيرها [[qa:bayyinat:26]]. بالإضافة إلى ذلك، فإن وجود عتاب للنبي ﷺ في بعض الآيات يدل على أنه كان يتلقى الوحي ولا يؤلفه [[qa:bayyinat:27]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "القرآن الكريم ليس من تأليف النبي محمد ﷺ، بل هو تنزيل من الله عز وجل . يوضح القرآن الكريم أنه كلام رسول كريم وليس من وضع البشر .",
+        "cites": [
+         "tafsir:muyassar:41:2",
+         "quran:39:1",
+         "quran:40:2",
+         "quran:69:40",
+         "quran:81:19"
+        ],
+        "best_id": "tafsir:muyassar:41:2",
+        "score": 0.7194
+       },
+       {
+        "text": "هناك أدلة كثيرة تنفي أن يكون القرآن من صنع البشر أو تأليف النبي ﷺ، منها وجود الإعجاز العلمي والتشريعي والبلاغي الذي لا يمكن لبشر في ذلك الزمان أن يأتي به . كما أن القرآن يحتوي على أخبار غيبية وتنبؤات مستقبلية تحققت بالفعل، وهو ما لا يمكن لإنسان أن يعرفه من وثائق قديمة أو غيرها . بالإضافة إلى ذلك، فإن وجود عتاب للنبي ﷺ في بعض الآيات يدل على أنه كان يتلقى الوحي ولا يؤلفه .",
+        "cites": [
+         "qa:bayyinat:27",
+         "qa:bayyinat:26",
+         "qa:bayyinat:27"
+        ],
+        "best_id": "qa:bayyinat:27",
+        "score": 0.7921
+       }
+      ]
+     }
+    ],
+    "canonical_question": "هل القرآن الكريم من تأليف النبي محمد صلى الله عليه وسلم؟",
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "هل القرآن الكريم من تأليف النبي محمد صلى الله عليه وسلم؟",
+     "claim": null,
+     "original": "هل القرآن من تأليف محمد ﷺ؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "القرآن الكريم ليس من تأليف النبي محمد ﷺ، بل هو تنزيل من الله عز وجل [1][2][3]. يوضح القرآن الكريم أنه كلام رسول كريم وليس من وضع البشر [4][5].\n\n﴿تَنزِيلُ ٱلۡكِتَٰبِ مِنَ ٱللَّهِ ٱلۡعَزِيزِ ٱلۡحَكِيمِ﴾ [الزُّمَرِ: 1]\n\n﴿تَنزِيلُ ٱلۡكِتَٰبِ مِنَ ٱللَّهِ ٱلۡعَزِيزِ ٱلۡعَلِيمِ﴾ [غَافِرٍ: 2]\n\n﴿إِنَّهُۥ لَقَوۡلُ رَسُولࣲ كَرِيمࣲ﴾ [الحَاقَّةِ: 40]\n\n﴿إِنَّهُۥ لَقَوۡلُ رَسُولࣲ كَرِيمࣲ﴾ [التَّكۡوِيرِ: 19]\n\nهناك أدلة كثيرة تنفي أن يكون القرآن من صنع البشر أو تأليف النبي ﷺ، منها وجود الإعجاز العلمي والتشريعي والبلاغي الذي لا يمكن لبشر في ذلك الزمان أن يأتي به [6]. كما أن القرآن يحتوي على أخبار غيبية وتنبؤات مستقبلية تحققت بالفعل، وهو ما لا يمكن لإنسان أن يعرفه من وثائق قديمة أو غيرها [7]. بالإضافة إلى ذلك، فإن وجود عتاب للنبي ﷺ في بعض الآيات يدل على أنه كان يتلقى الوحي ولا يؤلفه [6].\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "القرآن الكريم ليس من تأليف النبي محمد ﷺ، بل هو تنزيل من الله عز وجل [1][2][3]. يوضح القرآن الكريم أنه كلام رسول كريم وليس من وضع البشر [4][5]."
+     },
+     {
+      "kind": "quran",
+      "ref": "39:1",
+      "surah_name_ar": "الزُّمَرِ",
+      "text_ar": "تَنزِيلُ ٱلۡكِتَٰبِ مِنَ ٱللَّهِ ٱلۡعَزِيزِ ٱلۡحَكِيمِ",
+      "text_en": "The revelation of the Book [i.e., the Qur’ān] is from Allāh, the Exalted in Might, the Wise.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:39:1"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/39#1"
+     },
+     {
+      "kind": "quran",
+      "ref": "40:2",
+      "surah_name_ar": "غَافِرٍ",
+      "text_ar": "تَنزِيلُ ٱلۡكِتَٰبِ مِنَ ٱللَّهِ ٱلۡعَزِيزِ ٱلۡعَلِيمِ",
+      "text_en": "The revelation of the Book [i.e., the Qur’ān] is from Allāh, the Exalted in Might, the Knowing,",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:40:2"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/40#2"
+     },
+     {
+      "kind": "quran",
+      "ref": "69:40",
+      "surah_name_ar": "الحَاقَّةِ",
+      "text_ar": "إِنَّهُۥ لَقَوۡلُ رَسُولࣲ كَرِيمࣲ",
+      "text_en": "[That] indeed, it [i.e., the Qur’ān] is the word of a noble Messenger.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:69:40"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/69#40"
+     },
+     {
+      "kind": "quran",
+      "ref": "81:19",
+      "surah_name_ar": "التَّكۡوِيرِ",
+      "text_ar": "إِنَّهُۥ لَقَوۡلُ رَسُولࣲ كَرِيمࣲ",
+      "text_en": "[That] indeed, it [i.e., the Qur’ān] is a word [conveyed by] a noble messenger [i.e., Gabriel]",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:81:19"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/81#19"
+     },
+     {
+      "kind": "explanation",
+      "text": "هناك أدلة كثيرة تنفي أن يكون القرآن من صنع البشر أو تأليف النبي ﷺ، منها وجود الإعجاز العلمي والتشريعي والبلاغي الذي لا يمكن لبشر في ذلك الزمان أن يأتي به [6]. كما أن القرآن يحتوي على أخبار غيبية وتنبؤات مستقبلية تحققت بالفعل، وهو ما لا يمكن لإنسان أن يعرفه من وثائق قديمة أو غيرها [7]. بالإضافة إلى ذلك، فإن وجود عتاب للنبي ﷺ في بعض الآيات يدل على أنه كان يتلقى الوحي ولا يؤلفه [6]."
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "tafsir:muyassar:41:2",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 41:2",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/41#2",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "quran:39:1",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الزُّمَرِ 1",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/39#1",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:40:2",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "غَافِرٍ 2",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/40#2",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "quran:69:40",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الحَاقَّةِ 40",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/69#40",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "quran:81:19",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "التَّكۡوِيرِ 19",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/81#19",
+      "grade": null
+     },
+     {
+      "n": 6,
+      "id": "qa:bayyinat:27",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "ُادِّعاءُ أن القرآنَ مصدرُهُ البشَر",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 7,
+      "id": "qa:bayyinat:26",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "ادِّعاءُ أن القرآنَ وثيقةٌ قديمة",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 2,
+     "input": 5578,
+     "output": 323
+    }
+   },
+   "secs": 55.3
+  },
+  {
+   "id": "dp6-06",
+   "input": "أعطني حديثًا يثبت هذا الكلام",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "abstain_or_clarify"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "abstained",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "answer_excerpt": "لم أفهم ما الذي تريد مني أن أُثبته؛ فلم تذكر نصّ الكلام أو الحكم المقصود. يمكنك كتابة العبارة أو الحكم الذي تسأل عنه، وسأبحث له في المصادر المعتمدة. ولن أذكر لك حديثًا أو آية لا صلة لها بما تقصده.",
+   "lang": "ar",
+   "abstain_reason": "needs_clarification",
+   "attempts": 0,
+   "trace": {
+    "retrieved_ids": [],
+    "attempts": [],
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما هو الحديث الذي يثبت هذا الكلام؟",
+     "claim": null
+    },
+    "abstain_reason": "needs_clarification"
+   },
+   "_resp": {
+    "status": "abstained",
+    "level": "ب",
+    "answer_text": "لم أفهم ما الذي تريد مني أن أُثبته؛ فلم تذكر نصّ الكلام أو الحكم المقصود. يمكنك كتابة العبارة أو الحكم الذي تسأل عنه، وسأبحث له في المصادر المعتمدة. ولن أذكر لك حديثًا أو آية لا صلة لها بما تقصده.",
+    "blocks": [
+     {
+      "kind": "notice",
+      "text": "لم أفهم ما الذي تريد مني أن أُثبته؛ فلم تذكر نصّ الكلام أو الحكم المقصود. يمكنك كتابة العبارة أو الحكم الذي تسأل عنه، وسأبحث له في المصادر المعتمدة. ولن أذكر لك حديثًا أو آية لا صلة لها بما تقصده."
+     }
+    ],
+    "sources": [],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [
+     {
+      "name": "IslamQA — الإسلام سؤال وجواب",
+      "url": "https://islamqa.info"
+     },
+     {
+      "name": "موقع الشيخ ابن باز",
+      "url": "https://binbaz.org.sa"
+     },
+     {
+      "name": "موقع الشيخ ابن عثيمين",
+      "url": "https://binothaimeen.net"
+     }
+    ],
+    "abstain_reason": "needs_clarification",
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 1,
+     "input": 635,
+     "output": 46
+    }
+   },
+   "secs": 4.3
+  },
+  {
+   "id": "dp6-07",
+   "input": "ما معنى التوحيد لشخص لم يسمع بالمصطلح من قبل؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "answer_excerpt": "التوحيد هو إفراد الله عز وجل بالربوبية والألوهية ووصفه بما جاء به الوحي من أسمائه الحسنى [1]. ويمكن شرح هذا المصطلح لشخص لا يعرفه بأن التوحيد يعني الإيمان بأن الله هو الخالق والرازق والمالك والمدبر وحده لا شريك له [2].\n\nكما يتضمن التوحيد إفراد الله بالعبادة، بحيث لا يُعبد أحد غيره سبحانه وتعالى [2]. وكلمة التوحيد هي لا إله إلا الله، ومعناها أن لا معبود حقٌّ إلا الله [3].\n\nويشمل التوحيد أيضاً الإيم",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 2,
+   "trace": {
+    "retrieved_ids": [
+     "quran:18:68",
+     "quran:9:112",
+     "quran:4:21",
+     "quran:2:273",
+     "hadith:hadeethenc:65219",
+     "hadith:hadeethenc:65051",
+     "hadith:hadeethenc:65675",
+     "hadith:hadeethenc:65875",
+     "qa:icadb:26020",
+     "qa:icadb:26014",
+     "qa:icadb:26026",
+     "qa:icadb:36144",
+     "tafsir:muyassar:89:9",
+     "tafsir:muyassar:89:10",
+     "term:glossary:2",
+     "term:glossary:10",
+     "quran:89:9",
+     "quran:89:10",
+     "quran:9:6",
+     "quran:21:45",
+     "quran:90:7"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "التوحيد هو إفراد الله عز وجل بالربوبية والألوهية ووصفه بما جاء به الوحي من أسمائه الحسنى [[term:glossary:2]]. ويمكن شرح هذا المصطلح لشخص لا يعرفه بأن التوحيد يعني الإيمان بأن الله هو الخالق والرازق والمالك والمدبر وحده لا شريك له [[qa:icadb:26020]].\n\nكما يتضمن التوحيد إفراد الله بالعبادة، بحيث لا يُعبد أحد غيره سبحانه وتعالى [[qa:icadb:26020]]. وكلمة التوحيد هي لا إله إلا الله، ومعناها أن لا معبود حقٌّ إلا الله [[qa:icadb:26014]].\n\nويشمل التوحيد أيضاً الإيمان بأسماء الله وصفاته كما وردت في الكتاب والسنة، دون تشبيه أو تمثيل أو تعطيل أو تكييف [[qa:icadb:26020]].\n\n{{quran:محمد:19}}\n\nتؤكد الآية الكريمة على ضرورة العلم بأن لا إله إلا الله [[qa:icadb:26014]].\n\n{{quran:الحج:62}}\n\nوتوضح هذه الآية أن الله هو الحق، وأن ما يدعوه الناس من دون الله هو باطل [[qa:icadb:26014]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [
+       "Malformed placeholder: {{quran:محمد:19}}",
+       "Malformed placeholder: {{quran:الحج:62}}"
+      ],
+      "ok": false,
+      "support": null
+     },
+     {
+      "n": 2,
+      "raw": "التوحيد هو إفراد الله عز وجل بالربوبية والألوهية ووصفه بما جاء به الوحي من أسمائه الحسنى [[term:glossary:2]]. ويمكن شرح هذا المصطلح لشخص لا يعرفه بأن التوحيد يعني الإيمان بأن الله هو الخالق والرازق والمالك والمدبر وحده لا شريك له [[qa:icadb:26020]].\n\nكما يتضمن التوحيد إفراد الله بالعبادة، بحيث لا يُعبد أحد غيره سبحانه وتعالى [[qa:icadb:26020]]. وكلمة التوحيد هي لا إله إلا الله، ومعناها أن لا معبود حقٌّ إلا الله [[qa:icadb:26014]].\n\nويشمل التوحيد أيضاً الإيمان بأسماء الله وصفاته كما وردت في الكتاب والسنة، دون تشبيه أو تمثيل أو تعطيل أو تكييف [[qa:icadb:26020]].\n\n{{quran:4:21}}\n\nتؤكد الآية الكريمة على ضرورة العلم بأن لا إله إلا الله [[qa:icadb:26014]].\n\n{{quran:9:6}}\n\nوتوضح هذه الآية أن الله هو الحق، وأن ما يدعوه الناس من دون الله هو باطل [[qa:icadb:26014]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "التوحيد هو إفراد الله عز وجل بالربوبية والألوهية ووصفه بما جاء به الوحي من أسمائه الحسنى . ويمكن شرح هذا المصطلح لشخص لا يعرفه بأن التوحيد يعني الإيمان بأن الله هو الخالق والرازق والمالك والمدبر وحده لا شريك له .",
+        "cites": [
+         "term:glossary:2",
+         "qa:icadb:26020"
+        ],
+        "best_id": "qa:icadb:26020",
+        "score": 0.7788
+       },
+       {
+        "text": "كما يتضمن التوحيد إفراد الله بالعبادة، بحيث لا يُعبد أحد غيره سبحانه وتعالى . وكلمة التوحيد هي لا إله إلا الله، ومعناها أن لا معبود حقٌّ إلا الله .",
+        "cites": [
+         "qa:icadb:26020",
+         "qa:icadb:26014"
+        ],
+        "best_id": "qa:icadb:26014",
+        "score": 0.7782
+       },
+       {
+        "text": "ويشمل التوحيد أيضاً الإيمان بأسماء الله وصفاته كما وردت في الكتاب والسنة، دون تشبيه أو تمثيل أو تعطيل أو تكييف .",
+        "cites": [
+         "qa:icadb:26020"
+        ],
+        "best_id": "qa:icadb:26020",
+        "score": 0.7911
+       },
+       {
+        "text": "تؤكد الآية الكريمة على ضرورة العلم بأن لا إله إلا الله .",
+        "cites": [
+         "qa:icadb:26014"
+        ],
+        "best_id": "qa:icadb:26014",
+        "score": 0.5987
+       },
+       {
+        "text": "وتوضح هذه الآية أن الله هو الحق، وأن ما يدعوه الناس من دون الله هو باطل .",
+        "cites": [
+         "qa:icadb:26014"
+        ],
+        "best_id": "qa:icadb:26014",
+        "score": 0.7414
+       }
+      ]
+     }
+    ],
+    "canonical_question": "ما هو تعريف التوحيد وكيف يمكن شرحه لشخص لا يعرف المصطلح؟",
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما هو تعريف التوحيد وكيف يمكن شرحه لشخص لا يعرف المصطلح؟",
+     "claim": null,
+     "original": "ما معنى التوحيد لشخص لم يسمع بالمصطلح من قبل؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "التوحيد هو إفراد الله عز وجل بالربوبية والألوهية ووصفه بما جاء به الوحي من أسمائه الحسنى [1]. ويمكن شرح هذا المصطلح لشخص لا يعرفه بأن التوحيد يعني الإيمان بأن الله هو الخالق والرازق والمالك والمدبر وحده لا شريك له [2].\n\nكما يتضمن التوحيد إفراد الله بالعبادة، بحيث لا يُعبد أحد غيره سبحانه وتعالى [2]. وكلمة التوحيد هي لا إله إلا الله، ومعناها أن لا معبود حقٌّ إلا الله [3].\n\nويشمل التوحيد أيضاً الإيمان بأسماء الله وصفاته كما وردت في الكتاب والسنة، دون تشبيه أو تمثيل أو تعطيل أو تكييف [2].\n\n﴿وَكَيۡفَ تَأۡخُذُونَهُۥ وَقَدۡ أَفۡضَىٰ بَعۡضُكُمۡ إِلَىٰ بَعۡضࣲ وَأَخَذۡنَ مِنكُم مِّيثَٰقًا غَلِيظࣰا﴾ [النِّسَاءِ: 21]\n\nتؤكد الآية الكريمة على ضرورة العلم بأن لا إله إلا الله [3].\n\n﴿وَإِنۡ أَحَدࣱ مِّنَ ٱلۡمُشۡرِكِينَ ٱسۡتَجَارَكَ فَأَجِرۡهُ حَتَّىٰ يَسۡمَعَ كَلَٰمَ ٱللَّهِ ثُمَّ أَبۡلِغۡهُ مَأۡمَنَهُۥۚ ذَٰلِكَ بِأَنَّهُمۡ قَوۡمࣱ لَّا يَعۡلَمُونَ﴾ [التَّوۡبَةِ: 6]\n\nوتوضح هذه الآية أن الله هو الحق، وأن ما يدعوه الناس من دون الله هو باطل [3].\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "التوحيد هو إفراد الله عز وجل بالربوبية والألوهية ووصفه بما جاء به الوحي من أسمائه الحسنى [1]. ويمكن شرح هذا المصطلح لشخص لا يعرفه بأن التوحيد يعني الإيمان بأن الله هو الخالق والرازق والمالك والمدبر وحده لا شريك له [2].\n\nكما يتضمن التوحيد إفراد الله بالعبادة، بحيث لا يُعبد أحد غيره سبحانه وتعالى [2]. وكلمة التوحيد هي لا إله إلا الله، ومعناها أن لا معبود حقٌّ إلا الله [3].\n\nويشمل التوحيد أيضاً الإيمان بأسماء الله وصفاته كما وردت في الكتاب والسنة، دون تشبيه أو تمثيل أو تعطيل أو تكييف [2]."
+     },
+     {
+      "kind": "quran",
+      "ref": "4:21",
+      "surah_name_ar": "النِّسَاءِ",
+      "text_ar": "وَكَيۡفَ تَأۡخُذُونَهُۥ وَقَدۡ أَفۡضَىٰ بَعۡضُكُمۡ إِلَىٰ بَعۡضࣲ وَأَخَذۡنَ مِنكُم مِّيثَٰقًا غَلِيظࣰا",
+      "text_en": "And how could you take it while you have gone in unto each other and they have taken from you a solemn covenant?",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:4:21"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/4#21"
+     },
+     {
+      "kind": "explanation",
+      "text": "تؤكد الآية الكريمة على ضرورة العلم بأن لا إله إلا الله [3]."
+     },
+     {
+      "kind": "quran",
+      "ref": "9:6",
+      "surah_name_ar": "التَّوۡبَةِ",
+      "text_ar": "وَإِنۡ أَحَدࣱ مِّنَ ٱلۡمُشۡرِكِينَ ٱسۡتَجَارَكَ فَأَجِرۡهُ حَتَّىٰ يَسۡمَعَ كَلَٰمَ ٱللَّهِ ثُمَّ أَبۡلِغۡهُ مَأۡمَنَهُۥۚ ذَٰلِكَ بِأَنَّهُمۡ قَوۡمࣱ لَّا يَعۡلَمُونَ",
+      "text_en": "And if any one of the polytheists seeks your protection, then grant him protection so that he may hear the words of Allāh [i.e., the Qur’ān]. Then deliver him to his place of safety. That is because they are a people who do not know.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:9:6"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/9#6"
+     },
+     {
+      "kind": "explanation",
+      "text": "وتوضح هذه الآية أن الله هو الحق، وأن ما يدعوه الناس من دون الله هو باطل [3]."
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "term:glossary:2",
+      "type": "term",
+      "source": "glossary",
+      "title": "التوحيد",
+      "reference_url": "docs/data.pdf#page=7",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:icadb:26020",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما أنواع التوحيد؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26020/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "qa:icadb:26014",
+      "type": "qa",
+      "source": "icadb",
+      "title": "اذكر كلمة التوحيد، وما معناها؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26014/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "quran:4:21",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "النِّسَاءِ 21",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/4#21",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "quran:9:6",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "التَّوۡبَةِ 6",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/9#6",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 10318,
+     "output": 659
+    }
+   },
+   "secs": 44.4
+  }
+ ]
+}
