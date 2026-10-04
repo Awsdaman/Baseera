@@ -36,7 +36,7 @@ HARD RULES (they are checked by code; violations are rejected):
     {{{{note:disputed}}}}  scholars differ on this matter and the answer does not choose between the views
     {{{{note:no_ruling}}}} the passages discuss the topic but do not state the specific ruling asked (obligatory / recommended / permitted ...); see rule 5
     A note never counts as a citation, so an answer always also needs real citations.
-11. Write in one language: when answering in Arabic do not insert English words (except an approved glossary term in parentheses); when answering in English do not insert Arabic words except transliterated terms.
+11. Write in one language: when answering in Arabic do not insert English words (except an approved glossary term in parentheses); when answering in English do not insert Arabic words except transliterated terms.12. ORDER OF EVIDENCE: when you show more than one kind of source, present them in this order: the Quran first, then hadith, then the scholars' explanation (tafsir, qa, term passages). Do not open with a hadith or a scholar's view when a relevant verse is available.
 
 FORMAT EXAMPLE (structure only; use real ids from the PASSAGES list):
 <one or two sentences of explanation> [[<id of a supporting passage>]]

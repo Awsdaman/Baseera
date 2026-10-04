@@ -122,6 +122,16 @@ def needs_context(text: str) -> bool:
     return bool(_DANGLING.fullmatch(t) or _DANGLING_EN.fullmatch(t))
 
 
+# First-person distress cues ("I feel hopeless", "I committed a sin and regret it"): the answer opens with a code-owned line that
+# acknowledges the person before any information. Fixed text we wrote, so it needs no citation and the model never has to write it.
+_EMPATHY_AR = re.compile(r"(اشعر|احس |احسست|شعرت|اعاني|عانيت|تعبت|ندمت|نادم|خايف|اخاف|يائس|حزين|مكتئب|قلق|وحيد|ضائع|ضايع|ذنوبي|ذنبي|ارتكبت|ابتليت|لا استطيع التوقف|مهموم|مخنوق)")
+_EMPATHY_EN = re.compile(r"\b(i feel|i am (?:so |very )?(?:sad|depressed|anxious|scared|lost|guilty|struggling|hopeless)|i'?m (?:so |very )?(?:sad|depressed|anxious|scared|lost|guilty|struggling|hopeless)|i(?:'ve| have) been struggling|i committed|my sins?|i regret|hopeless)\b", re.I)
+
+
+def needs_empathy(text: str) -> bool:
+    return bool(_EMPATHY_AR.search(normalize_ar(text or "") + " ") or _EMPATHY_EN.search(text or ""))
+
+
 def _clean(v, limit=400):
     v = v.strip() if isinstance(v, str) else ""
     return v[:limit] if v and v.lower() not in ("null", "none") else None

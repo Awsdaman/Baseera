@@ -169,6 +169,7 @@ def run_one(g, live, do_judge):
     r["behavior_ok"] = behavior_ok(g, resp)
     r["citation_ok"] = citation_ok(resp)
     r["fidelity_ok"] = fidelity_ok(resp)
+    r["hierarchy_ok"] = hierarchy_ok(resp)
     r["answer_excerpt"] = (resp.get("answer_text") or "")[:400]
     r["lang"] = resp.get("language")
     r["abstain_reason"] = resp.get("abstain_reason")
@@ -185,6 +186,20 @@ def run_one(g, live, do_judge):
     r["tokens"] = L.thread_usage()  # router + generator (+ judge) tokens of THIS case
     r["secs"] = round(time.time() - t0, 1)
     return r
+
+
+_RANK = {"quran": 0, "hadith": 1, "tafsir": 2}
+
+
+def hierarchy_ok(resp):
+    """Evidence order (Quran, then hadith, then tafsir) among the source blocks of an answer; None when fewer than two kinds are shown."""
+    if resp.get("status") != "answered":
+        return None
+    kinds = [b["kind"] for b in resp.get("blocks", []) if b["kind"] in _RANK]
+    if len(set(kinds)) < 2:
+        return None
+    ranks = [_RANK[k] for k in kinds]
+    return ranks == sorted(ranks)
 
 
 def rate(vals):
@@ -212,6 +227,7 @@ def summarize(rs):
                 flags.append(st["score"] < _S.theta())
     s["support_flag_rate"] = rate(flags)
     s["behavior_pass_rate"] = rate(r["behavior_ok"] for r in rs)
+    s["evidence_order_rate"] = rate(r.get("hierarchy_ok") for r in rs)  # Quran -> hadith -> tafsir, among answers that show 2+ kinds
     # Hidden-problem detectors: a run that quietly used the rule router, or lost answers to runtime failures, must not look clean.
     routed = [r for r in rs if r["expected"]["expected_behavior"] not in ("referral", "term") and r["status"] != "error"]
     s["router_llm_rate"] = rate(((r.get("route") or {}).get("source") == "llm") for r in routed)

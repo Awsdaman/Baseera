@@ -155,3 +155,13 @@ def test_abstain_or_clarify_accepts_abstention_or_a_scripture_free_answer_and_re
     assert E.behavior_ok(g, {"status": "answered", "blocks": [{"kind": "explanation", "text": "أرسل لي الكلام المقصود"}]})
     assert not E.behavior_ok(g, {"status": "answered", "blocks": [{"kind": "hadith", "text_ar": "..."}]})
     assert not E.behavior_ok(g, {"status": "answered", "blocks": [{"kind": "quran", "text_ar": "..."}]})
+
+
+def test_evidence_order_metric():
+    import importlib.util, pathlib
+    spec = importlib.util.spec_from_file_location("run_evals", pathlib.Path(__file__).resolve().parent.parent / "evals" / "run_evals.py")
+    mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+    blk = lambda *k: {"status": "answered", "blocks": [{"kind": x} for x in k]}
+    assert mod.hierarchy_ok(blk("quran", "explanation", "hadith", "tafsir")) is True
+    assert mod.hierarchy_ok(blk("hadith", "quran")) is False
+    assert mod.hierarchy_ok(blk("quran", "explanation")) is None

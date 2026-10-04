@@ -127,6 +127,11 @@ Caveats: one run on 52 cases; the router number is a little optimistic (the rout
 
 Unit/integration tests: **245 pass** (`python -m pytest -q`, plus one slow synthetic check with `-m slow`), including adversarial verifier cases, pipeline retry/abstain paths with a fake LLM, the OpenAI/Anthropic/local wrappers against stubs, API privacy checks, the eval runner (parallelism, resume), data-integrity assertions (6,236 verses) and retrieval on real questions. Tests need the ingested database (`python ingest/build_all.py`).
 
+### Tone and order of evidence
+
+- **Empathy first.** When a message contains first-person distress ("أشعر بالذنب...", "I feel hopeless"), the answer opens with a fixed, code-owned acknowledgement (`core/router.py: needs_empathy`, `core/pipeline.py: _with_empathy`). It is text we wrote, never model-generated, so it needs no citation and cannot hallucinate; it is not added to verify results.
+- **Hierarchy of evidence.** The generation rules ask for the Quran first, then hadith, then the scholars' explanation (tafsir / Q&A / terms), and the eval reports `evidence_order_rate` (share of answers showing 2+ kinds in that order). Idea taken from reading how themuslimgpt.com describes its method; we enforce rules in code rather than only in the prompt.
+
 ### Local model (Gemma 4 12B on your own GPU, no API cost)
 
 `LLM_PROVIDER=local` talks to any OpenAI-compatible server. Tested with LM Studio (Vulkan) on an RX 7600 XT 16 GB and `gemma-4-12b-it` Q4_K_M (7.1 GB):

@@ -237,3 +237,17 @@ def test_request_to_prove_an_unstated_claim_asks_for_the_statement(fake_llm):
     assert "الكلام" in r["answer_text"] and r["referrals"]
     en = pipeline.ask("give me a hadith that proves this")
     assert en["abstain_reason"] == "needs_clarification" and "write it out" in en["answer_text"]
+
+
+def test_empathy_opener_is_added_only_for_first_person_distress(fake_llm):
+    fake_llm(router=['{"level": "ب", "intent": "ask", "language": "ar", "term": null}'],
+             generate=["تذكر المصادر أذكارًا تقال في الصباح مثل آية الكرسي وسورة الإخلاص [[qa:icadb:26239]]"] * 2)
+    sad = pipeline.ask("أشعر بالحزن والذنب، ما حكم أذكار الصباح؟")
+    assert sad["blocks"][0]["note"] == "empathy" and sad["empathy"] and sad["answer_text"].startswith(sad["blocks"][0]["text"])
+    plain = pipeline.ask("ما حكم أذكار الصباح؟")
+    assert "empathy" not in plain and all(b.get("note") != "empathy" for b in plain["blocks"])
+
+
+def test_empathy_opener_is_never_added_to_verify_results():
+    out = pipeline._with_empathy({"status": "verified", "blocks": [], "answer_text": "", "language": "ar"}, "أشعر بالحزن")
+    assert out["blocks"] == [] and "empathy" not in out

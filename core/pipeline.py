@@ -7,7 +7,7 @@ from core import rewrites
 from core import support as S
 from core.generate import generate
 from core.glossary import GLOSSARY, lookup
-from core.router import detect_language, find_term, needs_context, route
+from core.router import detect_language, find_term, needs_context, needs_empathy, route
 from core.verify import VerifyResult, normalize_citations, verify_answer
 
 DISCLOSURE = {
@@ -44,6 +44,10 @@ TEXT = {
     "unavailable": {
         "ar": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
         "en": "The answer-generation service is not configured (no model key), so here are the closest approved sources for your question:",
+    },
+    "empathy": {
+        "ar": "أتفهّم أن ما تمرّ به قد يكون صعبًا، وأشكرك على مشاركته معي. سأعرض لك فيما يلي ما ورد في المصادر المعتمدة بلطف ووضوح.",
+        "en": "I understand that what you are going through may be difficult, and I thank you for sharing it. Below is what the approved sources say, offered gently and clearly.",
     },
     "clarify": {
         "ar": "لم أفهم ما الذي تريد مني أن أُثبته؛ فلم تذكر نصّ الكلام أو الحكم المقصود. يمكنك كتابة العبارة أو الحكم الذي تسأل عنه، وسأبحث له في المصادر المعتمدة. ولن أذكر لك حديثًا أو آية لا صلة لها بما تقصده.",
@@ -127,11 +131,24 @@ def _corrections(question: str, lang: str):
     return blocks, ids
 
 
+def _with_empathy(out: dict, question: str) -> dict:
+    """Acknowledge the person first when they share a struggle. A code-owned notice (fixed text, never model-written, never a citation)."""
+    if out.get("status") not in ("answered", "abstained", "referral") or not needs_empathy(question):
+        return out
+    lang = "en" if out.get("language") == "en" else "ar"
+    text = TEXT["empathy"][lang]
+    out["blocks"] = [{"kind": "notice", "text": text, "note": "empathy"}] + list(out.get("blocks") or [])
+    out["answer_text"] = text + chr(10) * 2 + (out.get("answer_text") or "")
+    out["empathy"] = True
+    return out
+
+
 def ask(question: str, lang: str | None = None, debug: bool = False) -> dict:
     """`debug=True` (evals/dev only, never exposed by the API) adds out["debug"]: route, retrieved ids, every generation
     attempt with its raw model output and verifier errors, and the abstention reason."""
     trace = {"retrieved_ids": [], "attempts": []}
     out = _ask(question, lang, trace)
+    out = _with_empathy(out, question)
     if debug:
         out["debug"] = trace | {"route": out.get("route"), "abstain_reason": out.get("abstain_reason")}
     return out
