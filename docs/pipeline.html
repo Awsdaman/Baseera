@@ -81,16 +81,16 @@
     <section class="col p2">
       <h2>PHASE 2: ROUTE, RETRIEVE, GENERATE, VERIFY</h2>
       <div class="body">
-        <div class="box key"><b>Router</b>level أ / ب / ج / د · intent ask / verify / translate_term<small>LLM + heuristic fallback; code can only escalate (to ب, ج, د), never relax</small></div>
+        <div class="box key"><b>Router</b>level أ / ب / ج / د · intent ask / verify / translate_term<small>LLM (thinking off on local models) + rule fallback; code can only escalate (to ب, ج, د), never relax<br>"prove <i>this</i>" with nothing to prove: asks for the statement, no model call, no unrelated text shown</small></div>
         <div class="arrow">&#9660;</div>
         <div class="box"><b>Hybrid retrieval</b>FTS5 BM25 + Chroma vectors, reciprocal rank fusion<small>alias lookup (آية الكرسي, سورة الإخلاص, 2:255) · tafsir hit pulls its verse</small></div>
         <div class="arrow">&#9660;</div>
-        <div class="box"><b>Generator (swappable LLM)</b>Anthropic · OpenAI · local server<small>sees passages; may emit only <code>{{quran:S:A}}</code> <code>{{hadith:SRC:ID}}</code> <code>{{tafsir:S:A}}</code> <code>{{note:…}}</code> and <code>[[id]]</code></small></div>
+        <div class="box"><b>Generator (swappable LLM)</b>Anthropic · OpenAI · local (LM Studio: Gemma 4 12B)<small>local profile adds a citation/placeholder checklist; empty or cut-off reply: one runtime retry; sees passages; may emit only <code>{{quran:S:A}}</code> <code>{{hadith:SRC:ID}}</code> <code>{{tafsir:S:A}}</code> <code>{{note:…}}</code> and <code>[[id]]</code></small></div>
         <div class="arrow">&#9660;</div>
         <div class="box star"><b>Verifier: pure code, no LLM</b>
-          <small>ids retrieved? · no model-typed Quran / hadith (fuzzy leak scan, quotes) · every 8+ word stretch cited · malformed placeholders rejected<br>+ semantic support check: cited passage must back the sentence (bge-m3, log mode)</small></div>
+          <small>citation syntax repair first ([[a], [b]] and short ids; ids still checked) · ids retrieved? · no model-typed Quran / hadith (fuzzy leak scan, quotes) · every 8+ word stretch cited · malformed placeholders rejected<br>+ semantic support check: cited passage must back the sentence (bge-m3, log mode)</small></div>
         <div class="row" style="grid-template-columns:1fr 1fr">
-          <div class="box bad"><b>reject, 1st time</b><small>retry once: sees its rejected answer + a fix recipe</small></div>
+          <div class="box bad"><b>reject, 1st time</b><small>retry once: sees its rejected answer + an exact fix per error</small></div>
           <div class="box warn"><b>reject, 2nd time</b><small>abstain + where to look</small></div>
         </div>
         <div class="box good"><b>accept</b><small>substitute exact text from the DB; grades only from Dorar / HadeethEnc</small></div>
@@ -135,22 +135,22 @@
 
   <div class="strip">
     <div class="panel">
-      <h3>Evaluation: live run, 52 cases (router gpt-5.4-mini · generator gpt-5.6-sol · judge gpt-5.5)</h3>
+      <h3>Evaluation: two live runs on the golden set (judge gpt-5.5)</h3>
       <table>
-        <tr><th>Metric</th><th>First run</th><th>Final run</th></tr>
-        <tr><td>Verse fidelity (no model-typed Quran text)</td><td class="n">100%</td><td class="n ok">100% (40/40)</td></tr>
-        <tr><td>Citation rate</td><td class="n mid">89.7%</td><td class="n ok">100% (39/39)</td></tr>
-        <tr><td>Correct abstention / referral</td><td class="n mid">85.7%</td><td class="n ok">100% (7/7)</td></tr>
-        <tr><td>Verify mode (viral messages)</td><td class="n">100%</td><td class="n ok">100% (5/5)</td></tr>
-        <tr><td>Retrieval recall (targeted cases)</td><td class="n">100% (8)</td><td class="n ok">100% (12/12)</td></tr>
-        <tr><td>Router accuracy</td><td class="n mid">86.5%</td><td class="n ok">100%* (52/52)</td></tr>
-        <tr><td>False abstention on answerable questions</td><td class="n ok">0%</td><td class="n ok">0% (0/30)</td></tr>
-        <tr><td>Verifier-forced abstention (target 0)</td><td class="n">n/a</td><td class="n ok">0% (0/39)</td></tr>
-        <tr><td>Behaviour pass rate</td><td class="n mid">98.1%</td><td class="n ok">100% (52/52)</td></tr>
-        <tr><td>LLM-judge score (1-5)</td><td class="n">4.71</td><td class="n">4.71</td></tr>
-        <tr><td>Cited stretches flagged by the support check (log mode)</td><td class="n">n/a</td><td class="n">2.3% (3/130)</td></tr>
+        <tr><th>Metric</th><th>OpenAI gpt-5.6-sol<br>52 cases</th><th>Gemma 4 12B local<br>55 cases</th></tr>
+        <tr><td>Behaviour pass rate</td><td class="n ok">100% (52/52)</td><td class="n ok">100% (55/55)</td></tr>
+        <tr><td>Verse fidelity (no model-typed Quran text)</td><td class="n ok">100% (40/40)</td><td class="n ok">100% (42/42)</td></tr>
+        <tr><td>Citation rate</td><td class="n ok">100% (39/39)</td><td class="n ok">100% (41/41)</td></tr>
+        <tr><td>Correct abstention / referral</td><td class="n ok">100% (7/7)</td><td class="n ok">100% (7/7)</td></tr>
+        <tr><td>Verify mode (viral messages)</td><td class="n ok">100% (5/5)</td><td class="n ok">100% (6/6)</td></tr>
+        <tr><td>Retrieval recall (targeted cases)</td><td class="n ok">100% (12/12)</td><td class="n mid">92.9% (13/14)</td></tr>
+        <tr><td>Router accuracy</td><td class="n ok">100%* (52/52)</td><td class="n ok">100%* (55/55)</td></tr>
+        <tr><td>False abstention on answerable questions</td><td class="n ok">0% (0/30)</td><td class="n ok">0% (0/32)</td></tr>
+        <tr><td>Verifier-forced abstention (target 0)</td><td class="n ok">0% (0/39)</td><td class="n ok">0% (0/41)</td></tr>
+        <tr><td>LLM-judge score (1-5)</td><td class="n">4.71</td><td class="n">4.86</td></tr>
+        <tr><td>Time for a full run</td><td class="n">about 5 min (4 workers)</td><td class="n">33 min (1 worker, own GPU, no API cost)</td></tr>
       </table>
-      <p class="legend" style="text-align:left;margin:8px 0 0">*optimistic: router rules were tuned while looking at this set. Outcomes: 40 answered, 6 referred, 5 verified, 1 expected abstention. The first pass ran out of API credit (27 clean cases); <code>--resume</code> re-ran only the 25 tainted ones and merged them. 187 tests pass.</p>
+      <p class="legend" style="text-align:left;margin:8px 0 0">*optimistic: router rules were tuned while looking at this set, so the real-world rate is lower. Gemma run: first attempt passed the verifier on 92.7% of answers; 245 tests pass. The first Gemma run (96.4%) showed the LLM router had never run (hidden reasoning used its token budget) and that Gemma wrote citations as [[a], [b]]; both are fixed in code.</p>
     </div>
     <div class="panel">
       <h3>Design choices that produced those numbers</h3>
@@ -161,7 +161,8 @@
         <li>Stock phrases (shahada, <i>bismillah</i>) are allowed; a long run or most of a verse is not.</li>
         <li>Verify mode was calibrated on 2,856 synthetic verse cases (misquote recall 73% to 99.8% after a bug it exposed) and 1,000 hadith cases.</li>
         <li>Evals run in parallel (3.7x faster); a rejected-answer trace and per-case token use are stored.</li>
-        <li>Provider-agnostic LLM layer with token counting; a full run is about 300k input and 40k output tokens.</li>
+        <li>Provider-agnostic LLM layer (Anthropic, OpenAI, local) with token counting. Local models run with hidden reasoning off (<code>reasoning_effort=none</code>): 130 output tokens per call instead of about 1,500, with the judge score unchanged.</li>
+        <li>Eval runner reports hidden problems: share of cases routed by the real LLM router, runtime abstentions, first-attempt pass rate, tainted-case warning.</li>
         <li>Everything beyond the LLM (verify mode, referral, glossary, retrieval) works with no API key.</li>
       </ul>
     </div>

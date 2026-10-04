@@ -125,7 +125,20 @@ What the judge and the support check still point at (not fixed): the judge score
 
 Caveats: one run on 52 cases; the router number is a little optimistic (the router rules were tuned while looking at this set); the judge is from the same vendor as the generator, so a Claude judge (`JUDGE_PROVIDER=anthropic` then `--rejudge`) would be a useful second opinion. Token use for a full run is roughly: generator 220k in / 20k out, judge 40k / 16k, router 19k / 1k; cases run in parallel (`--workers`, default 4), a full run takes about 5 minutes.
 
-Unit/integration tests: **187 pass** (`python -m pytest -q`, plus one slow synthetic check with `-m slow`), including adversarial verifier cases, pipeline retry/abstain paths with a fake LLM, the OpenAI/Anthropic/local wrappers against stubs, API privacy checks, the eval runner (parallelism, resume), data-integrity assertions (6,236 verses) and retrieval on real questions. Tests need the ingested database (`python ingest/build_all.py`).
+Unit/integration tests: **245 pass** (`python -m pytest -q`, plus one slow synthetic check with `-m slow`), including adversarial verifier cases, pipeline retry/abstain paths with a fake LLM, the OpenAI/Anthropic/local wrappers against stubs, API privacy checks, the eval runner (parallelism, resume), data-integrity assertions (6,236 verses) and retrieval on real questions. Tests need the ingested database (`python ingest/build_all.py`).
+
+### Local model (Gemma 4 12B on your own GPU, no API cost)
+
+`LLM_PROVIDER=local` talks to any OpenAI-compatible server. Tested with LM Studio (Vulkan) on an RX 7600 XT 16 GB and `gemma-4-12b-it` Q4_K_M (7.1 GB):
+
+```bash
+lms load gemma-4-12b-it --gpu max --parallel 1
+LLM_PROVIDER=local LOCAL_BASE_URL=http://localhost:1234/v1 LOCAL_MODEL=gemma-4-12b-it LOCAL_NO_THINK=1 LLM_GEN_MAX_TOKENS=1500 LLM_ROUTER_MAX_TOKENS=600 JUDGE_PROVIDER=openai python evals/run_evals.py --workers 1
+```
+
+Final run (55 cases): behaviour **100%**, router 100% (LLM router used every time), citations 100%, verse fidelity 100%, correct abstention 7/7, false abstention 0/32, verifier-forced abstention 0/41, first-attempt pass 92.7%, judge 4.86/5, 33 minutes. The one miss is retrieval on dp6-07 (a glossary entry; it passed on a rerun).
+
+What it took (details in `docs/local_model_plan.md`): the first Gemma run scored 96.4% but never used the LLM router, because hidden reasoning consumed its token budget. Fixes: reasoning off (`reasoning_effort=none`; `/no_think` only works for Qwen), a repair step for citation syntax (`[[a], [b]]`, short ids; every id is still verified), one runtime retry for empty or cut-off replies, exact fix instructions on the verifier retry, a local-only prompt checklist (Claude/OpenAI prompts unchanged), and a rule for "prove this" requests that name nothing to prove. Environment knobs are listed in `.env.example`. Limits: LM Studio ignored context-length requests for this model (it reports 262144); the laptop (RTX 4050, 6 GB) is untested.
 
 ### Verify-mode calibration on synthetic data (`evals/synth_verify.py`, free, no LLM)
 
