@@ -8,6 +8,7 @@ beautifulsoup4
 rapidfuzz
 chromadb
 sentence-transformers
+transformers
 pymupdf
 python-docx
 pytest

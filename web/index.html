@@ -62,6 +62,10 @@
   .loading { text-align:center; color:var(--mute); padding:22px 0; }
   .spin { display:inline-block; width:18px; height:18px; border:3px solid #cfe3e1; border-top-color:var(--teal); border-radius:50%; animation:sp 1s linear infinite; vertical-align:middle; margin-inline-end:8px; }
   @keyframes sp { to { transform:rotate(360deg); } }
+  button.mic { background:#fff; color:var(--teal); border:1px solid var(--teal); width:44px; height:44px; border-radius:50%; font-size:1.2rem; cursor:pointer; }
+  button.mic.rec { background:var(--red); color:#fff; border-color:var(--red); animation:pulse 1.2s ease-in-out infinite; }
+  button.mic:disabled { opacity:.5; cursor:wait; }
+  @keyframes pulse { 50% { box-shadow:0 0 0 8px rgba(179,38,30,.18); } }
   audio { width:100%; max-width:380px; height:34px; margin-top:6px; }
   .reportbox { margin:14px 0; border:1px dashed var(--line); border-radius:10px; padding:8px 12px; background:#fff; font-size:.9rem; }
   .reportbox summary { cursor:pointer; color:var(--teal); } .reportbox select { width:100%; padding:8px; border:1px solid #cbd2db; border-radius:8px; font:inherit; background:#fff; }
@@ -84,7 +88,7 @@
 
   <section id="pane-ask">
     <textarea id="q" data-ip="askPh" maxlength="2000"></textarea>
-    <div class="row"><button class="go" id="goAsk" data-i="ask"></button><span class="label" data-i="examples"></span>
+    <div class="row"><button class="go" id="goAsk" data-i="ask"></button><button class="mic" id="mic" type="button" aria-label="" hidden>🎤</button><span class="meta" id="micMsg" aria-live="polite"></span><span class="label" data-i="examples"></span>
       <button class="ex" data-ex="pillars"></button><button class="ex" data-ex="personal"></button><button class="ex" data-ex="kaaba"></button><button class="ex" data-ex="tawhid"></button></div>
   </section>
   <section id="pane-verify" hidden>
@@ -100,6 +104,7 @@
 const I18N = {
  ar: { tagline:'اسأل • تحقّق • اعرف المصدر', disclosure:'⚠️ بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا. تجيب من مصادر معتمدة وتعرض مراجعها، ولا تخزّن بياناتك الشخصية.',
    tabAsk:'اسأل', tabVerify:'تحقّق من رسالة', ask:'اسأل', verify:'تحقّق', examples:'جرّب:', askPh:'اكتب سؤالك بالعربية أو English …', verifyPh:'الصق هنا الرسالة (واتساب مثلًا) التي فيها آيات أو أحاديث للتحقق منها …',
+   micStart:'اسأل بصوتك', micStop:'إيقاف التسجيل', micRec:'جارٍ التسجيل … اضغط للإيقاف', micWork:'جارٍ تحويل الصوت إلى نص …', micDone:'راجِع النص وصحّحه قبل الإرسال — التعرّف على الصوت قد يخطئ.', micErr:'تعذّر تحويل الصوت، اكتب سؤالك.', micDenied:'لم يُسمح باستخدام الميكروفون.', micNote:' الصوت يُعالَج مؤقتًا في الذاكرة ولا يُحفظ.',
    loading:'جارٍ البحث في المصادر المعتمدة والتحقق …', gen:'شرح مُولَّد بالذكاء الاصطناعي', quran:'نص قرآني (مجمع الملك فهد)', hadith:'حديث نبوي', tafsir:'تفسير — كلام المفسّر وليس نصًّا قرآنيًّا',
    glossary:'مصطلح معتمد', notice:'ملاحظة من بصيرة', corr:'تصحيح نص الآية', sources:'المصادر', referrals:'مراجع موثوقة', grade:'الدرجة', listen:'استمع', translation:'الترجمة (Noor International)',
    ex:{pillars:'ما هي أركان الإسلام؟', personal:'أنا في دولة كذا، هل يجوز لي فعل كذا في زواجي؟', kaaba:'لماذا يعبد المسلمون الكعبة؟', tawhid:'ترجم كلمة التوحيد إلى الإنجليزية', viral:'رسالة منتشرة'},
@@ -114,6 +119,7 @@ const I18N = {
    credit:'المصادر: مجمع الملك فهد (المصحف والتفسير الميسر) · QuranEnc · HadeethEnc.com · بينات · icadb · الدرر السنية · mp3quran.' },
  en: { tagline:'Ask • Verify • Know the source', disclosure:'⚠️ Baseera is an AI-powered tool, not a scholar or mufti. It answers from approved sources, shows its references, and stores no personal data.',
    tabAsk:'Ask', tabVerify:'Verify a message', ask:'Ask', verify:'Verify', examples:'Try:', askPh:'Type your question in Arabic or English …', verifyPh:'Paste a message (e.g. from WhatsApp) containing verses or hadiths to check …',
+   micStart:'Ask by voice', micStop:'Stop recording', micRec:'Recording … tap to stop', micWork:'Transcribing …', micDone:'Review and correct the text before sending — speech recognition can make mistakes.', micErr:'Could not transcribe, please type your question.', micDenied:'Microphone access was denied.', micNote:' Audio is processed in memory and not stored.',
    loading:'Searching approved sources and verifying …', gen:'AI-generated explanation', quran:'Quran text (King Fahd Complex)', hadith:'Prophetic hadith', tafsir:'Tafsir — the commentator\'s words, not Quran text',
    glossary:'Approved term', notice:'Note from Baseera', corr:'Verse text correction', sources:'Sources', referrals:'Trusted references', grade:'Grade', listen:'Listen', translation:'Translation (Noor International)',
    ex:{pillars:'Five pillars (EN)', personal:'Personal question', kaaba:'Why Kaaba?', tawhid:'Translate Tawhid', viral:'Viral message'},
@@ -140,7 +146,8 @@ function applyLang() {
   document.querySelectorAll('[data-i]').forEach(e => e.textContent = T()[e.dataset.i]);
   document.querySelectorAll('[data-ip]').forEach(e => e.placeholder = T()[e.dataset.ip]);
   document.querySelectorAll('[data-ex]').forEach(e => e.textContent = T().ex[e.dataset.ex]);
-  $('#foot').textContent = T().credit;
+  $('#foot').textContent = T().credit + T().micNote;
+  $('#mic').title = $('#mic').ariaLabel = T().micStart;
 }
 $('#lang').onclick = () => { L = L === 'ar' ? 'en' : 'ar'; try { localStorage.setItem('bs-lang', L); } catch (e) {} applyLang(); };
 
@@ -289,6 +296,46 @@ async function call(url, body, btn, render) {
 $('#goAsk').onclick = () => { const q = $('#q').value.trim(); if (q) call('/api/ask', { question: q }, $('#goAsk'), renderAsk); };
 $('#goVerify').onclick = () => { const v = $('#v').value.trim(); if (v) call('/api/verify', { text: v }, $('#goVerify'), renderVerify); };
 $('#q').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) $('#goAsk').click(); });
+
+// ---- ask by voice: record, resample to 16 kHz mono in the browser, server returns text for the box (never auto-submitted)
+(() => {
+  const mic = $('#mic'), msg = $('#micMsg');
+  if (!navigator.mediaDevices || !window.MediaRecorder) return;
+  mic.hidden = false;
+  let rec = null, chunks = [], timer = null;
+  const stop = () => { clearTimeout(timer); if (rec && rec.state === 'recording') rec.stop(); };
+  async function toPcm16(blob) {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+    try {
+      const buf = await ctx.decodeAudioData(await blob.arrayBuffer());
+      const f = buf.getChannelData(0), out = new Int16Array(f.length);
+      for (let i = 0; i < f.length; i++) out[i] = Math.max(-1, Math.min(1, f[i])) * 32767;
+      return out.buffer;
+    } finally { ctx.close(); }
+  }
+  async function send(blob) {
+    mic.disabled = true; msg.textContent = T().micWork;
+    try {
+      const r = await fetch('/api/transcribe?language=' + L, { method: 'POST', headers: { 'Content-Type': 'application/octet-stream' }, body: await toPcm16(blob) });
+      if (!r.ok) throw new Error(r.status);
+      const { text } = await r.json();
+      const q = $('#q'); q.value = (q.value.trim() ? q.value.trim() + ' ' : '') + text; q.focus();
+      msg.textContent = T().micDone;
+    } catch (e) { msg.textContent = T().micErr; }
+    mic.disabled = false;
+  }
+  mic.onclick = async () => {
+    if (rec && rec.state === 'recording') return stop();
+    let stream;
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true } }); }
+    catch (e) { msg.textContent = T().micDenied; return; }
+    chunks = []; rec = new MediaRecorder(stream);
+    rec.ondataavailable = e => chunks.push(e.data);
+    rec.onstop = () => { stream.getTracks().forEach(t => t.stop()); mic.classList.remove('rec'); mic.title = T().micStart; const b = new Blob(chunks, { type: rec.mimeType }); chunks = []; send(b); };
+    rec.start(); mic.classList.add('rec'); mic.title = T().micStop; msg.textContent = T().micRec;
+    timer = setTimeout(stop, 29000);  // one Whisper window is 30 s
+  };
+})();
 applyLang();
 </script>
 </body>

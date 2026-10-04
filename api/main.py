@@ -3,7 +3,8 @@ import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -97,6 +98,22 @@ def privacy():
 @app.post("/api/verify")
 def verify(body: VerifyBody):
     return {"mode": "verify", **verifier_mode.verify_text(body.text), "ai_disclosure": pipeline.DISCLOSURE["ar"]}
+
+
+@app.post("/api/transcribe")
+async def transcribe(request: Request, language: str | None = Query(None, pattern="^(ar|en)$")):
+    """Ask by voice: raw 16 kHz mono PCM16 in the body -> text for the question box. Audio is never stored."""
+    from core import speech as S
+    data = await request.body()
+    if len(data) > S.SAMPLE_RATE * 2 * (S.MAX_SECONDS + 1):
+        raise HTTPException(413, "audio too long")
+    try:
+        text = await run_in_threadpool(S.transcribe, data, language)
+    except S.AudioError as e:
+        raise HTTPException(400, str(e))
+    except Exception:
+        raise HTTPException(503, "speech recognition unavailable")
+    return {"text": text}
 
 
 @app.get("/api/audio/{surah}")
