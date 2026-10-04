@@ -219,11 +219,12 @@ def verify_answer(text: str, retrieved: list[dict], lang: str = "ar") -> VerifyR
 
     if lang == "ar":  # one language per answer: Latin words are allowed only inside parentheses (approved glossary terms)
         plain = re.sub(r"\([^)]*\)", " ", CITE.sub(" ", PLACEHOLDER.sub(" ", text)))
-        loose = re.findall(_ID, plain)   # passage ids left outside a valid [[ ]] (e.g. [[a], [b]]) are a syntax slip, not English
+        loose = re.findall(_ID, ANY_BRACES.sub(" ", plain))   # passage ids left outside a valid [[ ]] (e.g. [[a], [b]]) are a syntax slip, not English
         if loose:
             errors.append(f"Malformed citation: {', '.join(dict.fromkeys(loose))[:100]} must be inside ONE pair of double brackets, "
                           f"e.g. [[{loose[0]}, {loose[-1]}]] (never [[a], [b]])")
             plain = re.sub(_ID, " ", plain)
+        plain = ANY_BRACES.sub(" ", plain)   # an invalid {{...}} is reported as a malformed placeholder, not as English words
         stray = re.findall(r"[A-Za-z]{3,}", plain)
         if stray:
             errors.append(f"English word(s) inside an Arabic answer: {', '.join(dict.fromkeys(stray))[:80]}. Write the whole answer in Arabic "

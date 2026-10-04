@@ -97,7 +97,7 @@ Pages: `/` main UI · `/retrieval` raw hybrid-retrieval debug view · `/docs` AP
 
 ## Evaluation
 
-`evals/golden.jsonl` has the 12 challenge test cases (docs/data.pdf p.6) + 40 more (15 level أ, 10 ب, 5 ج, 5 د, 5 viral messages). The 4 viral entries marked `provisional` are well-known weak/fabricated hadiths — replace them with real examples from Dorar's *widespread hadiths* section.
+`evals/golden.jsonl` has the 12 challenge test cases (data.pdf p.6) + 40 more (15 level أ, 10 ب, 5 ج, 5 د, 5 viral messages). The 4 viral entries marked `provisional` are well-known weak/fabricated hadiths — replace them with real examples from Dorar's *widespread hadiths* section.
 
 ### Results (live run, 52 cases, router `gpt-5.4-mini`, generator `gpt-5.6-sol`, judge `gpt-5.5`)
 

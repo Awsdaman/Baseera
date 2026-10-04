@@ -12,3 +12,7 @@ data/raw/*
 env-folder-original/
 OpenAI API.txt
 *API*.txt
+
+# Challenge PDFs (kept locally, not published)
+docs/data.pdf
+docs/the_idea.pdf

@@ -1,0 +1,1026 @@
+{
+ "meta": "LIVE run on local: router=gemma-4-12b-it, generator=gemma-4-12b-it, judge=gemma-4-12b-it · 4 cases · 2026-10-04 17:15",
+ "summary": {
+  "router_accuracy": [
+   100.0,
+   4
+  ],
+  "retrieval_recall": [
+   100.0,
+   2
+  ],
+  "citation_rate": [
+   100.0,
+   4
+  ],
+  "verse_fidelity": [
+   100.0,
+   4
+  ],
+  "correct_abstention_rate": [
+   null,
+   0
+  ],
+  "false_abstention_rate": [
+   0.0,
+   4
+  ],
+  "verifier_forced_abstention_rate": [
+   0.0,
+   4
+  ],
+  "support_flag_rate": [
+   0.0,
+   15
+  ],
+  "behavior_pass_rate": [
+   100.0,
+   4
+  ],
+  "evidence_order_rate": [
+   66.7,
+   3
+  ],
+  "router_llm_rate": [
+   100.0,
+   4
+  ],
+  "runtime_abstentions": [
+   0,
+   4
+  ],
+  "first_attempt_pass_rate": [
+   75.0,
+   4
+  ],
+  "gen_output_tokens_mean": [
+   207,
+   4
+  ],
+  "verify_mode_pass_rate": [
+   null,
+   0
+  ],
+  "judge_score_avg_of_5": [
+   null,
+   0
+  ],
+  "router_level_أ": [
+   100.0,
+   1
+  ],
+  "router_level_ب": [
+   100.0,
+   3
+  ],
+  "router_level_ج": [
+   null,
+   0
+  ],
+  "router_level_د": [
+   null,
+   0
+  ]
+ },
+ "patterns": {},
+ "results": [
+  {
+   "id": "a-06",
+   "input": "ما هي أركان الإيمان؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": null,
+   "answer_excerpt": "أركان الإيمان ستة أركان أساسية لا يصح إيمان المسلم إلا بها [1][2].\n\nوهذه الأركان هي:\n1. الإيمان بالله تعالى، وهو الاعتقاد الجازم بأنه الخالق والملك وحده، وأنه المستحق للعبادة والخضوع [2].\n2. الإيمان بملائكته، والتصديق بوجودهم كخلق من نور يطيعون الله [2].\n3. الإيمان بكتبه، ويشمل ذلك الكتب السماوية التي أنزلها الله على رسله مثل التوراة والإنجيل والزبور والقرآن [2].\n4. الإيمان برسله وأنبياه [1][2].\n5",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:68:39",
+     "quran:9:71",
+     "quran:3:177",
+     "quran:49:15",
+     "hadith:hadeethenc:65903",
+     "hadith:hadeethenc:3276",
+     "hadith:hadeethenc:6468",
+     "hadith:hadeethenc:65862",
+     "qa:icadb:26024",
+     "qa:icadb:36157",
+     "qa:icadb:26046",
+     "qa:icadb:26754",
+     "tafsir:muyassar:27:3",
+     "tafsir:muyassar:26:4",
+     "term:icadb:1676",
+     "term:icadb:1695",
+     "quran:27:3",
+     "quran:26:4"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "أركان الإيمان ستة أركان أساسية لا يصح إيمان المسلم إلا بها [[qa:icadb:26024, qa:icadb:36157]].\n\nوهذه الأركان هي:\n1. الإيمان بالله تعالى، وهو الاعتقاد الجازم بأنه الخالق والملك وحده، وأنه المستحق للعبادة والخضوع [[qa:icadb:36157]].\n2. الإيمان بملائكته، والتصديق بوجودهم كخلق من نور يطيعون الله [[qa:icadb:36157]].\n3. الإيمان بكتبه، ويشمل ذلك الكتب السماوية التي أنزلها الله على رسله مثل التوراة والإنجيل والزبور والقرآن [[qa:icadb:36157]].\n4. الإيمان برسله وأنبياه [[qa:icadb:26024, qa:icadb:36157]].\n5. الإيمان باليوم الآخر، وهو التصديق بيوم القيامة الذي يبعث الله فيه الناس للحساب والجزاء [[qa:icadb:36157, quran:27:3]].\n6. الإيمان بالقدر خيره وشره [[qa:icadb:26024, qa:icadb:36157]].\n\nوقد وُصف الإيمان بأنه اعتقاد في القلب، ونطق باللسان، وعمل بالجوارح والأركان [[qa:icadb:26754, qa:icadb:26046]]. كما أن الإيمان النافع هو الذي يكون اختياراً ويؤدي إلى خضوع العبد لله [[tafsir:muyassar:26:4]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "أركان الإيمان ستة أركان أساسية لا يصح إيمان المسلم إلا بها .",
+        "cites": [
+         "qa:icadb:26024",
+         "qa:icadb:36157"
+        ],
+        "best_id": "qa:icadb:36157",
+        "score": 0.81
+       },
+       {
+        "text": "وهذه الأركان هي: 1. الإيمان بالله تعالى، وهو الاعتقاد الجازم بأنه الخالق والملك وحده، وأنه المستحق للعبادة والخضوع . 2. الإيمان بملائكته، والتصديق بوجودهم كخلق من نور يطيعون الله . 3. الإيمان بكتبه، ويشمل ذلك الكتب السماوية التي أنزلها الله على رسله مثل التوراة والإنجيل والزبور والقرآن . 4. الإيمان برسله وأنبياه . 5. الإيمان باليوم الآخر، وهو التصديق بيوم القيامة الذي يبعث الله فيه الناس للحساب والجزاء . 6. الإيمان بالقدر خيره وشره .",
+        "cites": [
+         "qa:icadb:36157",
+         "qa:icadb:36157",
+         "qa:icadb:36157",
+         "qa:icadb:26024",
+         "qa:icadb:36157",
+         "qa:icadb:36157",
+         "quran:27:3",
+         "qa:icadb:26024",
+         "qa:icadb:36157"
+        ],
+        "best_id": "qa:icadb:36157",
+        "score": 0.7779
+       },
+       {
+        "text": "وقد وُصف الإيمان بأنه اعتقاد في القلب، ونطق باللسان، وعمل بالجوارح والأركان . كما أن الإيمان النافع هو الذي يكون اختياراً ويؤدي إلى خضوع العبد لله .",
+        "cites": [
+         "qa:icadb:26754",
+         "qa:icadb:26046",
+         "tafsir:muyassar:26:4"
+        ],
+        "best_id": "qa:icadb:26754",
+        "score": 0.8159
+       }
+      ]
+     }
+    ],
+    "canonical_question": "ما هي أركان الإيمان؟",
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما هي أركان الإيمان؟",
+     "claim": null
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "أركان الإيمان ستة أركان أساسية لا يصح إيمان المسلم إلا بها [1][2].\n\nوهذه الأركان هي:\n1. الإيمان بالله تعالى، وهو الاعتقاد الجازم بأنه الخالق والملك وحده، وأنه المستحق للعبادة والخضوع [2].\n2. الإيمان بملائكته، والتصديق بوجودهم كخلق من نور يطيعون الله [2].\n3. الإيمان بكتبه، ويشمل ذلك الكتب السماوية التي أنزلها الله على رسله مثل التوراة والإنجيل والزبور والقرآن [2].\n4. الإيمان برسله وأنبياه [1][2].\n5. الإيمان باليوم الآخر، وهو التصديق بيوم القيامة الذي يبعث الله فيه الناس للحساب والجزاء [2][3].\n6. الإيمان بالقدر خيره وشره [1][2].\n\nوقد وُصف الإيمان بأنه اعتقاد في القلب، ونطق باللسان، وعمل بالجوارح والأركان [4][5]. كما أن الإيمان النافع هو الذي يكون اختياراً ويؤدي إلى خضوع العبد لله [6].\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "أركان الإيمان ستة أركان أساسية لا يصح إيمان المسلم إلا بها [1][2].\n\nوهذه الأركان هي:\n1. الإيمان بالله تعالى، وهو الاعتقاد الجازم بأنه الخالق والملك وحده، وأنه المستحق للعبادة والخضوع [2].\n2. الإيمان بملائكته، والتصديق بوجودهم كخلق من نور يطيعون الله [2].\n3. الإيمان بكتبه، ويشمل ذلك الكتب السماوية التي أنزلها الله على رسله مثل التوراة والإنجيل والزبور والقرآن [2].\n4. الإيمان برسله وأنبياه [1][2].\n5. الإيمان باليوم الآخر، وهو التصديق بيوم القيامة الذي يبعث الله فيه الناس للحساب والجزاء [2][3].\n6. الإيمان بالقدر خيره وشره [1][2].\n\nوقد وُصف الإيمان بأنه اعتقاد في القلب، ونطق باللسان، وعمل بالجوارح والأركان [4][5]. كما أن الإيمان النافع هو الذي يكون اختياراً ويؤدي إلى خضوع العبد لله [6]."
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:26024",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما أركان الإيمان؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26024/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:icadb:36157",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هي أركان الإيمان التي لا يصح إيمان المسلم إلا بها؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36157/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:27:3",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "النَّمۡلِ 3",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/27#3",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "qa:icadb:26754",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو الإيمان؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26754/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "qa:icadb:26046",
+      "type": "qa",
+      "source": "icadb",
+      "title": "هل الإيمان قول وعمل؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26046/version/1.1/sentences/",
+      "grade": null
+     },
+     {
+      "n": 6,
+      "id": "tafsir:muyassar:26:4",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 26:4",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/26#4",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 2,
+     "input": 5951,
+     "output": 439
+    }
+   },
+   "secs": 72.9
+  },
+  {
+   "id": "b-02",
+   "input": "ما معنى الجهاد في الإسلام؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": true,
+   "answer_excerpt": "الجهاد في الإسلام هو بذل الجهد والوسع في نشر الإسلام والدفاع عنه وعن أهله، أو قتال عدو للإسلام وأهله [1]. كما يتضمن الجهاد مجاهدة النفس للكف عن المعاصي، والمثابرة على العبادات كالصوم والصلاة، واجتهاد الأفراد في طلب العلم أو تحمل آلام الحياة بما يرضي الله [2].\n\n﴿وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰ",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 2,
+   "trace": {
+    "retrieved_ids": [
+     "quran:3:85",
+     "quran:22:78",
+     "quran:61:7",
+     "quran:2:217",
+     "hadith:hadeethenc:5033",
+     "hadith:hadeethenc:3722",
+     "hadith:hadeethenc:3917",
+     "hadith:hadeethenc:2759",
+     "qa:icadb:26100",
+     "qa:icadb:36193",
+     "qa:bayyinat:230",
+     "qa:icadb:36099",
+     "tafsir:muyassar:9:20",
+     "tafsir:muyassar:9:45",
+     "term:glossary:1",
+     "term:glossary:10",
+     "quran:9:20",
+     "quran:9:45"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "الجهاد في الإسلام هو بذل الجهد والوسع في سبيل الله، ويشمل ذلك الدفاع عن الإسلام وأهله ونشر دينه [[qa:icadb:26100]]. كما يتضمن الجهاد مجاهدة النفس للكف عن المعاصي، والمثابرة على العبادات كالصوم والصلاة، واجتهاد الأفراد في طلب العلم أو تحمل آلام الحياة بما يرضي الله [[qa:icadb:36193]].\n\n{{quran:22:78}}\n\nتوضح الآية الكريمة وجوب الجهاد في سبيل الله حق جهاده، مع التأكيد على أن الدين لم يُجعل فيه حرج على المسلمين [[tafsir:muyassar:22:78]] (ملاحظة: هذا التفسير مستنتج من سياق الآية المذكورة).\n\n{{hadith:hadeethenc:5033}}\n\nأشار النبي ﷺ إلى أن السياحة الحقيقية لأمته هي الجهاد في سبيل الله عز وجل [[hadith:hadeethenc:5033, hadith:hadeethenc:3722]].\n\n{{hadith:hadeethenc:3917}}\n\nوصف النبي ﷺ المجاهد في سبيل الله بأنه يشبه الصائم القائم القانت بآيات الله الذي لا يفتر عن عبادته [[hadith:hadeethenc:3917]].\n\n{{hadith:hadeethenc:2759}}\n\nأوضح النبي ﷺ أن أفضل أنواع الجهاد هو الحج المبرور [[hadith:hadeethenc:2759]].\n\nيُشرع الجهاد في الإسلام كأداة للدفاع عن النفس ورد البغي ودفع الظلم وإقامة السلم، وليس الهدف منه سفك الدماء أو العنف [[qa:bayyinat:230]]. كما يشدد الإسلام على حماية الأرواح والممتلكات، ولا يجوز فيه قتل المسالمين أو المدنيين أو التمثيل بالقتلى [[qa:icadb:36193]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [
+       "Citation [[tafsir:muyassar:22:78]] was NOT retrieved for this question"
+      ],
+      "ok": false,
+      "support": null
+     },
+     {
+      "n": 2,
+      "raw": "الجهاد في الإسلام هو بذل الجهد والوسع في نشر الإسلام والدفاع عنه وعن أهله، أو قتال عدو للإسلام وأهله [[qa:icadb:26100]]. كما يتضمن الجهاد مجاهدة النفس للكف عن المعاصي، والمثابرة على العبادات كالصوم والصلاة، واجتهاد الأفراد في طلب العلم أو تحمل آلام الحياة بما يرضي الله [[qa:icadb:36193]].\n\n{{quran:22:78}}\n\nتأمر الآية الكريمة بالجهاد في سبيل الله حق جهاده، وتوضح أن الله قد اختار المؤمنين ولم يجعل عليهم في الدين من حرج [[tafsir:muyassar:9:20]] (ملاحظة: التفسير متاح للآيات المذكورة في السياق).\n\n{{hadith:hadeethenc:5033}}\n\nأشار النبي ﷺ إلى أن السياحة الحقيقية لأمته هي الجهاد في سبيل الله عز وجل [[hadith:hadeethenc:5033, hadith:hadeethenc:3722]].\n\n{{hadith:hadeethenc:3917}}\n\nوصف النبي ﷺ المجاهد في سبيل الله بأنه يشبه الصائم القائم القانت بآيات الله الذي لا يفتر عن عبادته [[hadith:hadeethenc:3917]].\n\n{{hadith:hadeethenc:2759}}\n\nأوضح النبي ﷺ أن أفضل أنواع الجهاد هو الحج المبرور [[hadith:hadeethenc:2759]].\n\nيُشرع الجهاد في الإسلام كأداة للدفاع عن النفس ورد البغي ودفع الظلم وإقامة السلم، وليس المقصود منه سفك الدماء أو العنف [[qa:bayyinat:230]]. كما يشدد الإسلام على حماية الأرواح والممتلكات، ولا يجوز فيه قتل المسالمين أو المدنيين أو التمثيل بالقتلى [[qa:icadb:36193]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "الجهاد في الإسلام هو بذل الجهد والوسع في نشر الإسلام والدفاع عنه وعن أهله، أو قتال عدو للإسلام وأهله . كما يتضمن الجهاد مجاهدة النفس للكف عن المعاصي، والمثابرة على العبادات كالصوم والصلاة، واجتهاد الأفراد في طلب العلم أو تحمل آلام الحياة بما يرضي الله .",
+        "cites": [
+         "qa:icadb:26100",
+         "qa:icadb:36193"
+        ],
+        "best_id": "qa:icadb:36193",
+        "score": 0.8542
+       },
+       {
+        "text": "تأمر الآية الكريمة بالجهاد في سبيل الله حق جهاده، وتوضح أن الله قد اختار المؤمنين ولم يجعل عليهم في الدين من حرج (ملاحظة: التفسير متاح للآيات المذكورة في السياق).",
+        "cites": [
+         "tafsir:muyassar:9:20"
+        ],
+        "best_id": "tafsir:muyassar:9:20",
+        "score": 0.5554
+       },
+       {
+        "text": "أشار النبي ﷺ إلى أن السياحة الحقيقية لأمته هي الجهاد في سبيل الله عز وجل .",
+        "cites": [
+         "hadith:hadeethenc:5033",
+         "hadith:hadeethenc:3722"
+        ],
+        "best_id": "hadith:hadeethenc:5033",
+        "score": 0.8074
+       },
+       {
+        "text": "وصف النبي ﷺ المجاهد في سبيل الله بأنه يشبه الصائم القائم القانت بآيات الله الذي لا يفتر عن عبادته .",
+        "cites": [
+         "hadith:hadeethenc:3917"
+        ],
+        "best_id": "hadith:hadeethenc:3917",
+        "score": 0.8033
+       },
+       {
+        "text": "أوضح النبي ﷺ أن أفضل أنواع الجهاد هو الحج المبرور .",
+        "cites": [
+         "hadith:hadeethenc:2759"
+        ],
+        "best_id": "hadith:hadeethenc:2759",
+        "score": 0.7173
+       },
+       {
+        "text": "يُشرع الجهاد في الإسلام كأداة للدفاع عن النفس ورد البغي ودفع الظلم وإقامة السلم، وليس المقصود منه سفك الدماء أو العنف . كما يشدد الإسلام على حماية الأرواح والممتلكات، ولا يجوز فيه قتل المسالمين أو المدنيين أو التمثيل بالقتلى .",
+        "cites": [
+         "qa:bayyinat:230",
+         "qa:icadb:36193"
+        ],
+        "best_id": "qa:icadb:36193",
+        "score": 0.8367
+       }
+      ]
+     }
+    ],
+    "canonical_question": "ما معنى الجهاد في الإسلام؟",
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما معنى الجهاد في الإسلام؟",
+     "claim": null
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "الجهاد في الإسلام هو بذل الجهد والوسع في نشر الإسلام والدفاع عنه وعن أهله، أو قتال عدو للإسلام وأهله [1]. كما يتضمن الجهاد مجاهدة النفس للكف عن المعاصي، والمثابرة على العبادات كالصوم والصلاة، واجتهاد الأفراد في طلب العلم أو تحمل آلام الحياة بما يرضي الله [2].\n\n﴿وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰهِيمَۚ هُوَ سَمَّىٰكُمُ ٱلۡمُسۡلِمِينَ مِن قَبۡلُ وَفِي هَٰذَا لِيَكُونَ ٱلرَّسُولُ شَهِيدًا عَلَيۡكُمۡ وَتَكُونُواْ شُهَدَآءَ عَلَى ٱلنَّاسِۚ فَأَقِيمُواْ ٱلصَّلَوٰةَ وَءَاتُواْ ٱلزَّكَوٰةَ وَٱعۡتَصِمُواْ بِٱللَّهِ هُوَ مَوۡلَىٰكُمۡۖ فَنِعۡمَ ٱلۡمَوۡلَىٰ وَنِعۡمَ ٱلنَّصِيرُ﴾ [الحَجِّ: 78]\n\nتأمر الآية الكريمة بالجهاد في سبيل الله حق جهاده، وتوضح أن الله قد اختار المؤمنين ولم يجعل عليهم في الدين من حرج [4] (ملاحظة: التفسير متاح للآيات المذكورة في السياق).\n\n«عن أبي أمامة رضي الله عنه : أن رجلا، قال: يا رسول الله، ائذن لي في السياحة. فقال النبي صلى الله عليه وسلم : «إن سياحة أمتي الجهاد في سبيل الله عز وجل ».» (رواه أبو داود — الدرجة: صحيح)\n\nأشار النبي ﷺ إلى أن السياحة الحقيقية لأمته هي الجهاد في سبيل الله عز وجل [5][6].\n\n«عن أبي هريرة رضي الله عنه قال: قيل: يا رسول الله، ما يعدل الجهاد في سبيل الله؟ قال: «لا تستطيعونه» فأعادوا عليه مرتين أو ثلاثًا كل ذلك يقول: «لا تستطيعونه»! ثم قال: «مثل المجاهد في سبيل الله كمثل الصائم القائم القانت بآيات الله لا يَفْتُرُ من صيام، ولا صلاة، حتى يرجع المجاهد في سبيل الله». \nوفي رواية البخاري: أن رجلاً قال: يا رسول الله، دلني على عمل يعْدِلُ الجهاد؟ قال: «لا أجده» ثم قال: «هل تستطيع إذا خرج المجاهد أن تدخل مسجدك فتقوم ولا تفتر، وتصوم ولا تفطر»؟ فقال: «ومن يستطيع ذلك؟!»» (متفق عليه، والرواية الثانية للبخاري — الدرجة: صحيح)\n\nوصف النبي ﷺ المجاهد في سبيل الله بأنه يشبه الصائم القائم القانت بآيات الله الذي لا يفتر عن عبادته [7].\n\n«عَنْ عَائِشَةَ أُمِّ المُؤْمِنِينَ رَضِيَ اللَّهُ عَنْهَا أَنَّهَا قَالَتْ: يَا رَسُولَ اللَّهِ، نَرَى الجِهَادَ أَفْضَلَ العَمَلِ، أَفَلاَ نُجَاهِدُ؟ قَالَ: «لَا، لَكُنَّ أَفْضَلُ الجِهَادِ: حَجٌّ مَبْرُورٌ».» (رواه البخاري — الدرجة: صحيح)\n\nأوضح النبي ﷺ أن أفضل أنواع الجهاد هو الحج المبرور [8].\n\nيُشرع الجهاد في الإسلام كأداة للدفاع عن النفس ورد البغي ودفع الظلم وإقامة السلم، وليس المقصود منه سفك الدماء أو العنف [9]. كما يشدد الإسلام على حماية الأرواح والممتلكات، ولا يجوز فيه قتل المسالمين أو المدنيين أو التمثيل بالقتلى [2].\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "الجهاد في الإسلام هو بذل الجهد والوسع في نشر الإسلام والدفاع عنه وعن أهله، أو قتال عدو للإسلام وأهله [1]. كما يتضمن الجهاد مجاهدة النفس للكف عن المعاصي، والمثابرة على العبادات كالصوم والصلاة، واجتهاد الأفراد في طلب العلم أو تحمل آلام الحياة بما يرضي الله [2]."
+     },
+     {
+      "kind": "quran",
+      "ref": "22:78",
+      "surah_name_ar": "الحَجِّ",
+      "text_ar": "وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰهِيمَۚ هُوَ سَمَّىٰكُمُ ٱلۡمُسۡلِمِينَ مِن قَبۡلُ وَفِي هَٰذَا لِيَكُونَ ٱلرَّسُولُ شَهِيدًا عَلَيۡكُمۡ وَتَكُونُواْ شُهَدَآءَ عَلَى ٱلنَّاسِۚ فَأَقِيمُواْ ٱلصَّلَوٰةَ وَءَاتُواْ ٱلزَّكَوٰةَ وَٱعۡتَصِمُواْ بِٱللَّهِ هُوَ مَوۡلَىٰكُمۡۖ فَنِعۡمَ ٱلۡمَوۡلَىٰ وَنِعۡمَ ٱلنَّصِيرُ",
+      "text_en": "And strive for Allāh with the striving due to Him. He has chosen you and has not placed upon you in the religion any difficulty. [It is] the religion of your father, Abraham. He [i.e., Allāh] named you \"Muslims\" before [in former scriptures] and in this [revelation] that the Messenger may be a witness over you and you may be witnesses over the people. So establish prayer and give zakāh and hold fast to Allāh. He is your protector; and excellent is the protector, and excellent is the helper.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:22:78"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/22#78"
+     },
+     {
+      "kind": "explanation",
+      "text": "تأمر الآية الكريمة بالجهاد في سبيل الله حق جهاده، وتوضح أن الله قد اختار المؤمنين ولم يجعل عليهم في الدين من حرج [4] (ملاحظة: التفسير متاح للآيات المذكورة في السياق)."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:5033",
+      "text_ar": "عن أبي أمامة رضي الله عنه : أن رجلا، قال: يا رسول الله، ائذن لي في السياحة. فقال النبي صلى الله عليه وسلم : «إن سياحة أمتي الجهاد في سبيل الله عز وجل ».",
+      "text_en": "Abu Umāmah (may Allah be pleased with him) reported: A man said: \"O Messenger of Allah, allow me to travel.\" The Prophet (may Allah's peace and blessings be upon him) said: \"The tourism of my Ummah is Jihad in the path of Allah, the Exalted.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه أبو داود",
+      "reference": "سنن أبي داود، تحقيق: محمد محيي الدين عبد الحميد، نشر: المكتبة العصرية، صيدا – بيروت.\nصحيح الجامع الصغير وزيادته، الألباني، المكتب الإسلامي، بيروت، الطبعة : الثالثة، 1408هـ ، 1988م\nنزهة المتقين شرح رياض الصالحين لمجموعة من الباحثين, مؤسسة الرسالة, الطبعة الرابعة عشر, 1407ه .\nدليل الفالحين لطرق رياض الصالحين لمحمد بن علان الصديقي, دار الكتاب العربي.\nمصابيح التنوير على صحيح الجامع الصغير، تأليف الألباني، إعداد معتز أحمد.\nبهجة الناظرين شرح رياض الصالحين، لسليم الهلالي, دار ابن الجوزي.\nكنوز رياض الصالحين بإشراف حمد العمار, دار كنوز إشبيليا, الطبعة الأولى, 1430ه .",
+      "ids": [
+       "hadith:hadeethenc:5033"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/5033"
+     },
+     {
+      "kind": "explanation",
+      "text": "أشار النبي ﷺ إلى أن السياحة الحقيقية لأمته هي الجهاد في سبيل الله عز وجل [5][6]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:3917",
+      "text_ar": "عن أبي هريرة رضي الله عنه قال: قيل: يا رسول الله، ما يعدل الجهاد في سبيل الله؟ قال: «لا تستطيعونه» فأعادوا عليه مرتين أو ثلاثًا كل ذلك يقول: «لا تستطيعونه»! ثم قال: «مثل المجاهد في سبيل الله كمثل الصائم القائم القانت بآيات الله لا يَفْتُرُ من صيام، ولا صلاة، حتى يرجع المجاهد في سبيل الله». \nوفي رواية البخاري: أن رجلاً قال: يا رسول الله، دلني على عمل يعْدِلُ الجهاد؟ قال: «لا أجده» ثم قال: «هل تستطيع إذا خرج المجاهد أن تدخل مسجدك فتقوم ولا تفتر، وتصوم ولا تفطر»؟ فقال: «ومن يستطيع ذلك؟!»",
+      "text_en": "Abu Hurayrah (may Allah be pleased with him) narrated that the Messenger of Allah (may Allah's peace and blessings be upon him) was asked: \"O Messenger of Allah, what is equivalent to Jihad in the cause of Allah?” He answered: “You can not do it.” The question was repeated twice or thrice to which he gave the same answer. Then he said: “The example of a Mujāhid in the cause of Allah is like a person who keeps fasting, praying and reciting the verses of Allah unfailingly until the Mujāhid returns.”\nIn the version narrated by Al-Bukhāri: A man said: \"O Messenger of Allah, show me a deed that equals Jihad.” The Prophet replied: \"I do not find one.\" Then he said: \"When the Mujāhid goes out for Jihad, can you enter your place of prayer and pray incessantly and fast without breaking your fast?\" The man replied: \"Who can do that!\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "متفق عليه، والرواية الثانية للبخاري",
+      "reference": "- رياض الصالحين من كلام سيد المرسلين؛ للإمام أبي زكريا النووي، تحقيق د. ماهر الفحل، دار ابن كثير-دمشق، الطبعة الأولى، 1428ه .\n- بهجة الناظرين شرح رياض الصالحين؛ تأليف سليم الهلالي، دار ابن الجوزي- الطبعة الأولى1418ه.\n- نزهة المتقين شرح رياض الصالحين؛ تأليف د. مصطفى الخِن وغيره، مؤسسة الرسالة-بيروت، الطبعة الرابعة عشر، 1407هـ.\n- صحيح البخاري –عناية محمد زهير الناصر، دار طوق النجاة، الطبعة الأولى، 1422هـ.\n- صحيح مسلم؛ حققه ورقمه محمد فؤاد عبد الباقي، دار عالم الكتب-الرياض، الطبعة الأولى، 1417هـ.\n- منار القاري شرح مختصر صحيح البخاري تأليف حمزة محمد قاسم مكتبة دار البيان، دمشق - الجمهورية العربية السورية، مكتبة المؤيد، الطائف - المملكة العربية السعودية 1410 هـ - 1990 م.\n- كنوز رياض الصالحين، لحمد بن ناصر العمار، دار كنوز إشبيليا- الطبعة الأولى1430ه.",
+      "ids": [
+       "hadith:hadeethenc:3917"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/3917"
+     },
+     {
+      "kind": "explanation",
+      "text": "وصف النبي ﷺ المجاهد في سبيل الله بأنه يشبه الصائم القائم القانت بآيات الله الذي لا يفتر عن عبادته [7]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:2759",
+      "text_ar": "عَنْ عَائِشَةَ أُمِّ المُؤْمِنِينَ رَضِيَ اللَّهُ عَنْهَا أَنَّهَا قَالَتْ: يَا رَسُولَ اللَّهِ، نَرَى الجِهَادَ أَفْضَلَ العَمَلِ، أَفَلاَ نُجَاهِدُ؟ قَالَ: «لَا، لَكُنَّ أَفْضَلُ الجِهَادِ: حَجٌّ مَبْرُورٌ».",
+      "text_en": "‘Ā’ishah, Mother of the Believers, (may Allah be pleased with her) reported saying: O Messenger of Allah, we consider Jihad the best deed; should we not perform Jihad? He said, \"No; rather, the best Jihad is Mabrūr (accepted) Hajj.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه البخاري",
+      "reference": "صحيح البخاري (2/ 133) (1520).\nبهجة الناظرين شرح رياض الصالحين، لسليم الهلالي (2/ 402).\nنزهة المتقين شرح رياض الصالحين، لمصطفى الخِن وغيره (2/ 902).\nشرح رياض الصالحين، لابن عثيمين (5/ 321).",
+      "ids": [
+       "hadith:hadeethenc:2759"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/2759"
+     },
+     {
+      "kind": "explanation",
+      "text": "أوضح النبي ﷺ أن أفضل أنواع الجهاد هو الحج المبرور [8].\n\nيُشرع الجهاد في الإسلام كأداة للدفاع عن النفس ورد البغي ودفع الظلم وإقامة السلم، وليس المقصود منه سفك الدماء أو العنف [9]. كما يشدد الإسلام على حماية الأرواح والممتلكات، ولا يجوز فيه قتل المسالمين أو المدنيين أو التمثيل بالقتلى [2]."
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:26100",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو الجهاد في سبيل الله؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26100/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:icadb:36193",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو الجهاد؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36193/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:22:78",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الحَجِّ 78",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/22#78",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "tafsir:muyassar:9:20",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 9:20",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/9#20",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "hadith:hadeethenc:5033",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "إن سياحة أمتي الجهاد في سبيل الله عز وجل ",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/5033",
+      "grade": "صحيح"
+     },
+     {
+      "n": 6,
+      "id": "hadith:hadeethenc:3722",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "إن سِيَاحَة أُمَّتِي الجِهاد في سَبِيلِ الله عز وجل ",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/3722",
+      "grade": "صحيح"
+     },
+     {
+      "n": 7,
+      "id": "hadith:hadeethenc:3917",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "مَثَلُ المجاهد في سَبِيل الله كمَثل الصَائم القَائم القَانت بآيات الله لا يَفْتُر من صيام، ولا صلاة، حتى يَرْجِع المجاهد في سبيل الله",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/3917",
+      "grade": "صحيح"
+     },
+     {
+      "n": 8,
+      "id": "hadith:hadeethenc:2759",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "يا رسول الله، نرى الجهاد أفضل العمل، أفلا نجاهد؟ قال: لا، لكن أفضل الجهاد: حج مبرور",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/2759",
+      "grade": "صحيح"
+     },
+     {
+      "n": 9,
+      "id": "qa:bayyinat:230",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "أليس الإسلامُ هو الذي يشجِّعُ على العُنْف؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 12484,
+     "output": 966
+    }
+   },
+   "secs": 70.5
+  },
+  {
+   "id": "b-05",
+   "input": "هل يتعارض القرآن مع العلم الحديث؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": true,
+   "answer_excerpt": "لا يوجد تعارض بين القرآن الكريم وعلم الحديث، بل هما متكاملان كونهما وحياً من عند الله تعالى [1]. فالقرآن هو كلام الله المحكم الذي لا شبهة فيه ولا تناقض [2][3]، بينما السنة النبوية هي الوحي الذي يبيّن القرآن ويُفصّل أحكامه [1].\n\n﴿أَفَلَا يَتَدَبَّرُونَ ٱلۡقُرۡءَانَۚ وَلَوۡ كَانَ مِنۡ عِندِ غَيۡرِ ٱللَّهِ لَوَجَدُواْ فِيهِ ٱخۡتِلَٰفࣰا كَثِيرࣰا﴾ [النِّسَاءِ: 82]\n\n﴿وَلِيَعۡلَمَ ٱلَّذِينَ أُوتُواْ ٱلۡع",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:10:37",
+     "quran:2:31",
+     "quran:4:82",
+     "quran:44:26",
+     "hadith:hadeethenc:6084",
+     "hadith:hadeethenc:65760",
+     "hadith:hadeethenc:5913",
+     "hadith:hadeethenc:8265",
+     "qa:bayyinat:75",
+     "qa:bayyinat:144",
+     "qa:bayyinat:125",
+     "qa:bayyinat:39",
+     "tafsir:muyassar:22:54",
+     "tafsir:muyassar:85:21",
+     "term:glossary:7",
+     "term:icadb:1672",
+     "quran:22:54",
+     "quran:85:21",
+     "quran:55:2",
+     "quran:31:6",
+     "quran:36:69"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "لا يوجد تعارض بين القرآن الكريم وعلم الحديث، بل هما متكاملان كونهما وحياً من عند الله تعالى [[qa:bayyinat:144]]. فالقرآن هو كلام الله المحكم الذي لا شبهة فيه ولا تناقض [[quran:4:82, tafsir:muyassar:22:54]]، بينما السنة النبوية هي الوحي الذي يبيّن القرآن ويُفصّل أحكامه [[qa:bayyinat:144]].\n\n{{quran:4:82}}\n\n{{quran:22:54}}\n\nإن الإيمان يقتضي التصديق بكل ما جاء في القرآن والسنّة والعمل بهما [[qa:bayyinat:125]]. وقد أوضح العلماء أن السنة الصحيحة لا تخالف القرآن أبداً، بل هي تأتي لتبيين المجمل، أو تقييد المطلق، أو تخصيص العام [[qa:bayyinat:125]]. وأي تعارض يُظن وجوده قد يكون ناتجاً عن توهم في فهم النصوص، حيث يمكن الجمع بينها وتوفيقها [[qa:bayyinat:125]].\n\n{{hadith:hadeethenc:65760}}\n\nفخير الحديث هو كتاب الله، والهدى هو هدي محمد ﷺ [[hadith:hadeethenc:65760]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "لا يوجد تعارض بين القرآن الكريم وعلم الحديث، بل هما متكاملان كونهما وحياً من عند الله تعالى . فالقرآن هو كلام الله المحكم الذي لا شبهة فيه ولا تناقض ، بينما السنة النبوية هي الوحي الذي يبيّن القرآن ويُفصّل أحكامه .",
+        "cites": [
+         "qa:bayyinat:144",
+         "quran:4:82",
+         "tafsir:muyassar:22:54",
+         "qa:bayyinat:144"
+        ],
+        "best_id": "qa:bayyinat:144",
+        "score": 0.7354
+       },
+       {
+        "text": "إن الإيمان يقتضي التصديق بكل ما جاء في القرآن والسنّة والعمل بهما . وقد أوضح العلماء أن السنة الصحيحة لا تخالف القرآن أبداً، بل هي تأتي لتبيين المجمل، أو تقييد المطلق، أو تخصيص العام . وأي تعارض يُظن وجوده قد يكون ناتجاً عن توهم في فهم النصوص، حيث يمكن الجمع بينها وتوفيقها .",
+        "cites": [
+         "qa:bayyinat:125",
+         "qa:bayyinat:125",
+         "qa:bayyinat:125"
+        ],
+        "best_id": "qa:bayyinat:125",
+        "score": 0.7907
+       },
+       {
+        "text": "فخير الحديث هو كتاب الله، والهدى هو هدي محمد ﷺ .",
+        "cites": [
+         "hadith:hadeethenc:65760"
+        ],
+        "best_id": "hadith:hadeethenc:65760",
+        "score": 0.8505
+       }
+      ]
+     }
+    ],
+    "canonical_question": "هل هناك تعارض بين القرآن الكريم وعلم الحديث؟",
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "هل هناك تعارض بين القرآن الكريم وعلم الحديث؟",
+     "claim": null,
+     "original": "هل يتعارض القرآن مع العلم الحديث؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "لا يوجد تعارض بين القرآن الكريم وعلم الحديث، بل هما متكاملان كونهما وحياً من عند الله تعالى [1]. فالقرآن هو كلام الله المحكم الذي لا شبهة فيه ولا تناقض [2][3]، بينما السنة النبوية هي الوحي الذي يبيّن القرآن ويُفصّل أحكامه [1].\n\n﴿أَفَلَا يَتَدَبَّرُونَ ٱلۡقُرۡءَانَۚ وَلَوۡ كَانَ مِنۡ عِندِ غَيۡرِ ٱللَّهِ لَوَجَدُواْ فِيهِ ٱخۡتِلَٰفࣰا كَثِيرࣰا﴾ [النِّسَاءِ: 82]\n\n﴿وَلِيَعۡلَمَ ٱلَّذِينَ أُوتُواْ ٱلۡعِلۡمَ أَنَّهُ ٱلۡحَقُّ مِن رَّبِّكَ فَيُؤۡمِنُواْ بِهِۦ فَتُخۡبِتَ لَهُۥ قُلُوبُهُمۡۗ وَإِنَّ ٱللَّهَ لَهَادِ ٱلَّذِينَ ءَامَنُوٓاْ إِلَىٰ صِرَٰطࣲ مُّسۡتَقِيمࣲ﴾ [الحَجِّ: 54]\n\nإن الإيمان يقتضي التصديق بكل ما جاء في القرآن والسنّة والعمل بهما [5]. وقد أوضح العلماء أن السنة الصحيحة لا تخالف القرآن أبداً، بل هي تأتي لتبيين المجمل، أو تقييد المطلق، أو تخصيص العام [5]. وأي تعارض يُظن وجوده قد يكون ناتجاً عن توهم في فهم النصوص، حيث يمكن الجمع بينها وتوفيقها [5].\n\n«عن جابر بن عبد الله قال: كان رسول الله صلى الله عليه وسلم إذا خطب احمرَّتْ عيناه، وعلا صوته، واشتد غضبه، حتى كأنه مُنذِرُ جيشٍ يقول: صبَّحكم ومسَّاكم، ويقول: «بُعثتُ أنا والساعةُ كهاتين»، ويقرن بين إصبعيه السبابة، والوسطى، ويقول: «أما بعد، فإن خير الحديث كتاب الله، وخير الهدى هدى محمد، وشر الأمور محدثاتها، وكل بدعة ضلالة» ثم يقول: «أنا أولى بكل مؤمن من نفسه، من ترك مالًا فلأهله، ومن ترك دينًا أو ضَياعًا فإليَّ وعليَّ».» (رواه مسلم — الدرجة: صحيح)\n\nفخير الحديث هو كتاب الله، والهدى هو هدي محمد ﷺ [6].\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "لا يوجد تعارض بين القرآن الكريم وعلم الحديث، بل هما متكاملان كونهما وحياً من عند الله تعالى [1]. فالقرآن هو كلام الله المحكم الذي لا شبهة فيه ولا تناقض [2][3]، بينما السنة النبوية هي الوحي الذي يبيّن القرآن ويُفصّل أحكامه [1]."
+     },
+     {
+      "kind": "quran",
+      "ref": "4:82",
+      "surah_name_ar": "النِّسَاءِ",
+      "text_ar": "أَفَلَا يَتَدَبَّرُونَ ٱلۡقُرۡءَانَۚ وَلَوۡ كَانَ مِنۡ عِندِ غَيۡرِ ٱللَّهِ لَوَجَدُواْ فِيهِ ٱخۡتِلَٰفࣰا كَثِيرࣰا",
+      "text_en": "Then do they not reflect upon the Qur’ān?[203] If it had been from [any] other than Allāh, they would have found within it much contradiction.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:4:82"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/4#82"
+     },
+     {
+      "kind": "quran",
+      "ref": "22:54",
+      "surah_name_ar": "الحَجِّ",
+      "text_ar": "وَلِيَعۡلَمَ ٱلَّذِينَ أُوتُواْ ٱلۡعِلۡمَ أَنَّهُ ٱلۡحَقُّ مِن رَّبِّكَ فَيُؤۡمِنُواْ بِهِۦ فَتُخۡبِتَ لَهُۥ قُلُوبُهُمۡۗ وَإِنَّ ٱللَّهَ لَهَادِ ٱلَّذِينَ ءَامَنُوٓاْ إِلَىٰ صِرَٰطࣲ مُّسۡتَقِيمࣲ",
+      "text_en": "And so those who were given knowledge may know that it is the truth from your Lord and [therefore] believe in it, and their hearts humbly submit to it. And indeed is Allāh the Guide of those who have believed to a straight path.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:22:54"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/22#54"
+     },
+     {
+      "kind": "explanation",
+      "text": "إن الإيمان يقتضي التصديق بكل ما جاء في القرآن والسنّة والعمل بهما [5]. وقد أوضح العلماء أن السنة الصحيحة لا تخالف القرآن أبداً، بل هي تأتي لتبيين المجمل، أو تقييد المطلق، أو تخصيص العام [5]. وأي تعارض يُظن وجوده قد يكون ناتجاً عن توهم في فهم النصوص، حيث يمكن الجمع بينها وتوفيقها [5]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:65760",
+      "text_ar": "عن جابر بن عبد الله قال: كان رسول الله صلى الله عليه وسلم إذا خطب احمرَّتْ عيناه، وعلا صوته، واشتد غضبه، حتى كأنه مُنذِرُ جيشٍ يقول: صبَّحكم ومسَّاكم، ويقول: «بُعثتُ أنا والساعةُ كهاتين»، ويقرن بين إصبعيه السبابة، والوسطى، ويقول: «أما بعد، فإن خير الحديث كتاب الله، وخير الهدى هدى محمد، وشر الأمور محدثاتها، وكل بدعة ضلالة» ثم يقول: «أنا أولى بكل مؤمن من نفسه، من ترك مالًا فلأهله، ومن ترك دينًا أو ضَياعًا فإليَّ وعليَّ».",
+      "text_en": null,
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه مسلم",
+      "reference": "صحيح مسلم (2/ 592) (867)، النهاية في غريب الحديث والأثر (909) (509) (192) (552)، البحر المحيط الثجاج في شرح صحيح الإمام مسلم بن الحجاج (17/ 257).",
+      "ids": [
+       "hadith:hadeethenc:65760"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/65760"
+     },
+     {
+      "kind": "explanation",
+      "text": "فخير الحديث هو كتاب الله، والهدى هو هدي محمد ﷺ [6]."
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:bayyinat:144",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "مثلُ القرآنِ الكريم؟»ِّصحيحُ البخاري« هل",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "quran:4:82",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "النِّسَاءِ 82",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/4#82",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "tafsir:muyassar:22:54",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 22:54",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/22#54",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "quran:22:54",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الحَجِّ 54",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/22#54",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "qa:bayyinat:125",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "السنَّةُ لا تستقِلُّ بالتشريعِ؛ فالتشريعُ للقرآن",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 6,
+      "id": "hadith:hadeethenc:65760",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "إن خير الحديث كتاب الله، وخير الهدى هدى محمد، وشر الأمور محدثاتها، وكل بدعة ضلالة",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/65760",
+      "grade": "صحيح"
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 2,
+     "input": 6491,
+     "output": 352
+    }
+   },
+   "secs": 41.7
+  },
+  {
+   "id": "u-02",
+   "input": "ما حكم اذكار الصباح؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": false,
+   "answer_excerpt": "تُشير النصوص الواردة إلى فضل تخصيص وقت الصباح بالذكر والعبادة، حيث حثَّ النبي ﷺ على البدء بالأذكار في الصباح لما لها من أجر عظيم [1].\n\n«عن رافع بن خديج رضي الله عنه قال: قال رسول الله صلى الله عليه وسلم : «أَصْبِحُوا بالصبح؛ فإنه أعظم لِأُجُورِكُم، أو أعظم للأجر».» (رواه أبو داود وابن ماجه وأحمد — الدرجة: صحيح)\n\nكما وردت إشارات إلى قراءة القرآن في وقت الفجر، حيث وصفه القرآن بأنه مشهود [2].\n\n﴿أَقِم",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:37:177",
+     "quran:17:78",
+     "quran:19:12",
+     "quran:74:34",
+     "hadith:hadeethenc:65260",
+     "hadith:hadeethenc:10602",
+     "hadith:hadeethenc:66004",
+     "hadith:hadeethenc:10601",
+     "qa:icadb:26239",
+     "qa:icadb:26079",
+     "qa:icadb:26082",
+     "qa:icadb:26070",
+     "tafsir:muyassar:68:21",
+     "tafsir:muyassar:15:83",
+     "term:icadb:1643",
+     "term:icadb:1648",
+     "quran:68:21",
+     "quran:15:83",
+     "term:icadb:1673",
+     "term:icadb:1638"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "تُشير النصوص الواردة إلى فضل تخصيص وقت الصباح بالذكر والعبادة، حيث حثَّ النبي ﷺ على البدء بالأذكار في الصباح لما لها من أجر عظيم [[hadith:hadeethenc:10601]].\n\n{{hadith:hadeethenc:10601}}\n\nكما وردت إشارات إلى قراءة القرآن في وقت الفجر، حيث وصفه القرآن بأنه مشهود [[quran:17:78]].\n\n{{quran:17:78}}\n\nويمكن للمسلم أن يذكر الله في الصباح من خلال قراءة آيات معينة مثل آية الكرسي وسور الإخلاص والفلق [[qa:icadb:26239]].\n\n{{note:no_ruling}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "تُشير النصوص الواردة إلى فضل تخصيص وقت الصباح بالذكر والعبادة، حيث حثَّ النبي ﷺ على البدء بالأذكار في الصباح لما لها من أجر عظيم .",
+        "cites": [
+         "hadith:hadeethenc:10601"
+        ],
+        "best_id": "hadith:hadeethenc:10601",
+        "score": 0.6642
+       },
+       {
+        "text": "كما وردت إشارات إلى قراءة القرآن في وقت الفجر، حيث وصفه القرآن بأنه مشهود .",
+        "cites": [
+         "quran:17:78"
+        ],
+        "best_id": "quran:17:78",
+        "score": 0.7706
+       },
+       {
+        "text": "ويمكن للمسلم أن يذكر الله في الصباح من خلال قراءة آيات معينة مثل آية الكرسي وسور الإخلاص والفلق .",
+        "cites": [
+         "qa:icadb:26239"
+        ],
+        "best_id": "qa:icadb:26239",
+        "score": 0.6286
+       }
+      ]
+     }
+    ],
+    "canonical_question": "ما حكم أذكار الصباح؟",
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما حكم أذكار الصباح؟",
+     "claim": null,
+     "original": "ما حكم اذكار الصباح؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "تُشير النصوص الواردة إلى فضل تخصيص وقت الصباح بالذكر والعبادة، حيث حثَّ النبي ﷺ على البدء بالأذكار في الصباح لما لها من أجر عظيم [1].\n\n«عن رافع بن خديج رضي الله عنه قال: قال رسول الله صلى الله عليه وسلم : «أَصْبِحُوا بالصبح؛ فإنه أعظم لِأُجُورِكُم، أو أعظم للأجر».» (رواه أبو داود وابن ماجه وأحمد — الدرجة: صحيح)\n\nكما وردت إشارات إلى قراءة القرآن في وقت الفجر، حيث وصفه القرآن بأنه مشهود [2].\n\n﴿أَقِمِ ٱلصَّلَوٰةَ لِدُلُوكِ ٱلشَّمۡسِ إِلَىٰ غَسَقِ ٱلَّيۡلِ وَقُرۡءَانَ ٱلۡفَجۡرِۖ إِنَّ قُرۡءَانَ ٱلۡفَجۡرِ كَانَ مَشۡهُودࣰا﴾ [الإِسۡرَاءِ: 78]\n\nويمكن للمسلم أن يذكر الله في الصباح من خلال قراءة آيات معينة مثل آية الكرسي وسور الإخلاص والفلق [3].\n\nملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "تُشير النصوص الواردة إلى فضل تخصيص وقت الصباح بالذكر والعبادة، حيث حثَّ النبي ﷺ على البدء بالأذكار في الصباح لما لها من أجر عظيم [1]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:10601",
+      "text_ar": "عن رافع بن خديج رضي الله عنه قال: قال رسول الله صلى الله عليه وسلم : «أَصْبِحُوا بالصبح؛ فإنه أعظم لِأُجُورِكُم، أو أعظم للأجر».",
+      "text_en": "Rāfi‘ ibn Khadeīj (may Allah be pleased with him) reported: The Messenger of Allah (may Allah’s peace and blessings be upon him) said: \"Offer the Fajr prayer at dawn, for this earns you greater rewards – or brings greater rewards.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه أبو داود وابن ماجه وأحمد",
+      "reference": "إرواء الغليل في تخريج أحاديث منار السبيل، محمد ناصر الدين الألباني، إشراف: زهير الشاويش، المكتب الإسلامي، بيروت، الطبعة: الثانية 1405هـ، 1985م.\nتوضيح الأحكام مِن بلوغ المرام، عبد الله بن عبد الرحمن البسام، مكتبة الأسدي، مكة المكرّمة، الطبعة: الخامِسَة 1423هـ، 2003م.\nسنن أبي داود، سليمان بن الأشعث أبوداود، تحقيق: محمد محيي الدين عبد الحميد، المكتبة العصرية، صيدا، بيروت.\nسنن ابن ماجه، ابن ماجه محمد بن يزيد القزويني، تحقيق: محمد فؤاد عبد الباقي، دار إحياء الكتب العربية، فيصل عيسى البابي الحلبي.\nمسند الإمام أحمد بن حنبل، أحمد بن حنبل أبو عبدالله الشيباني، تحقيق: شعيب الأرنؤوط و عادل مرشد، وآخرون، تحت إشراف: عبد الله بن عبد المحسن التركي، مؤسسة الرسالة، الطبعة: الأولى1421هـ، 2001م.\nمنحة العلام في شرح بلوغ المرام، عبد الله صالح الفوزان، دار ابن الجوزي، الطبعة: الأولى 1428هـ، 1432هـ.",
+      "ids": [
+       "hadith:hadeethenc:10601"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/10601"
+     },
+     {
+      "kind": "explanation",
+      "text": "كما وردت إشارات إلى قراءة القرآن في وقت الفجر، حيث وصفه القرآن بأنه مشهود [2]."
+     },
+     {
+      "kind": "quran",
+      "ref": "17:78",
+      "surah_name_ar": "الإِسۡرَاءِ",
+      "text_ar": "أَقِمِ ٱلصَّلَوٰةَ لِدُلُوكِ ٱلشَّمۡسِ إِلَىٰ غَسَقِ ٱلَّيۡلِ وَقُرۡءَانَ ٱلۡفَجۡرِۖ إِنَّ قُرۡءَانَ ٱلۡفَجۡرِ كَانَ مَشۡهُودࣰا",
+      "text_en": "Establish prayer at the decline of the sun [from its meridian] until the darkness of the night[767] and [also] the Qur’ān [i.e., recitation] of dawn.[768] Indeed, the recitation of dawn is ever witnessed.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:17:78"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/17#78"
+     },
+     {
+      "kind": "explanation",
+      "text": "ويمكن للمسلم أن يذكر الله في الصباح من خلال قراءة آيات معينة مثل آية الكرسي وسور الإخلاص والفلق [3]."
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+      "note": "no_ruling"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "hadith:hadeethenc:10601",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "أصبحوا بالصبح؛ فإنه أعظم لأجوركم، أو أعظم للأجر",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/10601",
+      "grade": "صحيح"
+     },
+     {
+      "n": 2,
+      "id": "quran:17:78",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الإِسۡرَاءِ 78",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/17#78",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "qa:icadb:26239",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ماذا تقول في الصباح والمساء من الأذكار؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26239/version/1.0/sentences/",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 2,
+     "input": 6046,
+     "output": 220
+    }
+   },
+   "secs": 29.5
+  }
+ ]
+}

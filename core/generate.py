@@ -36,7 +36,7 @@ HARD RULES (they are checked by code; violations are rejected):
     {{{{note:disputed}}}}  scholars differ on this matter and the answer does not choose between the views
     {{{{note:no_ruling}}}} the passages discuss the topic but do not state the specific ruling asked (obligatory / recommended / permitted ...); see rule 5
     A note never counts as a citation, so an answer always also needs real citations.
-11. Write in one language: when answering in Arabic do not insert English words (except an approved glossary term in parentheses); when answering in English do not insert Arabic words except transliterated terms.12. ORDER OF EVIDENCE: when you show more than one kind of source, present them in this order: the Quran first, then hadith, then the scholars' explanation (tafsir, qa, term passages). Do not open with a hadith or a scholar's view when a relevant verse is available.
+11. Write in one language: when answering in Arabic do not insert English words (except an approved glossary term in parentheses); when answering in English do not insert Arabic words except transliterated terms.12. ORDER OF EVIDENCE: when you show more than one kind of source, present them in this order: Quran placeholders first, then hadith placeholders, then your explanation of the scholars' passages. qa: and term: passages have NO placeholder: they are only cited with [[id]] and never shown with a placeholder.
 
 FORMAT EXAMPLE (structure only; use real ids from the PASSAGES list):
 <one or two sentences of explanation> [[<id of a supporting passage>]]
@@ -95,6 +95,7 @@ FIXES = [
     ("Ornate verse brackets", "Remove ﴿ ﴾ and the words between them. If the question quoted a verse, refer to it as «هذه الآية» and show it with {{quran:S:A}} alone on its own line."),
     ("Unattributed Arabic quotation", "Remove the quotation marks around that phrase and rephrase it in your own words, followed by its [[id]]."),
     ("Explanation without an explicit", "Add the [[id]] of the supporting passage at the end of that text, or delete it. If the sentence introduces a placeholder (it ends with a colon), end it with [[id]] and a full stop, then put the placeholder on the next line."),
+    ("Malformed placeholder", "The only placeholders are {{quran:S:A}}, {{hadith:SOURCE:ID}}, {{tafsir:S:A}} and {{note:KEY}}. Delete the invalid placeholder: qa: and term: passages are only cited with [[id]], never shown with a placeholder."),
     ("Malformed citation", "Use ONE pair of double brackets for several ids: [[id1, id2]]. Copy each id exactly from the PASSAGES list."),
     ("English word", "Replace those Latin-letter words with Arabic words."),
 ]
@@ -147,6 +148,7 @@ def build_prompts(question: str, level: str, lang: str, passages: list[dict], er
         if isinstance(error, (list, tuple)):  # precise recipe per verifier error (the pipeline passes the error list)
             user += ("\nIt was REJECTED by the verifier. Make the SMALLEST changes that fix the problems below and copy every other sentence unchanged.\n"
                      f"PROBLEMS AND EXACT FIXES:\n{fix_recipe(list(error))}\n"
+                     f"ALLOWED IDS (copy exactly): {', '.join(p['id'] for p in passages)}" + chr(10) +
                      "Before answering, check: every [[id]] is copied exactly from the PASSAGES list; no quotation marks and no ﴿ ﴾; every {{...}} placeholder is alone on its own line. "
                      f"Or output {NO_EVIDENCE} if the passages cannot support an answer.")
         else:

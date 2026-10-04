@@ -287,3 +287,16 @@ def test_duplicate_errors_are_reported_once():
     ps = P(KURSI)
     r = verify_answer("بيان [[tafsir:2:255]] وبيان آخر [[tafsir:2:255]]", ps)
     assert len(r.errors) == len(set(r.errors))
+
+
+def test_invented_placeholder_kind_is_one_clear_error_not_english_or_citation_noise():
+    ps = P("tafsir:muyassar:2:255")
+    r = verify_answer("بيان طويل عن الآية وفضلها [[tafsir:muyassar:2:255]]\n\n{{qa:icadb:26024}}", ps)
+    assert any(e.startswith("Malformed placeholder") for e in r.errors)
+    assert not any(e.startswith("Malformed citation") or "English word" in e for e in r.errors)
+
+
+def test_evidence_order_rule_does_not_invite_qa_placeholders():
+    from core import generate as G
+    rule = G.RULES[G.RULES.index("12. ORDER OF EVIDENCE"):]
+    assert "NO placeholder" in rule and "{{qa" not in rule
