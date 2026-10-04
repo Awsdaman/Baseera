@@ -7,7 +7,7 @@ from core import rewrites
 from core import support as S
 from core.generate import generate
 from core.glossary import GLOSSARY, lookup
-from core.router import detect_language, find_term, route
+from core.router import detect_language, find_term, needs_context, route
 from core.verify import VerifyResult, normalize_citations, verify_answer
 
 DISCLOSURE = {
@@ -44,6 +44,10 @@ TEXT = {
     "unavailable": {
         "ar": "خدمة توليد الإجابة غير متاحة حاليًا (لم يتم ضبط مفتاح النموذج)، وهذه أقرب المصادر المعتمدة لسؤالك:",
         "en": "The answer-generation service is not configured (no model key), so here are the closest approved sources for your question:",
+    },
+    "clarify": {
+        "ar": "لم أفهم ما الذي تريد مني أن أُثبته؛ فلم تذكر نصّ الكلام أو الحكم المقصود. يمكنك كتابة العبارة أو الحكم الذي تسأل عنه، وسأبحث له في المصادر المعتمدة. ولن أذكر لك حديثًا أو آية لا صلة لها بما تقصده.",
+        "en": "I could not tell what you want me to prove: the statement or ruling you mean was not included. Please write it out and I will look for it in the approved sources. I will not show you a hadith or verse that has no clear connection to what you mean.",
     },
     "term": {
         "ar": "الترجمة المعتمدة لمصطلح «{ar}» هي: {en}.",
@@ -92,8 +96,8 @@ def personal_response(question, info, lang):
                  answer_text=blocks[0]["text"], refer_label=t["refer"]["en" if lang == "en" else "ar"])
 
 
-def abstain_response(info, lang, reason="insufficient_evidence", sources=None, errors=None):
-    msg = TEXT["abstain"]["en" if lang == "en" else "ar"]
+def abstain_response(info, lang, reason="insufficient_evidence", sources=None, errors=None, text_key="abstain"):
+    msg = TEXT[text_key]["en" if lang == "en" else "ar"]
     return _resp("abstained", info, lang, blocks=[{"kind": "notice", "text": msg}], referrals=REFERRALS,
                  answer_text=msg, abstain_reason=reason, verification_errors=errors or [], sources=sources or [])
 
@@ -149,6 +153,9 @@ def _ask(question: str, lang: str | None = None, trace: dict | None = None) -> d
         if info["intent"] == "verify" and not rw.get("keep_verify"):
             info["intent"] = "ask"
 
+    if info["intent"] == "ask" and needs_context(question):
+        # "give me a hadith that proves this" with nothing to prove: ask for the statement instead of searching and showing unrelated texts
+        return abstain_response(info, lang, "needs_clarification", text_key="clarify")
     if info["intent"] == "translate_term":
         # the model's extracted term may not be a glossary key ("Tawhid / Oneness of God"): fall back to code matching
         info["term"] = info.get("term") if lookup(info.get("term") or "") else find_term(question)

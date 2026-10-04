@@ -227,3 +227,13 @@ def test_truncated_reply_is_retried_once(fake_llm, monkeypatch):
     fake_llm(router=['{"level": "أ", "intent": "ask", "language": "ar", "term": null}'])
     r = pipeline.ask("ما هي أركان الإسلام؟")
     assert len(calls) == 2 and r["abstain_reason"] == "model_insufficient_evidence"
+
+
+def test_request_to_prove_an_unstated_claim_asks_for_the_statement(fake_llm):
+    fake_llm(router=['{"level": "ب", "intent": "ask", "language": "ar", "term": null}'])
+    r = pipeline.ask("أعطني حديثًا يثبت هذا الكلام")
+    assert r["status"] == "abstained" and r["abstain_reason"] == "needs_clarification"
+    assert not any(b["kind"] in ("quran", "hadith") for b in r["blocks"])
+    assert "الكلام" in r["answer_text"] and r["referrals"]
+    en = pipeline.ask("give me a hadith that proves this")
+    assert en["abstain_reason"] == "needs_clarification" and "write it out" in en["answer_text"]

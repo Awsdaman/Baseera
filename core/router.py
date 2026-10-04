@@ -107,6 +107,21 @@ def extract_claim(text: str):
     return m.group(1).strip() if m else None
 
 
+# "Give me a hadith that proves THIS": a request that points at a statement the user never pasted. Searching would only retrieve
+# unrelated texts (and show them), so the pipeline asks for the statement instead. Deliberately narrow: request words + demonstrative only.
+_DANGLING = re.compile(
+    r"^(?:(?:اعطني|اعطيني|هات|اريد|ابي|ابغي|اذكر لي|اعطنا|هل يوجد|هل هناك)\s+)?(?:حديثا|حديث|دليلا|دليل|ايه|اية|مصدرا|مصدر|برهانا)?\s*"
+    r"(?:(?:ال)?(?:يثبت|يدل علي|يؤيد|يويد|يؤكد|يوكد|يبين|يصحح|يثبتان)|الذي يثبت|الذي يدل علي)\s*(?:هذا|هذه|ذلك|تلك)\s*(?:الكلام|القول|الحكم|الامر|الادعاء|الشيء|الموضوع)?$")
+_DANGLING_EN = re.compile(r"^(?:please\s+)?(?:give me|show me|find me|can you give me|is there)\s+(?:a|an|any)?\s*(?:hadith|verse|evidence|proof|source)\s+(?:that\s+)?(?:proves?|supports?|confirms?|shows?)\s+(?:this|that|it)(?:\s+(?:statement|claim|ruling))?$", re.I)
+
+
+def needs_context(text: str) -> bool:
+    """True when the message asks for evidence of 'this / that' without containing the statement."""
+    t = normalize_ar(text or "").strip(" .؟?!،,؛;:")
+    t = re.sub(r"\s+", " ", t)
+    return bool(_DANGLING.fullmatch(t) or _DANGLING_EN.fullmatch(t))
+
+
 def _clean(v, limit=400):
     v = v.strip() if isinstance(v, str) else ""
     return v[:limit] if v and v.lower() not in ("null", "none") else None

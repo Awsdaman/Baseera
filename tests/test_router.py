@@ -106,3 +106,11 @@ def test_attributed_narration_without_a_question_routes_to_verify():
     t = "عن عدي بن حاتم رضي الله عنه قال: سمعت النبي صلى الله عليه وسلم يقول: «اتقوا النار ولو تمرة»"
     assert heuristic_route(t)["intent"] == "verify"
     assert heuristic_route("ما معنى قول النبي ﷺ «اتقوا النار ولو بشق تمرة»؟")["intent"] == "ask"
+
+
+def test_dangling_proof_request_is_detected_but_real_questions_are_not():
+    from core.router import needs_context
+    for q in ("أعطني حديثًا يثبت هذا الكلام", "هات دليلا يؤيد هذا القول؟", "give me a hadith that proves this"):
+        assert needs_context(q), q
+    for q in ("أعطني حديثًا يثبت أن الصلاة واجبة", "ما حكم أذكار الصباح؟", "هل هذا الحديث يثبت هذا الحكم في الزكاة؟", ""):
+        assert not needs_context(q), q
