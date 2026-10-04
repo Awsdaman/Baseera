@@ -27,6 +27,13 @@ Open quality points the judge/support check raised (not fixed): contested-fiqh g
 - Opt-in learning loop (see README "Learning over time"): `core/reports.py`, `/api/report`, `/api/privacy`, report box in the UI, `tools/review.py`, `core/rewrites.py`, `data/curated/`. 226 tests pass.
 - Last full live eval after these changes (55 cases, before the last router/extractor stability fixes): 53/55; the two misses (v-02, v-03) were the router calling pasted hadiths "ask" and are fixed and re-run green. A fresh full run is advisable.
 
+## FINAL local result (2026-10-04, build faab13c): Gemma 4 12B Q4_K_M via LM Studio, judge gpt-5.5
+55/55 behaviour, router 100% (LLM router used 48/48), citations 100%, verse fidelity 100%, correct abstention 7/7, false abstention 0/32,
+verifier-forced abstention 0/41, runtime abstentions 0, first-attempt pass 92.7%, judge 4.86/5 (OpenAI run: 4.71), 33 min per full run, ~130 output tokens/call.
+Only miss: dp6-07 retrieval (term:glossary:2 not retrieved; flaky, it passed on a rerun). Run with:
+`LLM_PROVIDER=local LOCAL_BASE_URL=http://localhost:1234/v1 LOCAL_MODEL=gemma-4-12b-it LOCAL_NO_THINK=1 LLM_GEN_MAX_TOKENS=1500 LLM_ROUTER_MAX_TOKENS=600 JUDGE_PROVIDER=openai python evals/run_evals.py --workers 1`
+Decision: Gemma 4 12B is the local model for the desktop. Not tested: the laptop (RTX 4050 6 GB; plan: use the desktop LM Studio over the network, or partial offload).
+
 ## Local model plan implemented (2026-10-04) - NOT yet re-evaluated
 All 7 steps of docs/local_model_plan.md are in the code (242 tests pass). The eval has NOT been re-run yet.
 - Findings behind it: the first live Gemma run never used the LLM router (hidden reasoning ate the 300-token cap), `/no_think` is Qwen-only,
