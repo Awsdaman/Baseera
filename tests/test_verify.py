@@ -233,3 +233,57 @@ def test_quoting_a_whole_short_verse_is_still_rejected():
     for q in ("«قل هو الله أحد»", "«بسم الله الرحمن الرحيم»"):
         r = verify_answer(f"وقد جاء في القرآن {q} وهو واضح في معناه عند أهل العلم [[qa:icadb:26014]]", ps)
         assert not r.ok, q
+
+
+# ---------------------------------------------------------------- citation syntax repair (small local models)
+from core.verify import normalize_citations  # noqa: E402
+
+
+def _by_id(*ids):
+    return {p["id"]: p for p in P(*ids)}
+
+
+def test_split_citation_list_is_merged_into_one_bracket():
+    by = _by_id(KURSI, "tafsir:muyassar:2:255")
+    out = normalize_citations("بيان [[quran:2:255], [tafsir:muyassar:2:255]].", by)
+    assert "[[quran:2:255, tafsir:muyassar:2:255]]" in out
+    assert verify_answer(out, list(by.values())).ok
+
+
+def test_short_tafsir_id_is_expanded_only_when_retrieved():
+    by = _by_id(KURSI, "tafsir:muyassar:2:255")
+    assert normalize_citations("بيان [[tafsir:2:255]]", by) == "بيان [[tafsir:muyassar:2:255]]"
+    assert normalize_citations("بيان [[tafsir:3:7]]", by) == "بيان [[tafsir:3:7]]"
+    r = verify_answer("هذه أعظم آية في القرآن الكريم وفيها بيان [[tafsir:3:7]]", list(by.values()))
+    assert not r.ok and any("NOT retrieved" in e for e in r.errors)
+
+
+def test_verse_range_citation_expands_only_when_all_ayat_retrieved():
+    by = _by_id("quran:112:1", "quran:112:2")
+    assert normalize_citations("[[quran:112:1-2]]", by) == "[[quran:112:1, quran:112:2]]"
+    assert normalize_citations("[[quran:112:1-4]]", by) == "[[quran:112:1-4]]"
+
+
+def test_placeholder_followed_by_its_own_citation_is_reordered():
+    by = _by_id(KURSI)
+    out = normalize_citations("انظر الآية: {{quran:2:255}} [[quran:2:255]].", by)
+    assert out.index("[[quran:2:255]]") < out.index("{{quran:2:255}}")
+    assert normalize_citations("{{quran:2:255}} [[tafsir:muyassar:2:255]]", by) == "{{quran:2:255}} [[tafsir:muyassar:2:255]]"  # different ids: untouched
+
+
+def test_unrepaired_split_citation_gets_a_precise_error_not_an_english_one():
+    ps = P(KURSI, "tafsir:muyassar:2:255")
+    r = verify_answer("بيان طويل [[quran:2:255], [tafsir:muyassar:2:255]].", ps)
+    assert any(e.startswith("Malformed citation") for e in r.errors)
+    assert not any("English word" in e for e in r.errors)
+
+
+def test_arabic_comma_separates_ids_in_one_bracket():
+    ps = P(KURSI, "tafsir:muyassar:2:255")
+    assert verify_answer("هذه أعظم آية في القرآن [[quran:2:255،tafsir:muyassar:2:255]]", ps).ok
+
+
+def test_duplicate_errors_are_reported_once():
+    ps = P(KURSI)
+    r = verify_answer("بيان [[tafsir:2:255]] وبيان آخر [[tafsir:2:255]]", ps)
+    assert len(r.errors) == len(set(r.errors))

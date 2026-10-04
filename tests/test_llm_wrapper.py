@@ -208,3 +208,37 @@ def test_passage_size_is_tunable_for_small_context_models(monkeypatch):
     assert len(format_passages(p)) > 900
     monkeypatch.setenv("LLM_PASSAGE_CHARS", "200")
     assert len(format_passages(p)) < 400
+
+
+def test_thinking_switch_and_empty_replies_are_not_cached(tmp_path, monkeypatch):
+    from core import llm as L
+    assert not L.thinking_off()
+    monkeypatch.setenv("LOCAL_NO_THINK", "1")
+    assert L.thinking_off()
+    monkeypatch.setenv("LOCAL_THINKING_GENERATE", "on")
+    assert not L.thinking_off()
+    with L.no_thinking():
+        assert L.thinking_off()          # router / extractor calls always switch thinking off
+
+    class Inner:
+        n = 0
+        def complete(self, *a, **k):
+            Inner.n += 1
+            return ""
+    c = L.CachedLLM(Inner(), "local")
+    c.dir = tmp_path
+    c.complete("m", "s", "u"); c.complete("m", "s", "u")
+    assert Inner.n == 2 and not list(tmp_path.iterdir())
+
+
+def test_default_prompt_is_unchanged_and_local_profile_adds_the_checklist(monkeypatch):
+    from core import generate as G
+    ps = [{"id": "qa:x:1", "type": "qa", "source": "s", "text": "t"}]
+    monkeypatch.setenv("LLM_PROVIDER", "openai")
+    default = G.build_prompts("q", "ب", "ar", ps)
+    assert "CHECKLIST" not in default[1]
+    monkeypatch.setenv("LLM_PROVIDER", "local")
+    local = G.build_prompts("q", "ب", "ar", ps)
+    assert local[0] == default[0] and "CHECKLIST" in local[1] and local[1].index("PASSAGES") < local[1].index("CHECKLIST")
+    retry = G.build_prompts("q", "ب", "ar", ps, error=["Citation [[x]] was NOT retrieved for this question"], previous="p")[1]
+    assert "FIX:" in retry and "PASSAGES list" in retry

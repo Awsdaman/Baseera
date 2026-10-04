@@ -9,6 +9,7 @@ Roles: router (routing + claim extraction), generate (answers), judge (evals). P
                 (optionally LOCAL_ROUTER_MODEL / LOCAL_GENERATE_MODEL / LOCAL_JUDGE_MODEL)
 Tests inject a fake with set_llm(); callers only ever use .complete(model, system, user, max_tokens, temperature, effort).
 """
+import contextlib
 import json
 import os
 import re
@@ -24,6 +25,34 @@ ANTHROPIC_DEFAULTS = {"router": "claude-haiku-4-5-20251001", "generate": "claude
 
 class LLMUnavailable(RuntimeError):
     pass
+
+
+class LLMTruncated(RuntimeError):
+    """The model ran out of tokens (often spent on hidden reasoning) before finishing: never verify a partial answer."""
+
+
+_tls_mode = threading.local()
+
+
+@contextlib.contextmanager
+def no_thinking():
+    """Callers with short structured outputs (router, claim extractor) ask local reasoning models not to think.
+    A context manager (not a new complete() parameter) so every provider and test fake keeps the same signature."""
+    prev = getattr(_tls_mode, "off", False)
+    _tls_mode.off = True
+    try:
+        yield
+    finally:
+        _tls_mode.off = prev
+
+
+def thinking_off() -> bool:
+    """True when hidden reasoning should be switched off for the current call (local models only)."""
+    if getattr(_tls_mode, "off", False):
+        return True
+    if os.environ.get("LOCAL_THINKING_GENERATE") == "on":
+        return False
+    return os.environ.get("LOCAL_NO_THINK") == "1"
 
 
 USAGE: dict[str, dict[str, int]] = {}  # model -> {"calls", "input", "output"}; printed by the eval runner (cost visibility)
@@ -136,7 +165,8 @@ class OpenAICompatibleLLM:
                 raise LLMUnavailable("OPENAI_API_KEY is not set (put it in .env)")
             _use_system_trust_store()
         import openai
-        self.client = openai.OpenAI(api_key=api_key, base_url=base_url, timeout=float(os.environ.get("LLM_TIMEOUT", 300)))
+        retries = int(os.environ.get("LLM_MAX_RETRIES", 1 if local else 2))  # a hung local call must not block for 3 x timeout
+        self.client = openai.OpenAI(api_key=api_key, base_url=base_url, timeout=float(os.environ.get("LLM_TIMEOUT", 300)), max_retries=retries)
 
     def _is_reasoning(self, model: str) -> bool:
         return not self.local and model.lower().startswith(self.REASONING_PREFIXES)
@@ -157,8 +187,12 @@ class OpenAICompatibleLLM:
             kw["max_completion_tokens"] = max_tokens
             if temperature is not None:
                 kw["temperature"] = temperature
-        if self.local and os.environ.get("LOCAL_NO_THINK") == "1":
-            user += chr(10) + "/no_think"  # Qwen-style soft switch that turns the hidden reasoning phase off (saves time and tokens)
+        if self.local and thinking_off():
+            # Template switch (honoured by Gemma 4 / Qwen3 chat templates) plus the Qwen-style soft switch; saves most output tokens.
+            kw["extra_body"] = {"chat_template_kwargs": {"enable_thinking": False}}
+            kw["reasoning_effort"] = "none"  # the switch LM Studio honours for Gemma 4 (probe: 10 tokens instead of 134; a server that rejects it gets the 400-retry below)
+            if "qwen" in model.lower():
+                user += chr(10) + "/no_think"
         messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
         try:
             resp = self.client.chat.completions.create(model=model, messages=messages, **kw)
@@ -176,6 +210,8 @@ class OpenAICompatibleLLM:
         text = choice.message.content or ""
         if self.local:
             text = strip_thinking(text)
+            if choice.finish_reason == "length":
+                raise LLMTruncated(f"{model} hit max_tokens={max_tokens} before finishing (visible chars: {len(text)})")
         return text
 
 
@@ -216,12 +252,14 @@ class CachedLLM:
         self.dir.mkdir(parents=True, exist_ok=True)
 
     def complete(self, model, system, user, max_tokens=1500, temperature=None, effort=None):
-        key = self._sha(json.dumps([self.tag, model, system, user, max_tokens, temperature, effort], ensure_ascii=False).encode("utf-8")).hexdigest()
+        mode = [thinking_off(), os.environ.get("LOCAL_THINKING_GENERATE")] if self.tag == "local" else None
+        key = self._sha(json.dumps([self.tag, model, system, user, max_tokens, temperature, effort, mode], ensure_ascii=False).encode("utf-8")).hexdigest()
         f = self.dir / f"{key}.txt"
         if f.exists():
             return f.read_text(encoding="utf-8")
         out = self.inner.complete(model, system, user, max_tokens=max_tokens, temperature=temperature, effort=effort)
-        f.write_text(out, encoding="utf-8")  # only successful completions are cached (errors propagate)
+        if out.strip():  # only successful, non-empty completions are cached (errors propagate; an empty reply must be retried)
+            f.write_text(out, encoding="utf-8")
         return out
 
 

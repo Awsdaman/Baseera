@@ -1,4 +1,6 @@
 """ASK pipeline: route -> (term | referral | verify | retrieve -> generate -> verify -> retry once -> abstain)."""
+import os
+
 from core import llm as L
 from core import retrieve as R
 from core import rewrites
@@ -6,7 +8,7 @@ from core import support as S
 from core.generate import generate
 from core.glossary import GLOSSARY, lookup
 from core.router import detect_language, find_term, route
-from core.verify import VerifyResult, verify_answer
+from core.verify import VerifyResult, normalize_citations, verify_answer
 
 DISCLOSURE = {
     "ar": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
@@ -190,6 +192,34 @@ def _ask(question: str, lang: str | None = None, trace: dict | None = None) -> d
     return resp
 
 
+class _Empty(Exception):
+    pass
+
+
+def _generate_once(question, info, lang, passages, errors, previous):
+    """One generation with a single RUNTIME retry (not a verifier attempt): a truncated or empty reply (a local model that spent its
+    budget on hidden reasoning) or a dropped connection is retried once, with a bigger budget after a truncation."""
+    import time
+    kw = dict(error=errors, previous=previous, claim=info.get("claim"), original=info.get("original"))
+    budget = int(os.environ.get("LLM_GEN_MAX_TOKENS", 6000))
+    for retry in (False, True):
+        try:
+            raw = generate(question, info["level"], lang, passages, max_tokens=budget, **kw)
+            if raw.strip():
+                return raw
+            err = _Empty()
+        except L.LLMTruncated as e:
+            err, budget = e, min(budget * 2, 3000 if budget <= 1500 else budget)
+        except Exception as e:
+            if type(e).__name__ not in ("APIConnectionError", "APITimeoutError"):
+                raise
+            err = e
+            time.sleep(2)
+        if retry:
+            raise err
+    raise err  # unreachable
+
+
 def _answer(question, info, lang, passages, trace):
     if not passages:
         return abstain_response(info, lang, "no_passages")
@@ -198,14 +228,22 @@ def _answer(question, info, lang, passages, trace):
         msg = TEXT["unavailable"]["en" if lang == "en" else "ar"]
         return _resp("retrieval_only", info, lang, blocks=[{"kind": "notice", "text": msg}], sources=cards, answer_text=msg)
 
-    errors, attempts, last, raw = None, 0, None, None
-    for attempts in (1, 2):
+    by_id = {p["id"]: p for p in passages}
+    errors, last, raw = None, None, None
+    max_attempts = int(os.environ.get("LLM_MAX_ATTEMPTS", 2))
+    for attempts in range(1, max_attempts + 1):
         try:
-            raw = generate(question, info["level"], lang, passages, error=errors, previous=raw,
-                           claim=info.get("claim"), original=info.get("original"))
+            raw_model = _generate_once(question, info, lang, passages, errors, raw)
+        except L.LLMTruncated as e:
+            trace["attempts"].append({"n": attempts, "raw": None, "errors": [str(e)[:200]], "ok": False})
+            return abstain_response(info, lang, "llm_truncated", errors=[str(e)[:200]])
+        except _Empty:
+            trace["attempts"].append({"n": attempts, "raw": "", "errors": ["empty answer"], "ok": False})
+            return abstain_response(info, lang, "llm_empty", errors=["empty answer"])
         except Exception as e:  # API outage, rate limit, ...: fail closed with a warm abstain, never fabricate
             trace["attempts"].append({"n": attempts, "raw": None, "errors": [str(e)[:200]], "ok": False})
             return abstain_response(info, lang, "llm_error", errors=[str(e)[:200]])
+        raw = normalize_citations(raw_model, by_id)  # citation SYNTAX only; every id is still verified below
         vr = verify_answer(raw, passages, lang)
         support = None
         if vr.ok and not vr.abstain and S.mode() != "off":
@@ -216,11 +254,11 @@ def _answer(question, info, lang, passages, trace):
                     vr = VerifyResult(ok=False, errors=s_errs)
             except Exception as e:  # the check is an extra safety net: never let a model-loading problem break answering
                 support = [{"error": str(e)[:120]}]
-        trace["attempts"].append({"n": attempts, "raw": raw, "errors": vr.errors, "ok": vr.ok, "support": support})
+        trace["attempts"].append({"n": attempts, "raw": raw_model, "normalized": raw != raw_model, "errors": vr.errors, "ok": vr.ok, "support": support})
         last = vr
         if vr.ok:
             if vr.abstain:
                 return abstain_response(info, lang, "model_insufficient_evidence")
             return _resp("answered", info, lang, blocks=vr.blocks, sources=vr.sources, answer_text=vr.answer_text, attempts=attempts)
-        errors = "\n".join(f"- {e}" for e in vr.errors)
+        errors = list(vr.errors)
     return abstain_response(info, lang, "verification_failed", errors=last.errors if last else [])

@@ -3,6 +3,7 @@
 level  أ basic sourced facts | ب explanation/concepts/doubts | ج disputed/sensitive | د personal ruling/case
 intent ask | verify | translate_term
 """
+import os
 import re
 
 from core import llm as L
@@ -28,7 +29,9 @@ A hostile or accusatory question about Islam is still level ب (answer wisely), 
 Language is the language of the message itself.
 canonical_question: rewrite the message as ONE clear, self-contained question in the SAME language, naming the topic and what is asked, so a search engine can find the sources.
   Example: 'هل هذا الحكم "حكم أذكار الصباح واجبة" صحيح؟'  ->  'ما حكم أذكار الصباح، وهل هي واجبة؟'.  Keep an already-clear question as it is.
-claim: if the user quotes or asserts a statement and asks whether it is correct, put that statement here (without the surrounding question); otherwise null."""
+claim: if the user quotes or asserts a statement and asks whether it is correct, put that statement here (without the surrounding question); otherwise null.
+A message that only reports a narration with no question, e.g. 'عن فلان رضي الله عنه قال: سمعت النبي ﷺ يقول: «...»' or 'قال رسول الله ﷺ: «...»', is verify even without words like "تحقق" or "صحيح؟".
+Output the JSON object only, on one line, with nothing before or after it."""
 
 _PERSONAL = re.compile(
     r"(هل يجوز لي|هل يحق لي|هل يصح لي|ما حكم (?:زواجي|طلاقي|عقدي)|في زواجي|زوجتي|زوجي|طلقت|طلاقي|عقد(?:ي| العمل| الايجار)|"
@@ -42,6 +45,7 @@ _BASIC = re.compile(r"(ما معني (?:ايه|اية|سوره|حديث|قوله
 _SENSITIVE = re.compile(r"(جهاد|قتال|الحدود|الرده|الرق|الاسترقاق|jihad|apostasy|slavery)")
 _CONCEPT = re.compile(r"(مقاصد|الحكمه|لماذا|هل الاسلام|هل يتعارض|هل يظلم|ارهاب|عنف|do muslims|why do|is islam)")
 _VERIFY = re.compile(r"(تحقق|هل هذا الحديث صحيح|هل هذه الايه|صحيح ام|fact.?check|is this (?:hadith|verse)|verify|authentic\?|ارسل لي|وصلني)", re.I)
+_NARRATION = re.compile(r"(قال رسول الله|قال النبي|عن النبي|قال تعالى|سمعت (?:رسول الله|النبي)|(?:رسول الله|النبي)\s*(?:ﷺ|صلى الله عليه وسلم)?\s*(?:يقول|قال)|رضي الله عن(?:ه|ها|هما|هم))")
 _TRANSLATE = re.compile(r"(ترجم|ترجمه|ما معنى كلمه .* بالانجليزيه|translate|how (?:do you|to) say|english (?:word|equivalent|for))", re.I)
 
 
@@ -81,7 +85,7 @@ def heuristic_route(text: str) -> dict:
         intent, term = "translate_term", find_term(text)
         level = "أ"
     elif ((_VERIFY.search(text) and has_claim_text(text)) or ("﴿" in text and not re.search("[؟?]", text)) or len(text) > 400
-          or (re.search(r"(قال رسول الله|قال النبي|عن النبي|قال تعالى)", text) and re.search("[«\"“﴿]", text) and not re.search("[؟?]", text))):
+          or (_NARRATION.search(text) and re.search("[«\"“﴿]", text) and not re.search("[؟?]", text))):
         intent, level = "verify", "ب"
     return {"level": level, "intent": intent, "language": lang, "term": term, "source": "heuristic"}
 
@@ -115,7 +119,8 @@ def route(text: str) -> dict:
     if not L.llm_available():
         return h
     try:
-        raw = L.get_llm().complete(L.ROUTER_MODEL, SYSTEM, text, max_tokens=300)
+        with L.no_thinking():  # short JSON: a local reasoning model must not burn the token budget on hidden thinking
+            raw = L.get_llm().complete(L.ROUTER_MODEL, SYSTEM, text, max_tokens=int(os.environ.get("LLM_ROUTER_MAX_TOKENS", 300)))
         j = L.extract_json(raw)
         level = j.get("level") if j.get("level") in LEVELS else h["level"]
         intent = j.get("intent") if j.get("intent") in INTENTS else h["intent"]

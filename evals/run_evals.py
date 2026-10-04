@@ -154,7 +154,7 @@ def run_one(g, live, do_judge):
     trace = resp.get("debug") or {"retrieved_ids": [], "attempts": []}
     accept = g.get("expected_acceptable_levels") or [g["expected_level"]]
     r = {"id": g["id"], "input": q, "expected": {k: g.get(k) for k in ("expected_level", "expected_intent", "expected_behavior")},
-         "provisional": bool(g.get("provisional")), "route": {k: route.get(k) for k in ("level", "intent", "source")},
+         "provisional": bool(g.get("provisional")), "route": {k: route.get(k) for k in ("level", "intent", "source", "router_error")},
          "router_level_ok": route.get("level") in accept, "router_intent_ok": route.get("intent") == g["expected_intent"]}
     if g["expected_intent"] == "verify":  # level is irrelevant for verify mode (the claims are checked, not answered)
         r["router_level_ok"] = True
@@ -178,6 +178,7 @@ def run_one(g, live, do_judge):
                                            "abstain_reason", "language")}
     r["verification_errors"] = resp.get("verification_errors", [])
     if resp.get("verify"):
+        r["extraction"] = resp["verify"].get("extraction")
         r["verdicts"] = [c["verdict"] for c in resp["verify"]["claims"]]
     if do_judge and live and resp["status"] in ("answered", "abstained", "referral"):
         r["judge"] = judge(q, resp)
@@ -211,6 +212,14 @@ def summarize(rs):
                 flags.append(st["score"] < _S.theta())
     s["support_flag_rate"] = rate(flags)
     s["behavior_pass_rate"] = rate(r["behavior_ok"] for r in rs)
+    # Hidden-problem detectors: a run that quietly used the rule router, or lost answers to runtime failures, must not look clean.
+    routed = [r for r in rs if r["expected"]["expected_behavior"] not in ("referral", "term") and r["status"] != "error"]
+    s["router_llm_rate"] = rate(((r.get("route") or {}).get("source") == "llm") for r in routed)
+    s["runtime_abstentions"] = (sum(1 for r in rs if r.get("abstain_reason") in ("llm_error", "llm_empty", "llm_truncated")), len(rs))
+    tried = [r for r in rs if r["attempts"] and r.get("abstain_reason") in (None, "verification_failed", "model_insufficient_evidence")]
+    s["first_attempt_pass_rate"] = rate(((r.get("trace") or {}).get("attempts") or [{}])[0].get("ok") for r in tried)
+    outs = [u["output"] / u["calls"] for r in rs for u in (r.get("tokens") or {}).values() if u.get("calls")]
+    s["gen_output_tokens_mean"] = (round(sum(outs) / len(outs)), len(outs)) if outs else (None, 0)
     verify_rs = [r for r in rs if r["expected"]["expected_behavior"] == "verify"]
     s["verify_mode_pass_rate"] = rate(r["behavior_ok"] for r in verify_rs)
     scores = [r["judge"]["overall"] for r in rs if r.get("judge", {}).get("overall") is not None]
@@ -271,7 +280,7 @@ def rejudge(path):
 
 def reverify(path):
     """Re-run the (current) verifier on the saved raw model outputs: iterate on core/verify.py at zero API cost."""
-    from core.verify import verify_answer
+    from core.verify import normalize_citations, verify_answer
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     flipped, same, n = [], 0, 0
     for r in data["results"]:
@@ -281,7 +290,7 @@ def reverify(path):
             if a.get("raw") is None:
                 continue
             n += 1
-            vr = verify_answer(a["raw"], passages, r.get("lang") or "ar")
+            vr = verify_answer(normalize_citations(a["raw"], {p["id"]: p for p in passages}), passages, r.get("lang") or "ar")
             if vr.ok != a["ok"]:
                 flipped.append((r["id"], a["n"], a["ok"], vr.ok, (vr.errors or [""])[0][:110]))
             else:
@@ -301,7 +310,8 @@ def is_tainted(r) -> bool:
     api_failure = any(re.search(r"Error code: (429|5\d\d)", e) or "no credits" in e or "insufficient_quota" in e for e in errs)
     judge_failure = "error" in (r.get("judge") or {})
     fell_back = (r.get("route") or {}).get("source") == "heuristic" and r["expected"]["expected_behavior"] not in ("referral", "term", "verify")
-    return api_failure or judge_failure or fell_back or r.get("status") == "error"
+    runtime = r.get("abstain_reason") in ("llm_error", "llm_empty", "llm_truncated")
+    return api_failure or judge_failure or fell_back or runtime or r.get("status") == "error"
 
 
 def show(r):
@@ -339,8 +349,12 @@ def finish(rs, meta):
     (REPORTS / f"report-{stamp}.html").write_text(page, encoding="utf-8")
     (REPORTS / "latest.html").write_text(page, encoding="utf-8")
     print("\n== SUMMARY ==")
+    counts = ("judge", "runtime_abstentions", "tokens_mean")
     for k, v in summary.items():
-        print(f"  {k:28} {'n/a' if v[0] is None else str(v[0]) + '%' if 'judge' not in k else v[0]}  (n={v[1]})")
+        print(f"  {k:28} {'n/a' if v[0] is None else str(v[0]) + '%' if not any(c in k for c in counts) else v[0]}  (n={v[1]})")
+    tainted = [r["id"] for r in rs if is_tainted(r) and r["expected"]["expected_behavior"] not in ("referral", "term", "verify")]
+    if tainted:
+        print(f"{chr(10)}WARNING: {len(tainted)} cases are tainted (provider failure, or the rule router stood in for the LLM router): {', '.join(tainted[:20])}")
     print("\n== FAILURE PATTERNS ==")
     for k, v in patterns.items():
         print(f"  {k}: {', '.join(dict.fromkeys(v))}")

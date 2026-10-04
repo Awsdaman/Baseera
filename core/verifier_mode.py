@@ -6,6 +6,7 @@ The only LLM use is claim EXTRACTION (Haiku); a regex extractor is the fallback.
 """
 import collections
 import difflib
+import os
 import re
 
 from rapidfuzz import fuzz, process
@@ -27,7 +28,8 @@ Return ONLY a JSON array. Each item: {"type": "verse"|"hadith"|"quote", "text": 
 - verse: text presented as Quran (inside ﴿﴾, or after "قال تعالى", "قال الله", "in the Quran").
 - hadith: text presented as the Prophet's saying (after "قال رسول الله ﷺ", "عن النبي", "hadith").
 - quote: any other quotation attributed to a person (a companion, scholar, imam).
-Copy the text verbatim (including any mistakes); never correct, translate or complete it. If there are no claims return []."""
+Copy the text verbatim (including any mistakes); never correct, translate or complete it.
+Do not put the narrator chain or introduction (e.g. عن فلان رضي الله عنه قال، سمعت النبي ﷺ يقول) in "text". Output the JSON array only, with nothing before or after it. If there are no claims return []."""
 
 _INTRO_ONLY = re.compile(r"(?:و?قال|و?يقول|عن)?\s*(?:رسول الله|النبي|نبينا|الرسول|الله تعالي|الله|تعالي)(?:\s+(?:تعالي|عنه|عليه))?")
 _quran_rows = None
@@ -84,7 +86,8 @@ def extract_claims(text: str) -> tuple[list[dict], str]:
     text = text[:MAX_INPUT]
     if L.llm_available():
         try:
-            raw = L.get_llm().complete(L.ROUTER_MODEL, EXTRACT_SYSTEM, text, max_tokens=1500)
+            with L.no_thinking():  # short structured output: a local reasoning model must not spend its budget thinking
+                raw = L.get_llm().complete(L.ROUTER_MODEL, EXTRACT_SYSTEM, text, max_tokens=int(os.environ.get("LLM_EXTRACT_MAX_TOKENS", 1500)))
             items = L.extract_json(raw)
             claims = []
             for it in items if isinstance(items, list) else []:

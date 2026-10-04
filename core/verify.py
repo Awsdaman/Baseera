@@ -39,8 +39,48 @@ def cite_ids(text: str) -> list[str]:
     """Every passage id cited in `text`, expanding [[a, b]] / [[a; b]] into separate ids."""
     out = []
     for group in CITE.findall(text):
-        out += [i for i in re.split(r"[,;\s]+", group.strip()) if i]
+        out += [i for i in re.split(r"[,;،\s]+", group.strip()) if i]
     return out
+_ID = r"[a-z\-]+:[A-Za-z0-9_:\-]+"
+_SPLIT_LIST = re.compile(rf"\[\[\s*{_ID}\s*\](?:\s*[,،;]?\s*\[\s*{_ID}\s*\])+\s*\]")      # [[a], [b], [c]]
+_PH_THEN_CITE = re.compile(r"[ \t]*[:：]?[ \t]*(\{\{\s*(quran|hadith|tafsir)\s*:\s*([^{}]+?)\s*\}\})[ \t]*(\[\[[^\[\]]+\]\])[ \t]*([.،]?)")
+
+
+def _canon_id(i: str, by_id: dict) -> str:
+    """Spell a citation id the way the PASSAGES list does. Only documented short forms are mapped, and only to ids that were retrieved."""
+    if i in by_id:
+        return i
+    m = re.fullmatch(r"tafsir:(?:muyassar:)?(\d{1,3}):(\d{1,3})", i)
+    if m and f"tafsir:muyassar:{m[1]}:{m[2]}" in by_id:
+        return f"tafsir:muyassar:{m[1]}:{m[2]}"
+    m = re.fullmatch(r"quran:(\d{1,3}):(\d{1,3})-(\d{1,3})", i)
+    if m and 0 <= int(m[3]) - int(m[2]) <= 20:
+        ids = [f"quran:{m[1]}:{a}" for a in range(int(m[2]), int(m[3]) + 1)]
+        if all(x in by_id for x in ids):
+            return ", ".join(ids)
+    return i  # unknown: left as written so the normal "NOT retrieved" error names it
+
+
+def normalize_citations(text: str, by_id: dict) -> str:
+    """Repair citation SYNTAX only (small models write [[a], [b]], short ids, or a placeholder followed by its own citation).
+    Every resulting id is still checked against the retrieved set by verify_answer: this never adds a source the model did not name."""
+    text = text or ""
+    text = _SPLIT_LIST.sub(lambda m: "[[" + ", ".join(re.findall(_ID, m.group(0))) + "]]", text)
+
+    def fix(m):
+        ids = [_canon_id(i, by_id) for i in re.split(r"[,;،\s]+", m.group(1).strip()) if i]
+        return "[[" + ", ".join(ids) + "]]"
+    text = CITE.sub(fix, text)
+
+    def move(m):  # '... {{hadith:X}} [[hadith:X]].' -> the citation backs the sentence before it; the placeholder stands alone
+        ph, kind, body, cite, dot = m.groups()
+        want = _ids_for_placeholder(kind, body)
+        if want and set(cite_ids(cite)) == set(want):
+            return " " + cite + dot + chr(10) * 2 + ph + chr(10) * 2
+        return m.group(0)
+    return _PH_THEN_CITE.sub(move, text)
+
+
 _QUOTES = [re.compile(p, re.S) for p in ("«([^»]{1,2000})»", '"([^"]{1,2000})"', "“([^”]{1,2000})”", "‘([^’]{1,2000})’")]
 _AR = re.compile("[ء-ي]")
 _SPLIT = re.compile(r"[.!?؟؛:\n،,;()\[\]]+")
@@ -179,6 +219,11 @@ def verify_answer(text: str, retrieved: list[dict], lang: str = "ar") -> VerifyR
 
     if lang == "ar":  # one language per answer: Latin words are allowed only inside parentheses (approved glossary terms)
         plain = re.sub(r"\([^)]*\)", " ", CITE.sub(" ", PLACEHOLDER.sub(" ", text)))
+        loose = re.findall(_ID, plain)   # passage ids left outside a valid [[ ]] (e.g. [[a], [b]]) are a syntax slip, not English
+        if loose:
+            errors.append(f"Malformed citation: {', '.join(dict.fromkeys(loose))[:100]} must be inside ONE pair of double brackets, "
+                          f"e.g. [[{loose[0]}, {loose[-1]}]] (never [[a], [b]])")
+            plain = re.sub(_ID, " ", plain)
         stray = re.findall(r"[A-Za-z]{3,}", plain)
         if stray:
             errors.append(f"English word(s) inside an Arabic answer: {', '.join(dict.fromkeys(stray))[:80]}. Write the whole answer in Arabic "
@@ -202,7 +247,7 @@ def verify_answer(text: str, retrieved: list[dict], lang: str = "ar") -> VerifyR
             if pid not in by_id:
                 errors.append(f"Placeholder {m.group(0)} refers to {pid}, which was NOT retrieved for this question")
     for group in CITE.findall(text):
-        parts = [i for i in re.split(r"[,;\s]+", group.strip()) if i]
+        parts = [i for i in re.split(r"[,;،\s]+", group.strip()) if i]
         if not parts or not all(_CITE_ID.fullmatch(i) for i in parts):
             errors.append(f"Malformed citation [[{group[:60]}]]: put exactly one passage id, e.g. [[qa:bayyinat:17]] (several ids may be separated by commas)")
             continue
@@ -227,7 +272,7 @@ def verify_answer(text: str, retrieved: list[dict], lang: str = "ar") -> VerifyR
                               f"Rejected text: {seg.strip()[:200]}")
 
     if errors:
-        return VerifyResult(ok=False, errors=errors)
+        return VerifyResult(ok=False, errors=list(dict.fromkeys(errors)))
     blocks, sources, answer_text = build_blocks(text, by_id, lang)
     return VerifyResult(ok=True, blocks=blocks, sources=sources, answer_text=answer_text)
 
@@ -247,7 +292,7 @@ def build_blocks(text: str, by_id: dict, lang: str):
         return order[pid]
 
     def cite_sub(s):
-        return CITE.sub(lambda m: "".join(f"[{num(i)}]" for i in re.split(r"[,;\s]+", m.group(1).strip()) if i), s)
+        return CITE.sub(lambda m: "".join(f"[{num(i)}]" for i in re.split(r"[,;،\s]+", m.group(1).strip()) if i), s)
 
     blocks, plain, pos = [], [], 0
 

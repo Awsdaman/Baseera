@@ -206,3 +206,24 @@ def test_a_support_check_failure_never_breaks_answering(fake_llm, monkeypatch):
     fake_llm(router=[ROUTE_A], generate=[ans])
     out = pipeline.ask(Q, debug=True)
     assert out["status"] == "answered" and "error" in out["debug"]["attempts"][-1]["support"][0]
+
+
+def test_empty_reply_is_retried_once_then_reported_as_llm_empty(fake_llm):
+    fake_llm(router=['{"level": "أ", "intent": "ask", "language": "ar", "term": null}'], generate=["", ""])
+    r = pipeline.ask("ما هي أركان الإسلام؟")
+    assert r["status"] == "abstained" and r["abstain_reason"] == "llm_empty"
+
+
+def test_truncated_reply_is_retried_once(fake_llm, monkeypatch):
+    from core import generate as G
+    calls = []
+
+    def fake_generate(*a, **k):
+        calls.append(k.get("max_tokens"))
+        if len(calls) == 1:
+            raise L.LLMTruncated("hit max_tokens")
+        return "INSUFFICIENT_EVIDENCE"
+    monkeypatch.setattr(pipeline, "generate", fake_generate)
+    fake_llm(router=['{"level": "أ", "intent": "ask", "language": "ar", "term": null}'])
+    r = pipeline.ask("ما هي أركان الإسلام؟")
+    assert len(calls) == 2 and r["abstain_reason"] == "model_insufficient_evidence"

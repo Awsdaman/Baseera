@@ -61,6 +61,54 @@ LEVEL_NOTES = {
 }
 
 
+LOCAL_CHECKLIST = """CHECKLIST (the verifier rejects any answer that breaks one of these):
+- Citations: copy the passage id EXACTLY as it appears in square brackets in the PASSAGES list, inside double brackets: [[qa:icadb:123]], [[tafsir:muyassar:2:255]]. Citations always use the FULL id (only placeholders use the short form {{tafsir:2:255}}).
+- Several ids go inside ONE pair of double brackets: [[qa:icadb:123, qa:bayyinat:45]]. Never write [[a], [b]].
+- Every sentence of explanation ends with its [[id]] before the full stop.
+- Every placeholder ({{quran:...}}, {{hadith:...}}, {{tafsir:...}}, {{note:...}}) stands alone on its own line with a blank line before and after it. Never put a placeholder inside a sentence and never introduce it with a colon.
+- Use no quotation marks (« » " ") and no ﴿ ﴾ anywhere, not even for a short phrase or a phrase from the question. Never repeat the wording of a verse or hadith: say what it teaches in your own words and let the placeholder show the text.
+- When answering in Arabic, use no Latin letters except inside [[ ]] and {{ }}.
+- Output only the answer: no title, no greeting, no markdown headings.
+BAD:  ... بالدعوة [[qa:icadb:111], [qa:bayyinat:22]].      GOOD: ... بالدعوة [[qa:icadb:111, qa:bayyinat:22]].
+BAD:  ... [[tafsir:2:255]]                                  GOOD: ... [[tafsir:muyassar:2:255]]
+BAD:  قال النبي ﷺ: {{hadith:hadeethenc:999}} [[hadith:hadeethenc:999]]
+GOOD: أرشد النبي ﷺ إلى <what it teaches, in your own words> [[hadith:hadeethenc:999]].  then a blank line, {{hadith:hadeethenc:999}} alone, then a blank line.
+BAD:  وقوله "<verse words>" يعني ...                        GOOD: تبيّن الآية أن ... [[quran:S:A]].
+(the ids in these examples are illustrative: use only ids from your PASSAGES list)"""
+
+# Prompt profiles: "default" (Claude / OpenAI) is the unchanged prompt; "local" appends the checklist at the END of the user
+# message (small models follow the most recent instructions best). LLM_PROMPT_PROFILE overrides the automatic choice.
+ADDENDA = {"default": "", "local": LOCAL_CHECKLIST}
+
+
+def prompt_profile() -> str:
+    p = (os.environ.get("LLM_PROMPT_PROFILE") or "").strip().lower()
+    return p if p in ADDENDA else ("local" if L.provider_name() == "local" else "default")
+
+
+# error prefix -> the exact fix asked for on the retry
+FIXES = [
+    ("Hadith text written", "Delete those words of the hadith from your answer. Do not quote or closely paraphrase a hadith: say in a few words of your own what it teaches, end that sentence with its [[id]], and show the hadith only with {{hadith:SOURCE:ID}} alone on its own line."),
+    ("Text resembling retrieved hadith", "Delete those words. Do not copy or closely paraphrase a hadith: say in a few words of your own what it teaches, end that sentence with its [[id]], and show the hadith only with {{hadith:SOURCE:ID}} alone on its own line."),
+    ("Quran text written", "Delete those verse words. Do not quote or repeat verse wording, not even part of it. Say what the verse teaches in your own words with its [[id]], and show it only with {{quran:S:A}} alone on its own line."),
+    ("Text resembling a Quran verse", "Delete those verse words. Do not repeat verse wording, not even part of it. Say what the verse teaches in your own words with its [[id]], and show it only with {{quran:S:A}} alone on its own line."),
+    ("Ornate verse brackets", "Remove ﴿ ﴾ and the words between them. If the question quoted a verse, refer to it as «هذه الآية» and show it with {{quran:S:A}} alone on its own line."),
+    ("Unattributed Arabic quotation", "Remove the quotation marks around that phrase and rephrase it in your own words, followed by its [[id]]."),
+    ("Explanation without an explicit", "Add the [[id]] of the supporting passage at the end of that text, or delete it. If the sentence introduces a placeholder (it ends with a colon), end it with [[id]] and a full stop, then put the placeholder on the next line."),
+    ("Malformed citation", "Use ONE pair of double brackets for several ids: [[id1, id2]]. Copy each id exactly from the PASSAGES list."),
+    ("English word", "Replace those Latin-letter words with Arabic words."),
+]
+_NOT_RETRIEVED_FIX = "Replace that id with an id that appears exactly in the PASSAGES list (citations use the full id, e.g. [[tafsir:muyassar:2:255]]), or delete the sentence."
+
+
+def fix_recipe(errors: list[str]) -> str:
+    out = []
+    for n, e in enumerate(dict.fromkeys(errors), 1):
+        fix = _NOT_RETRIEVED_FIX if "NOT retrieved" in e else next((f for k, f in FIXES if e.startswith(k)), None)
+        out.append(f"{n}. {e}" + (chr(10) + f"   FIX: {fix}" if fix else ""))
+    return chr(10).join(out)
+
+
 def glossary_block(terms: list[dict]) -> str:
     from core.glossary import GLOSSARY
     return "\n".join(f"- {g['ar']} = {g['en']}" for g in GLOSSARY)
@@ -92,14 +140,22 @@ def build_prompts(question: str, level: str, lang: str, passages: list[dict], er
                  "Say, using only the passages, whether they support it, contradict it, or do not address it; never judge it from memory. "
                  "If the passages do not address the exact point, say what they do say and use {{note:no_ruling}}.")
     user += f"\n\nPASSAGES (the only allowed sources):\n{format_passages(passages)}"
+    if ADDENDA[prompt_profile()]:
+        user += "\n\n" + ADDENDA[prompt_profile()]
     if error:
         user += "\n\nYour previous answer was:\n<<<\n" + (previous or "(not available)") + "\n>>>\n"
-        user += (f"\nIt was REJECTED by the verifier for these reasons:\n{error}\n"
-                 f"Rewrite the answer fixing every problem (keep what was fine), or output {NO_EVIDENCE} if the passages cannot support an answer.")
+        if isinstance(error, (list, tuple)):  # precise recipe per verifier error (the pipeline passes the error list)
+            user += ("\nIt was REJECTED by the verifier. Make the SMALLEST changes that fix the problems below and copy every other sentence unchanged.\n"
+                     f"PROBLEMS AND EXACT FIXES:\n{fix_recipe(list(error))}\n"
+                     "Before answering, check: every [[id]] is copied exactly from the PASSAGES list; no quotation marks and no ﴿ ﴾; every {{...}} placeholder is alone on its own line. "
+                     f"Or output {NO_EVIDENCE} if the passages cannot support an answer.")
+        else:
+            user += (f"\nIt was REJECTED by the verifier for these reasons:\n{error}\n"
+                     f"Rewrite the answer fixing every problem (keep what was fine), or output {NO_EVIDENCE} if the passages cannot support an answer.")
     return system, user
 
 
 def generate(question: str, level: str, lang: str, passages: list[dict], error: str | None = None,
-             previous: str | None = None, claim: str | None = None, original: str | None = None) -> str:
+             previous: str | None = None, claim: str | None = None, original: str | None = None, max_tokens: int | None = None) -> str:
     system, user = build_prompts(question, level, lang, passages, error, previous, claim, original)
-    return L.get_llm().complete(L.GENERATE_MODEL, system, user, max_tokens=6000, effort="medium")
+    return L.get_llm().complete(L.GENERATE_MODEL, system, user, max_tokens=max_tokens or int(os.environ.get("LLM_GEN_MAX_TOKENS", 6000)), effort="medium")

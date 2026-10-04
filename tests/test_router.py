@@ -99,3 +99,10 @@ def test_pasted_attributed_saying_without_a_question_is_always_verify_even_if_th
 def test_ruling_validity_question_with_quotes_stays_an_ask(fake_llm):
     fake_llm(router=['{"level": "ب", "intent": "ask", "language": "ar", "term": null}'])
     assert router.route('هل هذا الحكم "حكم اذكار الصباح واجبه" صحيح؟')["intent"] == "ask"
+
+
+def test_attributed_narration_without_a_question_routes_to_verify():
+    from core.router import heuristic_route
+    t = "عن عدي بن حاتم رضي الله عنه قال: سمعت النبي صلى الله عليه وسلم يقول: «اتقوا النار ولو تمرة»"
+    assert heuristic_route(t)["intent"] == "verify"
+    assert heuristic_route("ما معنى قول النبي ﷺ «اتقوا النار ولو بشق تمرة»؟")["intent"] == "ask"

@@ -27,6 +27,19 @@ Open quality points the judge/support check raised (not fixed): contested-fiqh g
 - Opt-in learning loop (see README "Learning over time"): `core/reports.py`, `/api/report`, `/api/privacy`, report box in the UI, `tools/review.py`, `core/rewrites.py`, `data/curated/`. 226 tests pass.
 - Last full live eval after these changes (55 cases, before the last router/extractor stability fixes): 53/55; the two misses (v-02, v-03) were the router calling pasted hadiths "ask" and are fixed and re-run green. A fresh full run is advisable.
 
+## Local model plan implemented (2026-10-04) - NOT yet re-evaluated
+All 7 steps of docs/local_model_plan.md are in the code (242 tests pass). The eval has NOT been re-run yet.
+- Findings behind it: the first live Gemma run never used the LLM router (hidden reasoning ate the 300-token cap), `/no_think` is Qwen-only,
+  dp6-03 was `[[a], [b]]` citation syntax, v-06 a narration pattern gap.
+- LM Studio honours `reasoning_effort="none"` for Gemma 4 (probe: 10 tokens vs 134); `chat_template_kwargs` is ignored. Context length requests are
+  ignored by `lms load -c` and the REST API (still 262144).
+- Code: `core/llm.py` (`no_thinking()`, `thinking_off()`, `LLMTruncated`, no empty cache, max_retries), `core/verify.py` (`normalize_citations`,
+  Malformed citation error, de-dup), `core/pipeline.py` (`_generate_once` runtime retry, `llm_empty`/`llm_truncated`, `LLM_MAX_ATTEMPTS`),
+  `core/generate.py` (local checklist profile, `fix_recipe`), `core/router.py` (`_NARRATION`), `evals/run_evals.py` (router_llm_rate, runtime_abstentions,
+  first_attempt_pass_rate, taint warning). `--reverify` on the saved Gemma run now flips dp6-03, dp6-11 (att.1), a-02, b-01, c-02 (att.1) to pass.
+- Next: run `LOCAL_NO_THINK=1 LLM_CACHE=1 LLM_GEN_MAX_TOKENS=1500 LLM_ROUTER_MAX_TOKENS=600 python evals/run_evals.py --no-judge --workers 1`
+  (smoke subset first: --only dp6-03,dp6-11,c-02,v-06,a-01,a-02,a-03,a-07,a-10,a-14,b-01), then twice in full; gates in the plan.
+
 ## Local model selection (in progress, resume here tomorrow)
 Hardware: this machine IS the desktop (Ryzen 5 7600X, 32 GB RAM, RX 7600 XT 16 GB, LM Studio with the Vulkan llama.cpp 2.51.0 engine selected; `lms` CLI works; `lms runtime survey` sees 15.98 GiB VRAM). Laptop (RTX 4050 6 GB) not tested yet.
 
