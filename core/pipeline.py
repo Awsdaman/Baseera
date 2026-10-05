@@ -3,12 +3,13 @@ import os
 
 from core import llm as L
 from core import retrieve as R
+from core import relevance as rel
 from core import rewrites
 from core import support as S
 from core.generate import generate
 from core.glossary import GLOSSARY, lookup
 from core.router import detect_language, find_term, needs_context, needs_empathy, route
-from core.verify import VerifyResult, normalize_citations, verify_answer
+from core.verify import NOTES, VerifyResult, normalize_citations, verify_answer
 
 DISCLOSURE = {
     "ar": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
@@ -208,6 +209,11 @@ def _ask(question: str, lang: str | None = None, trace: dict | None = None) -> d
     for pid in fix_ids:
         if pid not in have and R.get_passage(pid):
             passages.insert(0, R.get_passage(pid))
+    gloss = find_term(question)  # an approved glossary term in the user's own wording always brings its glossary card, even if the restatement lost it
+    if gloss:
+        gid = f"term:glossary:{[g['ar'] for g in GLOSSARY].index(gloss) + 1}"
+        if gid not in {p["id"] for p in passages} and R.get_passage(gid):
+            passages.insert(0, R.get_passage(gid))
     trace["retrieved_ids"] = [p["id"] for p in passages]
     resp = _answer(search_q, info, lang, passages, trace)
     if fix_blocks:
@@ -283,6 +289,20 @@ def _answer(question, info, lang, passages, trace):
         if vr.ok:
             if vr.abstain:
                 return abstain_response(info, lang, "model_insufficient_evidence")
-            return _resp("answered", info, lang, blocks=vr.blocks, sources=vr.sources, answer_text=vr.answer_text, attempts=attempts)
+            blocks, answer_text = vr.blocks, vr.answer_text
+            if rel.mode() != "off":
+                # on-topic check: do the CITED passages contain what the question asks? (the verifier checks form, not relevance)
+                cited = [by_id[x["id"]] for x in vr.sources if x["id"] in by_id]
+                decision = rel.decide(question, cited)
+                trace["attempts"][-1]["relevance"] = decision
+                if rel.mode() == "enforce":
+                    if decision["action"] == "abstain":
+                        return abstain_response(info, lang, "sources_not_on_topic",
+                                                errors=[f"cited passages do not address the question (model: {decision['verdict']}, similarity {decision.get('sim')})"])
+                    if decision["action"] == "note" and not any(b.get("note") in ("no_ruling", "not_direct") for b in blocks):
+                        note = NOTES["not_direct"]["en" if lang == "en" else "ar"]
+                        blocks = list(blocks) + [{"kind": "notice", "text": note, "note": "not_direct"}]
+                        answer_text = answer_text + chr(10) * 2 + note
+            return _resp("answered", info, lang, blocks=blocks, sources=vr.sources, answer_text=answer_text, attempts=attempts)
         errors = list(vr.errors)
     return abstain_response(info, lang, "verification_failed", errors=last.errors if last else [])

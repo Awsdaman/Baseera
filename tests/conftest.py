@@ -38,6 +38,7 @@ def isolated_llm_env(monkeypatch):
               "OPENAI_JUDGE_MODEL", "LOCAL_MODEL", "LOCAL_BASE_URL", "SUPPORT_THETA", "SUPPORT_MODEL"):
         monkeypatch.delenv(k, raising=False)
     monkeypatch.setenv("SUPPORT_MODE", "off")  # support-check tests opt in explicitly
+    monkeypatch.setenv("REL_MODE", "off")      # on-topic check tests opt in explicitly
     L.set_llm(None)
     yield
     L.set_llm(None)

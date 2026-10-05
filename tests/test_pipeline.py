@@ -251,3 +251,14 @@ def test_empathy_opener_is_added_only_for_first_person_distress(fake_llm):
 def test_empathy_opener_is_never_added_to_verify_results():
     out = pipeline._with_empathy({"status": "verified", "blocks": [], "answer_text": "", "language": "ar"}, "أشعر بالحزن")
     assert out["blocks"] == [] and "empathy" not in out
+
+
+def test_glossary_term_in_the_question_always_reaches_the_generator(fake_llm, monkeypatch):
+    from core import retrieve as R
+    seen = {}
+    real = R.retrieve
+    monkeypatch.setattr(R, "retrieve", lambda q, per_type=None, vectors=False, dorar=False: [p for p in real(q, per_type=per_type, vectors=False) if p["type"] != "term"])
+    fake_llm(router=['{"level": "ب", "intent": "ask", "language": "ar", "term": null, "canonical_question": "ما هو الاعتقاد الأول؟", "claim": null}'],
+             generate=["INSUFFICIENT_EVIDENCE"])
+    out = pipeline.ask("ما معنى التوحيد لشخص لم يسمع بالمصطلح من قبل؟", debug=True)
+    assert "term:glossary:2" in out["debug"]["retrieved_ids"]

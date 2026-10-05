@@ -30,6 +30,8 @@ NOTES = {
               "en": "For the detailed rulings on this matter, please consult a qualified scholar or fatwa authority."},
     "no_ruling": {"ar": "ملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
                   "en": "Note: the approved sources available to me do not state the specific ruling on this point (for example whether it is obligatory or recommended); what is above is what they contain. Please ask a qualified scholar."},
+    "not_direct": {"ar": "ملاحظة: النصوص المتاحة لي في المصادر المعتمدة لا تتناول سؤالك بشكل مباشر؛ وما سبق هو أقرب ما ورد فيها، فيُرجى التحقق من عالم أو جهة إفتاء مؤهلة.",
+                   "en": "Note: the passages available to me in the approved sources do not address your question directly; the above is the closest they contain. Please check with a qualified scholar or fatwa authority."},
     "disputed": {"ar": "هذه مسألة اختلف فيها أهل العلم؛ وما سبق عرضٌ لما ورد في المصادر المتاحة دون ترجيح بينها.",
                  "en": "Scholars differ on this matter; the above presents what the available sources say, without choosing between the views."},
 }
@@ -90,6 +92,26 @@ LEAK_WORDS = 6
 LEAK_CUTOFF = 93
 LONG_RUN_WORDS = 9      # an unquoted near-copy of at least this many words is treated as typed sacred text
 COVER_RATIO = 0.6       # ...or a shorter one that reproduces >= 60% of the verse / hadith it matches
+
+# The shahada is the first pillar of Islam and the core of tawhid: answers about either must be able to state it. It is a universally known
+# formula (not a retrieved text the model could be "copying"), so these exact forms are removed before the typed-scripture checks measure a chunk.
+# Deliberately minimal: only shahada forms; any other long run or verse-like text is still judged as before.
+_STOCK_RAW = ["اشهد ان لا اله الا الله واشهد ان محمدا رسول الله", "الشهاده بان لا اله الا الله وان محمدا عبده ورسوله",
+              "شهاده ان لا اله الا الله وان محمدا رسول الله", "شهاده ان لا اله الا الله وان محمدا عبده ورسوله",
+              "ان لا اله الا الله وان محمدا رسول الله", "ان لا اله الا الله وان محمدا عبده ورسوله", "لا اله الا الله محمد رسول الله",
+              "لا اله الا الله"]
+_STOCK = None
+
+
+def _strip_stock(n: str) -> str:
+    """Remove the shahada formulas from an already normalized string (longest first)."""
+    global _STOCK
+    if _STOCK is None:
+        _STOCK = sorted({normalize_ar(x) for x in _STOCK_RAW}, key=len, reverse=True)
+    for st in _STOCK:
+        n = n.replace(st, " ")
+    return re.sub(r"\s+", " ", n).strip()
+
 
 _quran_cache = None
 
@@ -157,6 +179,8 @@ def _check_quotes(text: str, retrieved: dict, errors: list[str]):
             if not _AR.search(seg) or _arabic_words(seg) < MIN_QUOTE_WORDS:
                 continue
             n = normalize_ar(seg)
+            if len(_strip_stock(n).split()) < MIN_QUOTE_WORDS:  # only the shahada formula (or a tiny remainder): a stock phrase, not a recitation
+                continue
             words = len(n.split())
             # Typed scripture = a long run, or a quote that covers most of a verse. A short formula inside a longer verse
             # (the shahada «لا إله إلا الله», «بسم الله») is a stock phrase, not a recitation.
@@ -185,8 +209,8 @@ def _check_leaks(text: str, retrieved: dict, errors: list[str]):
     qnorms = _long_verses()
     hadith_norms = [(p["id"], normalize_ar(p["text"] or "")) for p in retrieved.values() if p["type"] == "hadith"]
     for chunk in _SPLIT.split(clean):
-        n = normalize_ar(chunk)
-        if _arabic_words(chunk) < LEAK_WORDS:
+        n = _strip_stock(normalize_ar(chunk))
+        if len(n.split()) < LEAK_WORDS or _arabic_words(chunk) < LEAK_WORDS:
             continue
         nwords = len(n.split())
         hit = process.extractOne(n, qnorms, scorer=fuzz.partial_ratio, score_cutoff=LEAK_CUTOFF)

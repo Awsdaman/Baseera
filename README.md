@@ -127,6 +127,21 @@ Caveats: one run on 52 cases; the router number is a little optimistic (the rout
 
 Unit/integration tests: **245 pass** (`python -m pytest -q`, plus one slow synthetic check with `-m slow`), including adversarial verifier cases, pipeline retry/abstain paths with a fake LLM, the OpenAI/Anthropic/local wrappers against stubs, API privacy checks, the eval runner (parallelism, resume), data-integrity assertions (6,236 verses) and retrieval on real questions. Tests need the ingested database (`python ingest/build_all.py`).
 
+### Reliability and answer boundaries (`evals/reliability.py`, 51 questions, local Gemma 4 12B)
+
+Built for the question "does it know when to answer and when to decline?", with the full answer to every question kept in `evals/reports/reliability-*.html` (git-ignored):
+
+| Category | What must happen | Result |
+|---|---|---|
+| Should answer (14 direct questions the sources cover) | answered, not refused | **14/14** |
+| No sufficient source / out of scope (16, incl. invented or off-topic questions) | decline, refer, ask for clarification, or answer *with* a limits note; a confident answer fails | **16/16** |
+| Disputed matters (6) | positions with a disputed / refer note, or decline | **6/6** |
+| Paraphrase groups (5 groups x 3 wordings, incl. colloquial and English) | the outcome (answered / withheld) must not flip | **5/5** (the level label differed within 3 groups; the answer did not) |
+
+What this suite found and fixed: a plain "what are the pillars of Islam?" answer was rejected because stating the shahada looked like copied hadith text (now a narrow stock-formula exemption, with a test that a real verse next to it is still caught); and the **on-topic check** below.
+
+**On-topic check (`core/relevance.py`).** The verifier proves a citation is real and each sentence is backed by the passage it cites, but not that the cited passages *address the question*. On 48 detailed fiqh questions, some answers were assembled from correct but loosely related passages (e.g. zakat on jewellery gold answered with a general definition of zakat). The check asks the model one narrow question about the retrieved text only (answers / partial / unrelated), and **code** applies the result: partial or unrelated adds the fixed note "the passages do not address your question directly"; the answer is withheld only when the model says "unrelated" **and** the question's embedding similarity to the cited passages is low (two weak signals together, because each alone was trigger-happy). It can only make an answer more cautious, never add content. On the 48 questions after the fix: 40 answered (32 of them carrying a limits note), 8 declined (4 because the verifier rejected uncited or from-memory text, 1 on-topic, 3 no evidence); none of the declines is a wrong answer shown.
+
 ### Tone and order of evidence
 
 - **Empathy first.** When a message contains first-person distress ("أشعر بالذنب...", "I feel hopeless"), the answer opens with a fixed, code-owned acknowledgement (`core/router.py: needs_empathy`, `core/pipeline.py: _with_empathy`). It is text we wrote, never model-generated, so it needs no citation and cannot hallucinate; it is not added to verify results.
@@ -141,7 +156,7 @@ lms load gemma-4-12b-it --gpu max --parallel 1
 LLM_PROVIDER=local LOCAL_BASE_URL=http://localhost:1234/v1 LOCAL_MODEL=gemma-4-12b-it LOCAL_NO_THINK=1 LLM_GEN_MAX_TOKENS=1500 LLM_ROUTER_MAX_TOKENS=600 JUDGE_PROVIDER=openai python evals/run_evals.py --workers 1
 ```
 
-Final run (55 cases): behaviour **100%**, router 100% (LLM router used every time), citations 100%, verse fidelity 100%, correct abstention 7/7, false abstention 0/32, verifier-forced abstention 0/41, first-attempt pass 92.7%, judge 4.86/5, 33 minutes. The one miss is retrieval on dp6-07 (a glossary entry; it passed on a rerun).
+Final run (55 cases): behaviour **100%**, router 100% (LLM router used every time), citations 100%, verse fidelity 100%, correct abstention 7/7, false abstention 0/32, verifier-forced abstention 0/41, first-attempt pass 85%, judge 4.86/5, 37 minutes. The one flaky retrieval miss (dp6-07: the glossary card for a term dropped by the model's restated question) is fixed in code: a glossary term in the user's own wording always brings its card (test + rerun of the 17 term-related cases: 17/17).
 
 What it took (details in `docs/local_model_plan.md`): the first Gemma run scored 96.4% but never used the LLM router, because hidden reasoning consumed its token budget. Fixes: reasoning off (`reasoning_effort=none`; `/no_think` only works for Qwen), a repair step for citation syntax (`[[a], [b]]`, short ids; every id is still verified), one runtime retry for empty or cut-off replies, exact fix instructions on the verifier retry, a local-only prompt checklist (Claude/OpenAI prompts unchanged), and a rule for "prove this" requests that name nothing to prove. Environment knobs are listed in `.env.example`. Limits: LM Studio ignored context-length requests for this model (it reports 262144); the laptop (RTX 4050, 6 GB) is untested.
 

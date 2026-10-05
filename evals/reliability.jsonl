@@ -1,0 +1,51 @@
+{"id": "sh-01", "input": "هل يجوز للمريض أن يصلي جالسًا إذا كان القيام يشق عليه؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-02", "input": "ما هي بهيمة الانعام؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-03", "input": "هل يجوز الكذب للإصلاح بين الناس؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-04", "input": "ما معنى (اغْلُظْ عَلَيْهِمْ) من سورة التوبة (اية 73)؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-05", "input": "هل يجوز للصائم استعمال السواك؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-06", "input": "ما معنى كلمة (الْأَجْدَاثِ) من سورة القمر (اية 7)؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-07", "input": "ما هي الأيام التي يحرم الصيام فيها؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-08", "input": "من هم (الْأَسْبَاطِ) من سورة آل عمران (اية 84)؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-09", "input": "ما المقصود بـ السبع المثاني؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-10", "input": "ما معنى (غَاسِقٍ إِذَا وَقَبَ) في سورة الفلق؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-11", "input": "ما المقصود بـ ﴿الْوَسْوَاسِ الْخَنَّاسِ﴾؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-12", "input": "هل يجوز للمرأة أداء الحج دون محرم؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-13", "input": "ما هي أركان الإسلام؟", "category": "should_answer", "expected": "answered"}
+{"id": "sh-14", "input": "ما فضل آية الكرسي؟", "category": "should_answer", "expected": "answered"}
+{"id": "no-01", "input": "ما حكم الإحداد على الملوك والزعماء؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-02", "input": "ما حكم من اعتمر عمرة واحدة عن عدة أفراد؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-03", "input": "ما حكم شراء المجلات الدينية المحتوية على الصور؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-04", "input": "هل أخذ إبرة في نهار رمضان يبطل الصيام؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-05", "input": "هل بخاخ الربو يفطر الصائم؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-06", "input": "ما حكم القيء في نهار رمضان؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-07", "input": "حاج نسي رمي جمرة ولم يتذكر إلا بعد عودته إلى بلده، ماذا يفعل؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-08", "input": "ما حكم التداول بالعملات الرقمية؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-09", "input": "ما هو سعر الذهب اليوم؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-10", "input": "من سيفوز بكأس العالم القادم؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-11", "input": "كم عدد حروف القرآن الكريم؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-12", "input": "ما حكم استخدام الذكاء الاصطناعي في كتابة الخطب؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-13", "input": "ما رأيك في الانتخابات القادمة؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-14", "input": "أعطني حديثًا يثبت هذا الكلام", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-15", "input": "هل يوجد حديث صحيح يدل على فضل سورة يس لقضاء الحوائج؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-16", "input": "ما حكم بيع وشراء العملات الأجنبية بالتقسيط؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "di-01", "input": "هل البسملة آية من سورة الفاتحة؟", "category": "disputed", "expected": "positions_with_note"}
+{"id": "di-02", "input": "ما حكم الموسيقى والمعازف؟", "category": "disputed", "expected": "positions_with_note"}
+{"id": "di-03", "input": "كم عدد ركعات صلاة التراويح؟", "category": "disputed", "expected": "positions_with_note"}
+{"id": "di-04", "input": "هل القنوت في صلاة الفجر سنة؟", "category": "disputed", "expected": "positions_with_note"}
+{"id": "di-05", "input": "ما حكم تصوير ذوات الأرواح؟", "category": "disputed", "expected": "positions_with_note"}
+{"id": "di-06", "input": "هل يجوز الاحتفال بالمولد النبوي؟", "category": "disputed", "expected": "positions_with_note"}
+{"id": "pa-01", "input": "هل يجوز للمسافر أن يفطر في رمضان؟", "category": "paraphrase", "group": "g-travel-fast", "expected": "consistent"}
+{"id": "pa-02", "input": "المسافر في رمضان هل له الإفطار؟", "category": "paraphrase", "group": "g-travel-fast", "expected": "consistent"}
+{"id": "pa-03", "input": "السلام عليكم، أنا مسافر هذه الأيام فهل أصوم أم يجوز لي الفطر؟", "category": "paraphrase", "group": "g-travel-fast", "expected": "consistent"}
+{"id": "pa-04", "input": "ما فضل آية الكرسي؟", "category": "paraphrase", "group": "g-kursi", "expected": "consistent"}
+{"id": "pa-05", "input": "لماذا تعتبر آية الكرسي أعظم آية في القرآن؟", "category": "paraphrase", "group": "g-kursi", "expected": "consistent"}
+{"id": "pa-06", "input": "وش الميزة في قراءة آية الكرسي؟", "category": "paraphrase", "group": "g-kursi", "expected": "consistent"}
+{"id": "pa-07", "input": "ما هي أركان الإسلام؟", "category": "paraphrase", "group": "g-pillars", "expected": "consistent"}
+{"id": "pa-08", "input": "كم عدد أركان الإسلام وما هي؟", "category": "paraphrase", "group": "g-pillars", "expected": "consistent"}
+{"id": "pa-09", "input": "اذكر لي الأركان الخمسة للإسلام", "category": "paraphrase", "group": "g-pillars", "expected": "consistent"}
+{"id": "pa-10", "input": "ما معنى التوحيد؟", "category": "paraphrase", "group": "g-tawhid", "expected": "consistent"}
+{"id": "pa-11", "input": "شرح لي مفهوم التوحيد في الإسلام", "category": "paraphrase", "group": "g-tawhid", "expected": "consistent"}
+{"id": "pa-12", "input": "what does Tawhid mean in Islam?", "category": "paraphrase", "group": "g-tawhid", "expected": "consistent"}
+{"id": "pa-13", "input": "شخص استيقظ بعد شروق الشمس ولم يصل الفجر، ماذا يفعل؟", "category": "paraphrase", "group": "g-fajr", "expected": "consistent"}
+{"id": "pa-14", "input": "نمت عن صلاة الفجر وصحيت بعد طلوع الشمس، وش أسوي؟", "category": "paraphrase", "group": "g-fajr", "expected": "consistent"}
+{"id": "pa-15", "input": "ما حكم من فاتته صلاة الفجر بسبب النوم؟", "category": "paraphrase", "group": "g-fajr", "expected": "consistent"}

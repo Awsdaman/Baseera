@@ -300,3 +300,20 @@ def test_evidence_order_rule_does_not_invite_qa_placeholders():
     from core import generate as G
     rule = G.RULES[G.RULES.index("12. ORDER OF EVIDENCE"):]
     assert "NO placeholder" in rule and "{{qa" not in rule
+
+
+# ---------------------------------------------------------------- the shahada is a stock formula, not typed scripture
+def test_shahada_in_a_pillars_answer_is_not_flagged_as_copied_hadith():
+    ps = P("hadith:hadeethenc:65000") if R.get_passage("hadith:hadeethenc:65000") else P(KURSI)
+    text = "الركن الأول من أركان الإسلام هو الشهادة بأن لا إله إلا الله وأن محمداً عبده ورسوله [[%s]]" % ps[0]["id"]
+    r = verify_answer(text, ps)
+    assert not any("resembling" in e or "Unattributed" in e for e in r.errors), r.errors
+
+
+def test_quoted_shahada_alone_is_allowed_but_a_verse_next_to_it_is_still_caught():
+    ps = P(KURSI)
+    ok = verify_answer("وكلمة التوحيد هي «لا إله إلا الله» وهي أساس الدين وعليها يقوم الإسلام كله [[quran:2:255]]", ps)
+    assert not any("Unattributed" in e for e in ok.errors), ok.errors
+    verse = R.get_passage(KURSI)["text"]
+    bad = verify_answer(f"قال: «لا إله إلا الله {normalize_ar(verse)}» [[quran:2:255]]", ps)
+    assert not bad.ok                                   # the shahada exemption does not hide a typed verse

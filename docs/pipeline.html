@@ -93,6 +93,7 @@
           <div class="box bad"><b>reject, 1st time</b><small>retry once: sees its rejected answer + an exact fix per error</small></div>
           <div class="box warn"><b>reject, 2nd time</b><small>abstain + where to look</small></div>
         </div>
+        <div class="box warn"><b>On-topic check</b><small>do the CITED passages address the question? partial: fixed "not directly addressed" note · unrelated and far from the question: decline. Can only make an answer more cautious</small></div>
         <div class="box good"><b>accept</b><small>substitute exact text from the DB; grades only from Dorar / HadeethEnc</small></div>
       </div>
     </section>
@@ -148,9 +149,11 @@
         <tr><td>False abstention on answerable questions</td><td class="n ok">0% (0/30)</td><td class="n ok">0% (0/32)</td></tr>
         <tr><td>Verifier-forced abstention (target 0)</td><td class="n ok">0% (0/39)</td><td class="n ok">0% (0/41)</td></tr>
         <tr><td>LLM-judge score (1-5)</td><td class="n">4.71</td><td class="n">4.86</td></tr>
+        <tr><td>Reliability suite: should answer / no-source / disputed</td><td class="n">n/a</td><td class="n ok">14/14 · 16/16 · 6/6</td></tr>
+        <tr><td>Paraphrase groups: same outcome</td><td class="n">n/a</td><td class="n ok">5/5</td></tr>
         <tr><td>Time for a full run</td><td class="n">about 5 min (4 workers)</td><td class="n">33 min (1 worker, own GPU, no API cost)</td></tr>
       </table>
-      <p class="legend" style="text-align:left;margin:8px 0 0">*optimistic: router rules were tuned while looking at this set, so the real-world rate is lower. Gemma run: first attempt passed the verifier on 92.7% of answers; 245 tests pass. The first Gemma run (96.4%) showed the LLM router had never run (hidden reasoning used its token budget) and that Gemma wrote citations as [[a], [b]]; both are fixed in code.</p>
+      <p class="legend" style="text-align:left;margin:8px 0 0">*optimistic: router rules were tuned while looking at this set, so the real-world rate is lower. Gemma run: first attempt passed the verifier on 92.7% of answers; 265 tests pass; the reliability suite (answer boundaries) and a 48-question fiqh set are in evals/. The first Gemma run (96.4%) showed the LLM router had never run (hidden reasoning used its token budget) and that Gemma wrote citations as [[a], [b]]; both are fixed in code.</p>
     </div>
     <div class="panel">
       <h3>Design choices that produced those numbers</h3>
@@ -162,6 +165,7 @@
         <li>Verify mode was calibrated on 2,856 synthetic verse cases (misquote recall 73% to 99.8% after a bug it exposed) and 1,000 hadith cases.</li>
         <li>Evals run in parallel (3.7x faster); a rejected-answer trace and per-case token use are stored.</li>
         <li>Provider-agnostic LLM layer (Anthropic, OpenAI, local) with token counting. Local models run with hidden reasoning off (<code>reasoning_effort=none</code>): 130 output tokens per call instead of about 1,500, with the judge score unchanged.</li>
+        <li>Boundary tests: questions with no sufficient source must decline or carry a limits note (16/16), disputed matters must show positions with a note (6/6), and paraphrased questions must not flip the outcome (5/5).</li>
         <li>Eval runner reports hidden problems: share of cases routed by the real LLM router, runtime abstentions, first-attempt pass rate, tainted-case warning.</li>
         <li>Everything beyond the LLM (verify mode, referral, glossary, retrieval) works with no API key.</li>
       </ul>

@@ -27,6 +27,15 @@ Open quality points the judge/support check raised (not fixed): contested-fiqh g
 - Opt-in learning loop (see README "Learning over time"): `core/reports.py`, `/api/report`, `/api/privacy`, report box in the UI, `tools/review.py`, `core/rewrites.py`, `data/curated/`. 226 tests pass.
 - Last full live eval after these changes (55 cases, before the last router/extractor stability fixes): 53/55; the two misses (v-02, v-03) were the router calling pasted hadiths "ask" and are fixed and re-run green. A fresh full run is advisable.
 
+## FINAL VERSION (2026-10-06): everything below was re-run on the final build
+- Golden 55 (Gemma 4 12B local, judge gpt-5.5): behaviour 100%, citations/verse fidelity 100%, correct abstention 7/7, false abstention 0/32, forced abstention 0/41, judge 4.86. 17 glossary-related cases re-run after the last retrieval fix: 17/17.
+- Reliability (evals/reliability.py, 51 q): should-answer 14/14, no-source 16/16, disputed 6/6, paraphrase outcome 5/5 (levels differ in 3 groups).
+- 48 fiqh questions (evals/bulk_check.py): 40 answered (32 with a limits note), 8 declined; no confident wrong-source answer shown.
+- Synthetic verify: verse macro-F1 about 0.98 (script suggests 0.80 threshold, 0.997; current 0.72 kept), hadith F1 0.963. Tests: 265 pass (+1 slow).
+- New since the plan: on-topic check (core/relevance.py, REL_MODE), level-د demotion to ج for general worship questions, "prove this" clarification, shahada stock-formula exemption, glossary card always retrieved, empathy opener, evidence-order rule. Docs: docs/how_baseera_decides.md, docs/pipeline.html, README.
+- Known limits: fiqh details are only as good as the approved sources (the system declines or adds a "not directly addressed" note); answer LEVEL labels can differ between paraphrases; LM Studio ignores context-length requests; the laptop is untested; 4 of 48 fiqh answers were rejected by the verifier (uncited text, a verse recited from memory) and shown as declines.
+- Local files not in git: data/questions/, "The enhanced UI UX/", design-options/ (UI redesigns waiting for review), evals/reports/bulk-* and reliability-* (contain full answers).
+
 ## FINAL local result (2026-10-04, build faab13c): Gemma 4 12B Q4_K_M via LM Studio, judge gpt-5.5
 55/55 behaviour, router 100% (LLM router used 48/48), citations 100%, verse fidelity 100%, correct abstention 7/7, false abstention 0/32,
 verifier-forced abstention 0/41, runtime abstentions 0, first-attempt pass 92.7%, judge 4.86/5 (OpenAI run: 4.71), 33 min per full run, ~130 output tokens/call.
