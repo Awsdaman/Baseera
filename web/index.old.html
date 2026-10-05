@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بصيرة | Baseera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --navy:#1B2D45; --teal:#1F7872; --gold:#C9A04A; --bg:#f6f4ef; --card:#fff; --ink:#1c2430; --mute:#667085;
+          --green:#2e7d32; --amber:#b7791f; --red:#b3261e; --grey:#6b7280; --line:#e4e0d4; }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:"Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif; line-height:1.85; font-size:17px; }
+  html[dir=ltr] body { font-family:"Segoe UI",system-ui,Arial,sans-serif; line-height:1.65; font-size:16px; }
+  header { background:var(--navy); color:#fff; border-bottom:4px solid var(--gold); }
+  .bar { max-width:900px; margin:0 auto; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .brand h1 { margin:0; font-size:1.7rem; line-height:1.3; } .brand h1 small { font-size:.95rem; font-weight:400; color:#cfd6df; margin-inline-start:8px; }
+  .brand p { margin:0; color:#cfd6df; font-size:.9rem; }
+  #lang { background:transparent; color:#fff; border:1px solid #6b7c95; padding:4px 14px; border-radius:20px; cursor:pointer; font:inherit; font-size:.9rem; }
+  main { max-width:900px; margin:0 auto; padding:14px 16px 8px; }
+  .ai { background:#fff8e6; border:1px solid var(--gold); border-radius:10px; padding:8px 12px; font-size:.88rem; margin-bottom:12px; }
+  .tabs { display:flex; gap:8px; margin:6px 0 12px; }
+  .tab { flex:1; padding:10px 12px; border:1px solid var(--line); background:#fff; border-radius:10px; cursor:pointer; font:inherit; color:var(--navy); }
+  .tab[aria-selected=true] { background:var(--teal); color:#fff; border-color:var(--teal); }
+  textarea, input[type=text] { width:100%; padding:12px; font:inherit; border:1px solid #cbd2db; border-radius:10px; background:#fff; color:var(--ink); }
+  textarea { min-height:110px; resize:vertical; }
+  .row { display:flex; gap:8px; margin:8px 0; flex-wrap:wrap; align-items:center; }
+  button.go { background:var(--teal); color:#fff; border:0; padding:11px 26px; border-radius:10px; font:inherit; cursor:pointer; }
+  button.go:disabled { opacity:.6; cursor:wait; }
+  .ex { background:#fff; border:1px dashed var(--teal); color:var(--teal); padding:6px 12px; border-radius:18px; font:inherit; font-size:.85rem; cursor:pointer; }
+  .ex:hover { background:#eef6f5; }
+  .label { font-size:.78rem; color:var(--mute); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin:10px 0; border-inline-start:6px solid var(--navy); }
+  .card .kind { font-size:.78rem; font-weight:600; letter-spacing:.2px; }
+  .gen { border-inline-start-color:var(--navy); } .gen .kind { color:var(--navy); }
+  .quran { border-inline-start-color:var(--teal); background:#f4fbfa; } .quran .kind { color:var(--teal); }
+  .hadith { border-inline-start-color:var(--gold); background:#fffaf0; } .hadith .kind { color:#8a6a1f; }
+  .tafsir { border-inline-start-color:#7a8aa0; background:#f5f7fa; } .tafsir .kind { color:#51607a; }
+  .corr { border-inline-start-color:var(--amber); background:#fff7e8; } .corr .kind { color:var(--amber); }
+  .glos { border-inline-start-color:#9b6b9e; background:#faf5fb; } .glos .kind { color:#7b4d7f; }
+  .verse { font-family:"Amiri","Noto Naskh Arabic",serif; font-size:1.55rem; line-height:2.25; margin:4px 0; direction:rtl; text-align:right; }
+  .htext { font-size:1.15rem; direction:rtl; text-align:right; } .htext.big { font-family:"Amiri","Noto Naskh Arabic",serif; font-size:1.55rem; line-height:2.2; }
+  .correctbox { background:#fffaf0; border:1px solid #ecd9a8; border-inline-start:6px solid var(--gold); border-radius:10px; padding:8px 12px; margin:10px 0; }
+  .en { direction:ltr; text-align:left; color:#374151; font-size:.93rem; }
+  .meta { font-size:.8rem; color:var(--mute); }
+  .badge { display:inline-block; padding:0 10px; border-radius:12px; font-size:.8rem; margin-inline-end:6px; background:#eef3f3; color:var(--teal); }
+  .badge.grade { background:#fbf1d6; color:#7a5b10; }
+  a { color:var(--teal); } sup a { text-decoration:none; font-weight:700; padding:0 1px; }
+  .status { border-radius:10px; padding:8px 12px; margin:10px 0; font-size:.92rem; }
+  .status.abst { background:#eef2f7; border:1px solid #c9d3e0; } .status.ref { background:#eaf5f4; border:1px solid #b8dcd9; } .status.warn { background:#fff4e5; border:1px solid #f0c98a; }
+  .links a { display:inline-block; margin:2px 0; } .links li { margin:2px 0; }
+  .src { font-size:.88rem; } .src b { color:var(--navy); }
+  .diff .eq { } .diff .rep { background:#fde8e6; text-decoration:line-through; color:var(--red); } .diff .cor { background:#e3f4e4; color:var(--green); font-weight:600; }
+  .diff .miss { background:#e3f4e4; color:var(--green); font-weight:600; text-decoration:underline; }
+  .res { border-inline-start-width:8px; }
+  .res.green { border-inline-start-color:var(--green); } .res.amber { border-inline-start-color:var(--amber); }
+  .res.red { border-inline-start-color:var(--red); } .res.grey { border-inline-start-color:var(--grey); }
+  .verdict { font-weight:700; } .green .verdict { color:var(--green); } .amber .verdict { color:var(--amber); } .red .verdict { color:var(--red); } .grey .verdict { color:var(--grey); }
+  table.m { width:100%; border-collapse:collapse; font-size:.85rem; margin-top:6px; } table.m td, table.m th { border-top:1px solid var(--line); padding:4px 6px; text-align:start; vertical-align:top; }
+  .claimtxt { background:#f3f1ea; border-radius:8px; padding:6px 10px; font-size:1.05rem; direction:rtl; text-align:right; }
+  .loading { text-align:center; color:var(--mute); padding:22px 0; }
+  .spin { display:inline-block; width:18px; height:18px; border:3px solid #cfe3e1; border-top-color:var(--teal); border-radius:50%; animation:sp 1s linear infinite; vertical-align:middle; margin-inline-end:8px; }
+  @keyframes sp { to { transform:rotate(360deg); } }
+  audio { width:100%; max-width:380px; height:34px; margin-top:6px; }
+  .reportbox { margin:14px 0; border:1px dashed var(--line); border-radius:10px; padding:8px 12px; background:#fff; font-size:.9rem; }
+  .reportbox summary { cursor:pointer; color:var(--teal); } .reportbox select { width:100%; padding:8px; border:1px solid #cbd2db; border-radius:8px; font:inherit; background:#fff; }
+  .consent { display:flex; gap:8px; align-items:flex-start; margin:8px 0; font-size:.85rem; color:var(--mute); }
+  footer { max-width:900px; margin:10px auto 30px; padding:0 16px; color:var(--mute); font-size:.8rem; }
+  @media (max-width:560px) { body { font-size:16px; } .verse { font-size:1.35rem; } .bar { padding:10px 12px; } .brand p { display:none; } .tab { padding:9px 6px; font-size:.9rem; } }
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <div class="brand"><h1>بصيرة<small>Baseera</small></h1><p data-i="tagline"></p></div>
+  <button id="lang" type="button">English</button>
+</div></header>
+<main>
+  <div class="ai" data-i="disclosure"></div>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-ask" aria-selected="true" data-i="tabAsk"></button>
+    <button class="tab" role="tab" id="tab-verify" aria-selected="false" data-i="tabVerify"></button>
+  </div>
+
+  <section id="pane-ask">
+    <textarea id="q" data-ip="askPh" maxlength="2000"></textarea>
+    <div class="row"><button class="go" id="goAsk" data-i="ask"></button><span class="label" data-i="examples"></span>
+      <button class="ex" data-ex="pillars"></button><button class="ex" data-ex="personal"></button><button class="ex" data-ex="kaaba"></button><button class="ex" data-ex="tawhid"></button></div>
+  </section>
+  <section id="pane-verify" hidden>
+    <textarea id="v" data-ip="verifyPh" maxlength="6000"></textarea>
+    <div class="row"><button class="go" id="goVerify" data-i="verify"></button><span class="label" data-i="examples"></span>
+      <button class="ex" data-ex="viral"></button></div>
+  </section>
+  <div id="out" aria-live="polite"></div>
+</main>
+<footer id="foot"></footer>
+
+<script>
+const I18N = {
+ ar: { tagline:'اسأل • تحقّق • اعرف المصدر', disclosure:'⚠️ بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا. تجيب من مصادر معتمدة وتعرض مراجعها، ولا تخزّن بياناتك الشخصية.',
+   tabAsk:'اسأل', tabVerify:'تحقّق من رسالة', ask:'اسأل', verify:'تحقّق', examples:'جرّب:', askPh:'اكتب سؤالك بالعربية أو English …', verifyPh:'الصق هنا الرسالة (واتساب مثلًا) التي فيها آيات أو أحاديث للتحقق منها …',
+   loading:'جارٍ البحث في المصادر المعتمدة والتحقق …', gen:'شرح مُولَّد بالذكاء الاصطناعي', quran:'نص قرآني (مجمع الملك فهد)', hadith:'حديث نبوي', tafsir:'تفسير — كلام المفسّر وليس نصًّا قرآنيًّا',
+   glossary:'مصطلح معتمد', notice:'ملاحظة من بصيرة', corr:'تصحيح نص الآية', sources:'المصادر', referrals:'مراجع موثوقة', grade:'الدرجة', listen:'استمع', translation:'الترجمة (Noor International)',
+   ex:{pillars:'ما هي أركان الإسلام؟', personal:'أنا في دولة كذا، هل يجوز لي فعل كذا في زواجي؟', kaaba:'لماذا يعبد المسلمون الكعبة؟', tawhid:'ترجم كلمة التوحيد إلى الإنجليزية', viral:'رسالة منتشرة'},
+   exText:{pillars:'ما هي أركان الإسلام؟', personal:'أنا في دولة كذا، هل يجوز لي فعل كذا في زواجي؟', kaaba:'لماذا يعبد المسلمون الكعبة؟', tawhid:'ترجم كلمة التوحيد إلى الإنجليزية',
+     viral:'وصلتني هذه الرسالة، انشرها ولك الأجر:\nقال رسول الله ﷺ: «اطلبوا العلم ولو في الصين»\nوقال الله تعالى: ﴿إن الله مع الصابرين دائما وأبدا﴾\nوقال ﷺ: «إنما الأعمال بالنيات»'},
+   st:{answered:'', abstained:'لم أجد ما يكفي في المصادر — بدل التخمين، هذه مراجع تساعدك:', referral:'سؤالك يخص حالة شخصية — معلومات عامة فقط وإحالة لمختص:', retrieval_only:'خدمة التوليد غير مفعّلة — هذه أقرب المصادر:'},
+   verdicts:{verified:'نص صحيح', misquoted:'منقول بخطأ', fabricated:'غير موجود في المصحف', sound:'حديث ثابت', weak:'حديث ضعيف', mixed:'أحكام متفاوتة', not_found:'غير موجود في المصادر المعتمدة', graded:'درجته غير مصنّفة آليًا', unverifiable:'لا يمكن التحقق'},
+   hadithFab:'موضوع / لا أصل له', claim:'المنقول', correct:'النص الصحيح', correctHadith:'اللفظ الصحيح للحديث (كما ورد في المصادر)', whatDiffers:'ما الذي يختلف في ما نقلتَه؟', grader:'الحاكم', book:'المصدر', gradeCol:'الحكم', none:'لم نعثر على آيات أو أحاديث في النص.', err:'حدث خطأ، حاول مرة أخرى.',
+   reportSummary:'هل وجدتَ مشكلة في هذه النتيجة؟ أبلغ عنها', reportReason:'ما المشكلة؟', reportComment:'تفاصيل إضافية (اختياري)', reportSend:'إرسال البلاغ', reportThanks:'شكرًا، سيراجع البلاغ بشرٌ.', reportErr:'تعذّر الإرسال.',
+   reportReasons:{wrong_answer:'الإجابة خاطئة', incomplete:'الإجابة ناقصة', should_have_answered:'كان يجب أن تجيب بدل الامتناع', wrong_source:'المصدر غير مناسب', wrong_verify_result:'نتيجة التحقق خاطئة', other:'أخرى'},
+   reportConsent:'أوافق على حفظ سؤالي وملخّص الإجابة لدى بصيرة لمراجعتهما يدويًّا وتحسين الأداة، وسيُحذفان تلقائيًا بعد 90 يومًا. لا يُحفظ أي شيء آخر عنّي.',
+   credit:'المصادر: مجمع الملك فهد (المصحف والتفسير الميسر) · QuranEnc · HadeethEnc.com · بينات · icadb · الدرر السنية · mp3quran.' },
+ en: { tagline:'Ask • Verify • Know the source', disclosure:'⚠️ Baseera is an AI-powered tool, not a scholar or mufti. It answers from approved sources, shows its references, and stores no personal data.',
+   tabAsk:'Ask', tabVerify:'Verify a message', ask:'Ask', verify:'Verify', examples:'Try:', askPh:'Type your question in Arabic or English …', verifyPh:'Paste a message (e.g. from WhatsApp) containing verses or hadiths to check …',
+   loading:'Searching approved sources and verifying …', gen:'AI-generated explanation', quran:'Quran text (King Fahd Complex)', hadith:'Prophetic hadith', tafsir:'Tafsir — the commentator\'s words, not Quran text',
+   glossary:'Approved term', notice:'Note from Baseera', corr:'Verse text correction', sources:'Sources', referrals:'Trusted references', grade:'Grade', listen:'Listen', translation:'Translation (Noor International)',
+   ex:{pillars:'Five pillars (EN)', personal:'Personal question', kaaba:'Why Kaaba?', tawhid:'Translate Tawhid', viral:'Viral message'},
+   exText:{pillars:'What are the five pillars of Islam?', personal:'I live in another country; am I allowed to do this in my marriage?', kaaba:'Why do Muslims worship the Kaaba?', tawhid:'How do you translate the word Tawhid into English?',
+     viral:'وصلتني هذه الرسالة، انشرها ولك الأجر:\nقال رسول الله ﷺ: «اطلبوا العلم ولو في الصين»\nوقال الله تعالى: ﴿إن الله مع الصابرين دائما وأبدا﴾\nوقال ﷺ: «إنما الأعمال بالنيات»'},
+   st:{answered:'', abstained:'I did not find enough in the approved sources — rather than guess, here are places to look:', referral:'Your question is a personal case — general information only, plus a referral:', retrieval_only:'Answer generation is not enabled — here are the closest sources:'},
+   verdicts:{verified:'Correct text', misquoted:'Misquoted', fabricated:'Not in the Mushaf', sound:'Sound hadith', weak:'Weak hadith', mixed:'Mixed grades', not_found:'Not found in approved sources', graded:'Grade not auto-classified', unverifiable:'Cannot verify'},
+   hadithFab:'Fabricated / no basis', claim:'As quoted', correct:'Correct text', correctHadith:'Correct wording of the hadith (as in the sources)', whatDiffers:'What differs in what you quoted', grader:'Grader', book:'Source', gradeCol:'Grade', none:'No verses or hadiths found in the text.', err:'Something went wrong, please try again.',
+   reportSummary:'Found a problem with this result? Report it', reportReason:'What is wrong?', reportComment:'More details (optional)', reportSend:'Send report', reportThanks:'Thank you, a person will review it.', reportErr:'Could not send.',
+   reportReasons:{wrong_answer:'The answer is wrong', incomplete:'The answer is incomplete', should_have_answered:'It should have answered instead of declining', wrong_source:'Unsuitable source', wrong_verify_result:'The verification result is wrong', other:'Other'},
+   reportConsent:'I agree that Baseera saves my question and a summary of the answer for manual review to improve the tool; they are deleted automatically after 90 days. Nothing else about me is stored.',
+   credit:'Sources: King Fahd Complex (Mushaf, Muyassar tafsir) · QuranEnc · HadeethEnc.com · Bayyinat · icadb · Dorar · mp3quran.' }
+};
+let L = 'ar'; try { L = localStorage.getItem('bs-lang') || 'ar'; } catch (e) {}
+const T = () => I18N[L];
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const safeUrl = u => /^https?:\/\//.test(u || '') ? u : null;
+const link = (u, t) => safeUrl(u) ? `<a href="${esc(u)}" target="_blank" rel="noopener">${esc(t)}</a>` : esc(t);
+
+function applyLang() {
+  document.documentElement.lang = L; document.documentElement.dir = L === 'ar' ? 'rtl' : 'ltr';
+  $('#lang').textContent = L === 'ar' ? 'English' : 'العربية';
+  document.querySelectorAll('[data-i]').forEach(e => e.textContent = T()[e.dataset.i]);
+  document.querySelectorAll('[data-ip]').forEach(e => e.placeholder = T()[e.dataset.ip]);
+  document.querySelectorAll('[data-ex]').forEach(e => e.textContent = T().ex[e.dataset.ex]);
+  $('#foot').textContent = T().credit;
+}
+$('#lang').onclick = () => { L = L === 'ar' ? 'en' : 'ar'; try { localStorage.setItem('bs-lang', L); } catch (e) {} applyLang(); };
+
+function setTab(name) {
+  $('#tab-ask').setAttribute('aria-selected', name === 'ask'); $('#tab-verify').setAttribute('aria-selected', name === 'verify');
+  $('#pane-ask').hidden = name !== 'ask'; $('#pane-verify').hidden = name !== 'verify'; $('#out').innerHTML = '';
+}
+$('#tab-ask').onclick = () => setTab('ask'); $('#tab-verify').onclick = () => setTab('verify');
+document.querySelectorAll('[data-ex]').forEach(b => b.onclick = () => {
+  const k = b.dataset.ex, txt = T().exText[k];
+  if (k === 'viral') { setTab('verify'); $('#v').value = txt; } else { setTab('ask'); $('#q').value = txt; }
+});
+
+const loading = () => `<div class="loading"><span class="spin"></span>${esc(T().loading)}</div>`;
+
+function withCites(t) { return esc(t).replace(/\[(\d+)\]/g, (m, n) => `<sup><a href="#src-${n}">[${n}]</a></sup>`); }
+
+function diffHtml(diff) {
+  return (diff || []).map(d => d.op === 'equal' ? `<span>${esc(d.text)}</span>`
+    : d.op === 'replace' ? `<span class="rep">${esc(d.claimed)}</span> <span class="cor">${esc(d.correct)}</span>`
+    : d.op === 'extra' ? `<span class="rep">${esc(d.claimed)}</span>` : `<span class="miss">${esc(d.correct)}</span>`).join(' ');
+}
+
+function audioBtn(ref) {
+  const s = parseInt(ref); if (!s) return '';
+  return `<div><button class="ex" onclick="playSurah(${s}, this)">🔊 ${esc(T().listen)}</button><span class="meta" data-a></span></div>`;
+}
+async function playSurah(s, btn) {
+  try { const r = await (await fetch('/api/audio/' + s)).json(); if (!r.url) return;
+    const holder = btn.parentElement.querySelector('[data-a]'); holder.innerHTML = `<br><audio controls autoplay src="${esc(r.url)}"></audio><br>${esc(r.reciter)} — mp3quran.net`; } catch (e) {}
+}
+
+function block(b) {
+  const t = T();
+  if (b.kind === 'explanation') return `<div class="card gen"><div class="kind">${esc(t.gen)}</div><div>${withCites(b.text).replace(/\n/g, '<br>')}</div></div>`;
+  if (b.kind === 'notice') return `<div class="card"><div class="kind">${esc(t.notice)}</div><div>${withCites(b.text)}</div></div>`;
+  if (b.kind === 'quran') return `<div class="card quran"><div class="kind">${esc(t.quran)} — ${esc(b.surah_name_ar)} ${esc(b.ref)}</div>
+      <div class="verse">﴿${esc(b.text_ar)}﴾</div>${b.text_en ? `<div class="en">${esc(b.text_en)}<br><span class="meta">${esc(t.translation)}</span></div>` : ''}
+      <div class="meta">${link(b.reference_url, b.surah_name_ar + ' ' + b.ref)}</div>${audioBtn(b.ref)}</div>`;
+  if (b.kind === 'hadith') return `<div class="card hadith"><div class="kind">${esc(t.hadith)}</div><div class="htext">«${esc(b.text_ar)}»</div>
+      ${b.text_en ? `<div class="en">${esc(b.text_en)}</div>` : ''}
+      <div class="meta"><span class="badge grade">${esc(t.grade)}: ${esc(b.grade)}</span>${esc(b.attribution || '')} — ${esc(b.grade_source)} · ${link(b.reference_url, '↗')}</div></div>`;
+  if (b.kind === 'tafsir') return `<div class="card tafsir"><div class="kind">${esc(t.tafsir)} (${esc(b.ref)})</div><div class="htext">${esc(b.text_ar)}</div><div class="meta">${esc(b.work || '')} · ${link(b.reference_url, '↗')}</div></div>`;
+  if (b.kind === 'glossary') return `<div class="card glos"><div class="kind">${esc(t.glossary)}</div><div><b>${esc(b.term_ar)}</b> = <b dir="ltr">${esc(b.term_en)}</b></div><div class="meta">${esc(b.usage_note_ar)}</div></div>`;
+  if (b.kind === 'verse_correction') return `<div class="card corr"><div class="kind">${esc(t.corr)}</div><div>${esc(b.message)}</div>
+      ${b.text_ar ? `<div class="verse">﴿${esc(b.text_ar)}﴾</div><div class="meta">${esc(b.surah_name_ar)} ${esc(b.ref)} · ${link(b.reference_url, '↗')}</div><div class="diff claimtxt">${diffHtml(b.diff)}</div>` : ''}</div>`;
+  if (b.kind === 'general_info') return `<div class="card"><div class="kind">${esc(b.label)}</div>${b.cards.map(c => `<div class="src"><b>${esc(c.title || c.id)}</b> — ${esc(c.text.slice(0, 280))}… ${link(c.reference_url, '↗')}</div>`).join('<hr>')}</div>`;
+  return '';
+}
+
+function sources(list) {
+  if (!list || !list.length) return '';
+  return `<div class="card"><div class="kind">${esc(T().sources)}</div>` + list.map(s =>
+    `<div class="src" id="src-${s.n}">[${s.n}] <span class="badge">${esc(s.type)}</span><b>${esc(s.title || s.id)}</b> · ${esc(s.source)}${s.grade ? ` · <span class="badge grade">${esc(s.grade).slice(0, 60)}</span>` : ''} · ${link(s.reference_url, '↗')}${s.source === 'hadeethenc' ? ' · HadeethEnc.com' : ''}</div>`).join('') + '</div>';
+}
+function referrals(list) {
+  if (!list || !list.length) return '';
+  return `<div class="card"><div class="kind">${esc(T().referrals)}</div><ul class="links">` + list.map(r => `<li>${link(r.url, r.name)}</li>`).join('') + '</ul></div>';
+}
+
+function renderAsk(d) {
+  let h = '';
+  const cls = d.status === 'abstained' ? 'abst' : d.status === 'referral' ? 'ref' : 'warn';
+  if (T().st[d.status]) h += `<div class="status ${cls}">${esc(T().st[d.status])}</div>`;
+  h += (d.blocks || []).map(block).join('');
+  h += sources(d.sources) + referrals(d.referrals);
+  h += `<div class="meta">${esc(d.ai_disclosure)}${d.level ? ` · ${d.level}` : ''}</div>`;
+  return h;
+}
+
+function claimCard(c) {
+  const t = T(); let v = t.verdicts[c.verdict] || c.verdict; if (c.claim_type !== 'verse' && c.verdict === 'fabricated') v = t.hadithFab;
+  let h = `<div class="card res ${c.color}"><div class="verdict">${c.color === 'green' ? '✔' : c.color === 'red' ? '✖' : c.color === 'amber' ? '⚠' : '?'} ${esc(v)} <span class="meta">(${c.claim_type})</span></div>
+    <div class="label">${esc(t.claim)}</div><div class="claimtxt">${esc(c.claim)}</div><div class="meta">${esc(c.note || '')}</div>`;
+  if (c.match && (c.verdict === 'verified' || c.verdict === 'misquoted')) {
+    h += `<div class="label">${esc(t.correct)} — ${esc(c.match.surah_name_ar)} ${esc(c.match.ref)}</div><div class="verse">﴿${esc(c.match.text_ar)}﴾</div>`;
+    if (c.diff && c.diff.length) h += `<div class="diff claimtxt">${diffHtml(c.diff)}</div>`;
+    h += `<div class="meta">${link(c.match.reference_url, '↗ ' + c.match.ref)}</div>${audioBtn(c.match.ref)}`;
+  }
+  if (c.correct) {  // hadith whose wording differs from the sources: show the correct wording prominently, with its grade and what differs
+    h += `<div class="correctbox"><div class="label">${esc(t.correctHadith)}</div><div class="htext big">«${esc(c.correct.text_ar)}»</div>
+      <div class="meta"><span class="badge grade">${esc(t.grade)}: ${esc(c.correct.grade)}</span>${esc(c.correct.book || '')} · ${esc(c.correct.source === 'hadeethenc' ? 'HadeethEnc.com' : 'Dorar')} · ${link(c.correct.reference_url, '↗')}</div>`;
+    if (c.diff && c.diff.length) h += `<div class="label" style="margin-top:6px">${esc(t.whatDiffers)}</div><div class="diff claimtxt">${diffHtml(c.diff)}</div>`;
+    h += `</div>`;
+  }
+  if (c.matches && c.matches.length) {
+    h += `<table class="m"><tr><th>${esc(t.gradeCol)}</th><th>${esc(t.grader)}</th><th>${esc(t.book)}</th><th></th></tr>` +
+      c.matches.map(m => `<tr><td>${esc((m.grade || '').slice(0, 140))}</td><td>${esc(m.grader || '')}</td><td>${esc(m.book || '')} ${esc(m.reference ? String(m.reference).split('\n')[0] : '')}</td><td>${link(m.reference_url, m.source)}</td></tr>`).join('') + '</table>';
+  }
+  return h + '</div>';
+}
+function renderVerify(d) {
+  if (!d.claims || !d.claims.length) return `<div class="status abst">${esc(T().none)}</div>`;
+  return d.claims.map(claimCard).join('') + `<div class="meta">${esc(d.ai_disclosure || '')}</div>`;
+}
+
+
+// ---- opt-in problem report: saved ONLY if the user ticks the consent box (see core/reports.py)
+let lastCtx = null;
+function outcomeFrom(url, d) {
+  if (d.status === 'verified' && d.verify) {
+    return { status: 'verified', intent: 'verify', language: L, level: d.level, source_ids: [],
+             answer_text: (d.verify.claims || []).map(c => c.claim_type + ':' + c.verdict + ' ' + String(c.claim).slice(0, 80)).join(' | ') };
+  }
+  return { status: d.status, level: d.level, intent: d.intent, language: d.language, abstain_reason: d.abstain_reason,
+           answer_text: d.answer_text, source_ids: (d.sources || []).map(s => s.id) };
+}
+function reportHtml() {
+  const t = T();
+  return `<details class="reportbox"><summary>${esc(t.reportSummary)}</summary>
+    <label class="label">${esc(t.reportReason)}</label>
+    <select id="rp-reason">${Object.entries(t.reportReasons).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join('')}</select>
+    <label class="label">${esc(t.reportComment)}</label>
+    <textarea id="rp-comment" maxlength="500" style="min-height:60px"></textarea>
+    <label class="consent"><input type="checkbox" id="rp-consent"> <span>${esc(t.reportConsent)}</span></label>
+    <div class="row"><button class="go" id="rp-send" disabled>${esc(t.reportSend)}</button><span class="meta" id="rp-msg"></span></div></details>`;
+}
+function wireReport() {
+  const box = document.querySelector('.reportbox'); if (!box) return;
+  const cb = $('#rp-consent'), send = $('#rp-send');
+  cb.onchange = () => { send.disabled = !cb.checked; };
+  send.onclick = async () => {
+    if (!cb.checked || !lastCtx) return;
+    send.disabled = true;
+    try {
+      const r = await fetch('/api/report', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: lastCtx.question, reason: $('#rp-reason').value, comment: $('#rp-comment').value || null, consent: true, outcome: lastCtx.outcome }) });
+      if (!r.ok) throw new Error(r.status);
+      $('#rp-msg').textContent = T().reportThanks; cb.disabled = true;
+    } catch (e) { $('#rp-msg').textContent = T().reportErr; send.disabled = false; }
+  };
+}
+
+async function call(url, body, btn, render) {
+  btn.disabled = true; $('#out').innerHTML = loading();
+  try {
+    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    if (d.status === 'verified' && d.verify) $('#out').innerHTML = renderVerify({ ...d.verify, ai_disclosure: d.ai_disclosure }); else $('#out').innerHTML = render(d);
+    lastCtx = { question: body.question || body.text, outcome: outcomeFrom(url, d) };
+    $('#out').insertAdjacentHTML('beforeend', reportHtml()); wireReport();
+  } catch (e) { $('#out').innerHTML = `<div class="status warn">${esc(T().err)}</div>`; }
+  btn.disabled = false;
+}
+$('#goAsk').onclick = () => { const q = $('#q').value.trim(); if (q) call('/api/ask', { question: q }, $('#goAsk'), renderAsk); };
+$('#goVerify').onclick = () => { const v = $('#v').value.trim(); if (v) call('/api/verify', { text: v }, $('#goVerify'), renderVerify); };
+$('#q').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) $('#goAsk').click(); });
+applyLang();
+</script>
+</body>
+</html>

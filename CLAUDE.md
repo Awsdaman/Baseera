@@ -29,7 +29,7 @@ Arabic-first grounded Islamic Q&A and verification assistant for the "AI Challen
 ## Stack
 Python 3.13 (3.11 was specified; 3.13 approved), FastAPI, SQLite + FTS5 (normalized Arabic), Chroma, bge-m3 or multilingual-e5-large, rapidfuzz, Anthropic SDK, python-dotenv, pytest.
 Models: `claude-haiku-4-5-20251001` (routing, claim extraction), `claude-sonnet-5-5` (answer generation).
-Frontend: single RTL Arabic page served by FastAPI (plain HTML/CSS/JS), Arabic/English toggle. Colors: navy #1B2D45, teal #1F7872, gold #C9A04A.
+Frontend: single RTL Arabic page served by FastAPI (plain HTML/CSS/JS), Arabic/English toggle. Design: `web/index.html` (from the baseera-ui design; old page kept as `web/index.old.html`), light + dark themes. Colors: green #2f6b57 / #1f4f40, gold #b8975a, bg #faf8f3.
 
 ## Layout
 `docs/ ingest/ core/ api/ web/ evals/ data/raw/ data/db/ data/cache/ data/samples/ tests/`
