@@ -8,7 +8,7 @@ from core import rewrites
 from core import support as S
 from core.generate import generate
 from core.glossary import GLOSSARY, lookup
-from core.router import detect_language, find_term, needs_context, needs_empathy, route
+from core.router import detect_language, find_term, needs_context, needs_empathy, needs_medical_note, route
 from core.verify import NOTES, VerifyResult, normalize_citations, verify_answer
 
 DISCLOSURE = {
@@ -156,12 +156,26 @@ def _with_empathy(out: dict, question: str) -> dict:
     return out
 
 
+def _with_medical(out: dict, question: str) -> dict:
+    """Health questions: a code-owned reminder that this is general information, not medical advice. Added once, never to verify results."""
+    if out.get("status") not in ("answered", "abstained", "referral") or not needs_medical_note(question):
+        return out
+    if any(b.get("note") == "medical" for b in out.get("blocks") or []):
+        return out
+    lang = "en" if out.get("language") == "en" else "ar"
+    note = NOTES["medical"][lang]
+    out["blocks"] = list(out.get("blocks") or []) + [{"kind": "notice", "text": note, "note": "medical"}]
+    out["answer_text"] = (out.get("answer_text") or "") + chr(10) * 2 + note
+    return out
+
+
 def ask(question: str, lang: str | None = None, debug: bool = False) -> dict:
     """`debug=True` (evals/dev only, never exposed by the API) adds out["debug"]: route, retrieved ids, every generation
     attempt with its raw model output and verifier errors, and the abstention reason."""
     trace = {"retrieved_ids": [], "attempts": []}
     out = _ask(question, lang, trace)
     out = _with_empathy(out, question)
+    out = _with_medical(out, question)
     if debug:
         out["debug"] = trace | {"route": out.get("route"), "abstain_reason": out.get("abstain_reason")}
     return out

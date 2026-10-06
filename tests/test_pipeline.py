@@ -292,3 +292,18 @@ def test_service_outage_is_not_reported_as_missing_evidence(fake_llm, monkeypatc
     assert r["abstain_reason"] == "llm_error" and "تعذّر الوصول" in r["answer_text"] and "لم أجد" not in r["answer_text"]
     en = pipeline.ask("What is the ruling on morning adhkar?")
     assert "could not be reached" in en["answer_text"]
+
+
+def test_health_questions_get_the_medical_note_once_and_other_questions_do_not(fake_llm):
+    from core.router import needs_medical_note
+    for q in ("هل بخاخ الربو يفطر الصائم؟", "هل أخذ إبرة في نهار رمضان يبطل الصيام؟", "I have diabetes, may I skip fasting?", "She suffers from generalised anxiety disorder, what should she do?"):
+        assert needs_medical_note(q), q
+    for q in ("ما هي أركان الإسلام؟", "ما حكم أذكار الصباح؟", "Who are the Tabi'in?"):
+        assert not needs_medical_note(q), q
+    fake_llm(router=['{"level": "ب", "intent": "ask", "language": "ar", "term": null}'],
+             generate=["تذكر المصادر أذكارًا تقال في الصباح مثل آية الكرسي وسورة الإخلاص [[qa:icadb:26239]]"] * 2)
+    sick = pipeline.ask("هل بخاخ الربو يفطر الصائم؟ أذكار الصباح")
+    assert sum(1 for b in sick["blocks"] if b.get("note") == "medical") <= 1
+    out = pipeline._with_medical({"status": "answered", "blocks": [], "answer_text": "x", "language": "ar"}, "أعاني من اكتئاب")
+    assert out["blocks"][-1]["note"] == "medical" and out["answer_text"].endswith(out["blocks"][-1]["text"])
+    assert pipeline._with_medical({"status": "verified", "blocks": [], "answer_text": "", "language": "ar"}, "أعاني من اكتئاب")["blocks"] == []

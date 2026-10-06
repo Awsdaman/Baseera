@@ -155,6 +155,15 @@ def needs_empathy(text: str) -> bool:
     return bool(_EMPATHY_AR.search(normalize_ar(text or "") + " ") or _EMPATHY_EN.search(text or ""))
 
 
+# Questions about health (a condition, medicine, an injection, pregnancy, depression...) get a fixed note: general information is not medical advice.
+_MEDICAL_AR = re.compile(r"(مرض|مريض|اعراض|دواء|ادويه|علاج|حقنه|ابره|بخاخ|السكري|مرض السكر|ضغط الدم|ارتفاع الضغط|الحمل|حامل|اجهاض|اكتئاب|اكتياب|قلق|وسواس|اضطراب|نفسي|نفسيه|انتحار|جراحه|عمليه جراحيه|تحاليل|سرطان|ربو|صرع|دوار|دوخه|اغماء|ادمان|مخدر)")
+_MEDICAL_EN = re.compile(r"\b(disease|illness|sick|medicine|medication|injection|diabetes|diabetic|pregnan\w*|miscarriage|abortion|depress\w*|anxiety|suicid\w*|therapy|surgery|symptom\w*|asthma|inhaler|cancer|vertigo|dizz\w*|addiction|mental health|blood pressure)\b", re.I)
+
+
+def needs_medical_note(text: str) -> bool:
+    return bool(_MEDICAL_AR.search(normalize_ar(text or "")) or _MEDICAL_EN.search(text or ""))
+
+
 def _clean(v, limit=400):
     v = v.strip() if isinstance(v, str) else ""
     return v[:limit] if v and v.lower() not in ("null", "none") else None

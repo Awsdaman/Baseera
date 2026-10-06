@@ -498,7 +498,7 @@ const I18N = {
      ['كتب القاعدة المركزية (icadb)','نحو ٣٣٥ كتابًا في الفقه والحج والعمرة والجنائز وأحكام النساء والصلاة والعقيدة، تُبحث نصوصها وتُعرض مع مرجعها.','https://icadb.com/api/books/list/'],
      ['mp3quran','تلاوات صوتية للسور (رواية حفص).','https://www.mp3quran.net']],
    aboutLead:'بصيرة أداة مدعومة بالذكاء الاصطناعي للإجابة عن الأسئلة الإسلامية من مصادر معتمدة، والتحقق من الآيات والأحاديث المتداولة. ليست عالمًا ولا مفتيًا.',
-   rules:[['لا يكتب النموذج نصًّا مقدّسًا','يشير النموذج إلى الآية أو الحديث، ويُدرج الكود النص المحفوظ كما هو.'],['يُذكر مصدر كل معلومة','كل جملة في الشرح مرتبطة بمصدر استُرجع فعلًا للسؤال.'],['الدرجات من المصادر','درجات الأحاديث من الدرر السنية وHadeethEnc فقط، لا من النموذج.'],['الامتناع بدل التخمين','إذا لم تكفِ المصادر تعتذر بصيرة وتدلّك على مراجع موثوقة، ولا تُفتي في الحالات الشخصية.']],
+   rules:[['لا يكتب النموذج نصًّا مقدّسًا','يشير النموذج إلى الآية أو الحديث، ويُدرج الكود النص المحفوظ كما هو.'],['يُذكر مصدر الشرح','كل مقطع من الشرح مرتبط بمصدر استُرجع فعلًا للسؤال، ويتحقق الكود من وجود المصدر ومن أن ما يُعرض هو النص المحفوظ نفسه.'],['الدرجات من المصادر','درجات الأحاديث من الدرر السنية وHadeethEnc فقط، لا من النموذج.'],['الامتناع بدل التخمين','إذا لم تكفِ المصادر تعتذر بصيرة وتدلّك على مراجع موثوقة، ولا تُفتي في الحالات الشخصية.']],
    privacyTitle:'الخصوصية', privacyText:'لا تخزّن بصيرة أسئلتك ولا أي بيانات شخصية. يُحفظ السؤال فقط إذا أرسلت بلاغًا عن مشكلة ووافقت صراحةً، ويُحذف تلقائيًا بعد 90 يومًا.',
    credit:'المصادر: مجمع الملك فهد (المصحف والتفسير الميسر) · QuranEnc · HadeethEnc.com · بينات · icadb · الدرر السنية · mp3quran.' },
  en: {
@@ -541,7 +541,7 @@ const I18N = {
      ['icadb books','About 335 books on fiqh, hajj and umrah, funerals, women rulings, prayer and creed; their text is searched and shown with its reference.','https://icadb.com/api/books/list/'],
      ['mp3quran','Surah recitations (Hafs).','https://www.mp3quran.net']],
    aboutLead:'Baseera is an AI-powered tool that answers Islamic questions from approved sources and checks circulating verses and hadiths. It is not a scholar or mufti.',
-   rules:[['No typed scripture','The model points at a verse or hadith; code inserts the exact stored text.'],['Every claim is cited','Each sentence of explanation is tied to a source retrieved for the question.'],['Grades from data','Hadith grades come only from Dorar and HadeethEnc, never the model.'],['Abstain, don\'t guess','When the sources are not enough Baseera says so and points to trusted references; it never rules on personal cases.']],
+   rules:[['No typed scripture','The model points at a verse or hadith; code inserts the exact stored text.'],['The explanation is cited','Each stretch of explanation is tied to a source retrieved for the question; code checks that the source exists and that scripture is the stored text itself.'],['Grades from data','Hadith grades come only from Dorar and HadeethEnc, never the model.'],['Abstain, don\'t guess','When the sources are not enough Baseera says so and points to trusted references; it never rules on personal cases.']],
    privacyTitle:'Privacy', privacyText:'Baseera does not store your questions or any personal data. A question is saved only if you send a problem report and explicitly agree; it is deleted automatically after 90 days.',
    credit:'Sources: King Fahd Complex (Mushaf, Muyassar tafsir) · QuranEnc · HadeethEnc.com · Bayyinat · icadb · Dorar · mp3quran.' }
 };

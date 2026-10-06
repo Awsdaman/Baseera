@@ -2,7 +2,7 @@
 
 **An Arabic-first, grounded Islamic Q&A and verification assistant** built for the *AI Challenge Serving Islamic Content*.
 
-Baseera answers **only** from approved sources, shows a citation for every claim, separates Quran / hadith / tafsir text from AI-generated explanation, and **abstains** (with places to look) when the evidence is not enough. It is an AI tool, not a mufti, and stores no personal data.
+Baseera answers **only** from approved sources, shows a verified source for every stretch of explanation, separates Quran / hadith / tafsir text from AI-generated explanation, and **abstains** (with places to look) when the evidence is not enough. It is an AI tool, not a mufti, and stores no personal data.
 
 Two modes:
 

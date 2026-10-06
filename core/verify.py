@@ -32,6 +32,8 @@ NOTES = {
                   "en": "Note: the approved sources available to me do not state the specific ruling on this point (for example whether it is obligatory or recommended); what is above is what they contain. Please ask a qualified scholar."},
     "not_direct": {"ar": "ملاحظة: النصوص المتاحة لي في المصادر المعتمدة لا تتناول سؤالك بشكل مباشر؛ وما سبق هو أقرب ما ورد فيها، فيُرجى التحقق من عالم أو جهة إفتاء مؤهلة.",
                    "en": "Note: the passages available to me in the approved sources do not address your question directly; the above is the closest they contain. Please check with a qualified scholar or fatwa authority."},
+    "medical": {"ar": "ملاحظة: إذا كان سؤالك يتعلق بحالة صحية أو نفسية، فما سبق معلومات عامة فقط ولا يغني عن استشارة طبيب أو مختص مؤهل؛ ويُرجى سؤال عالم مؤهل عن الحكم الشرعي لحالتك.",
+                "en": "Note: if your question concerns a medical or psychological condition, the above is general information only and does not replace consulting a doctor or qualified professional; please also ask a qualified scholar about the ruling for your own situation."},
     "disputed": {"ar": "هذه مسألة اختلف فيها أهل العلم؛ وما سبق عرضٌ لما ورد في المصادر المتاحة دون ترجيح بينها.",
                  "en": "Scholars differ on this matter; the above presents what the available sources say, without choosing between the views."},
 }
