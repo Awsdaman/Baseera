@@ -51,11 +51,11 @@ An on-screen line states that Baseera is an AI tool and not a scholar. No person
 
 | Suite | Result |
 |---|---|
-| Golden set, 55 cases (`evals/run_evals.py`) | behaviour 98.2% (54/55), verse fidelity 100%, citations 100%, correct abstention 7/7, retrieval 14/14, judge 4.81/5. The one miss was a model typo in a source id (since fixed in code with a test) |
+| Golden set, 55 cases (`evals/run_evals.py`) | behaviour 100% (55/55), verse fidelity 100%, citations 100%, correct abstention 7/7, retrieval 14/14, false abstention 0/32, forced abstention 0/41, judge 4.89/5 (final build) |
 | Reliability, 51 questions (`evals/reliability.py`) | should-answer 17/17, no-source 13/13 declined or qualified, disputed 6/6, paraphrase outcome 5/5 |
 | 82 IslamQA questions in English (`evals/bulk_check.py`) | real sourced answers 41 before the Arabic search step and the new sources, 59 after; declined 34 to 16; every answered "don't know"-tier question carries a referral or limits note |
 | Synthetic Verify mode (`evals/synth_verify.py`) | verse misquote/fabrication macro-F1 about 0.98, hadith matching F1 0.96 (2,856 verse and 1,000 hadith cases) |
-| Unit and integration tests | 290 pass |
+| Unit and integration tests | 291 pass |
 
 ## 6. How it is measured
 
