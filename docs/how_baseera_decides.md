@@ -47,15 +47,15 @@ Scope notes are **code-owned text**: the model asks for a note by key and the sy
 
 An on-screen line states that Baseera is an AI tool and not a scholar. No personal data is stored; only an explicit, opt-in problem report is kept (scrubbed, 90-day retention), and nothing learns automatically.
 
-## 5. Measured results (local Gemma 4 12B, final build)
+## 5. Measured results (local Gemma 4 12B, final sources, 2026-10-06)
 
 | Suite | Result |
 |---|---|
-| Golden set, 55 cases (`evals/run_evals.py`) | behaviour 100%, verse fidelity 100%, citations 100%, correct abstention 7/7, false abstention 0/32, verifier-forced abstention 0/41, judge 4.86/5 |
-| Reliability, 51 questions (`evals/reliability.py`) | should-answer 14/14, no-source 16/16 declined or qualified, disputed 6/6, paraphrase outcome 5/5 |
-| 48 detailed fiqh questions (`evals/bulk_check.py`) | 40 answered (32 with a limits note), 8 declined; the verifier stopped answers with uncited sentences and a verse recited from memory |
-| Synthetic verify mode (`evals/synth_verify.py`) | verse misquote/fabrication macro-F1 about 0.98 at the shipped threshold, hadith matching F1 0.96 (2,856 verse and 1,000 hadith cases) |
-| Unit and integration tests | 265 pass |
+| Golden set, 55 cases (`evals/run_evals.py`) | behaviour 98.2% (54/55), verse fidelity 100%, citations 100%, correct abstention 7/7, retrieval 14/14, judge 4.81/5. The one miss was a model typo in a source id (since fixed in code with a test) |
+| Reliability, 51 questions (`evals/reliability.py`) | should-answer 17/17, no-source 13/13 declined or qualified, disputed 6/6, paraphrase outcome 5/5 |
+| 82 IslamQA questions in English (`evals/bulk_check.py`) | real sourced answers 41 before the Arabic search step and the new sources, 59 after; declined 34 to 16; every answered "don't know"-tier question carries a referral or limits note |
+| Synthetic Verify mode (`evals/synth_verify.py`) | verse misquote/fabrication macro-F1 about 0.98, hadith matching F1 0.96 (2,856 verse and 1,000 hadith cases) |
+| Unit and integration tests | 290 pass |
 
 ## 6. How it is measured
 

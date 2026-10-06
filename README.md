@@ -164,7 +164,18 @@ What the judge and the support check still point at (not fixed): the judge score
 
 Caveats: one run on 52 cases; the router number is a little optimistic (the router rules were tuned while looking at this set); the judge is from the same vendor as the generator, so a Claude judge (`JUDGE_PROVIDER=anthropic` then `--rejudge`) would be a useful second opinion. Token use for a full run is roughly: generator 220k in / 20k out, judge 40k / 16k, router 19k / 1k; cases run in parallel (`--workers`, default 4), a full run takes about 5 minutes.
 
-Unit/integration tests: **245 pass** (`python -m pytest -q`, plus one slow synthetic check with `-m slow`), including adversarial verifier cases, pipeline retry/abstain paths with a fake LLM, the OpenAI/Anthropic/local wrappers against stubs, API privacy checks, the eval runner (parallelism, resume), data-integrity assertions (6,236 verses) and retrieval on real questions. Tests need the ingested database (`python ingest/build_all.py`).
+Unit/integration tests: **290 pass** (`python -m pytest -q`, plus one slow synthetic check with `-m slow`), including adversarial verifier cases, pipeline retry/abstain paths with a fake LLM, the OpenAI/Anthropic/local wrappers against stubs, API privacy checks, the eval runner (parallelism, resume), data-integrity assertions (6,236 verses) and retrieval on real questions. Tests need the ingested database (`python ingest/build_all.py`).
+
+### Final results with all sources (local Gemma 4 12B, 2026-10-06)
+
+| Suite | Result |
+|---|---|
+| Golden set, 55 cases (judge `gpt-5.5`) | behaviour **98.2% (54/55)**, router 100%, retrieval 14/14, citations 100%, verse fidelity 100%, correct abstention 7/7, judge 4.81. The one miss (a-08) was Gemma writing a source id as `qa:icadb:aalam:10387` instead of `qa:icadb-aalam:10387`; the verifier correctly refused it twice. The fix (a separator slip in an id is repaired only when exactly one retrieved id matches) has a unit test; the case was re-run after the fix only if stated in `HANDOFF.md` |
+| Reliability, 51 questions | should-answer 17/17 (3 relabelled from "no source" after the Dorar fiqh encyclopedia was added, see `evals/reliability.jsonl`), no-source 13/13, disputed 6/6, paraphrase outcome 5/5 |
+| 82 IslamQA questions in English (`bulk_check.py`), same questions at each stage | real sourced answers 41, then 45 with the English-to-Arabic search step, then **59** with the new sources; declined 34, then 24, then **16**; all 23 answered "don't know"-tier questions carry a referral or limits note |
+| Tests | 290 automated tests pass |
+
+Honest limits: each run is a single pass (small differences are within normal variation); the IslamQA labels (easy / hard / don't know) are heuristic; the 40,000 book passages are searched by keyword only; the golden set was tuned against, so its 98.2% is optimistic for new questions.
 
 ### Reliability and answer boundaries (`evals/reliability.py`, 51 questions, local Gemma 4 12B)
 
