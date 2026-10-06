@@ -28,7 +28,7 @@ Open quality points the judge/support check raised (not fixed): contested-fiqh g
 - Last full live eval after these changes (55 cases, before the last router/extractor stability fixes): 53/55; the two misses (v-02, v-03) were the router calling pasted hadiths "ask" and are fixed and re-run green. A fresh full run is advisable.
 
 ## Review fixes: DONE (2026-10-06 evening)
-English typed-scripture check, router personal-case patterns, Dorar circuit breaker + claim cap, service-outage message, startup DB check + embedding warm-up, API rate limits/size caps, search_ar committed, requirements pinned, LICENSE + NOTICE, hadith cards not truncated, docs reconciled, package built from committed code (tools/make_package.py). Still open: re-run golden case a-08 after the citation separator fix (needs the model; another session uses it for the live-demo warm-up).
+English typed-scripture check, router personal-case patterns, Dorar circuit breaker + claim cap, service-outage message, startup DB check + embedding warm-up, API rate limits/size caps, search_ar committed, requirements pinned, LICENSE + NOTICE, hadith cards not truncated, docs reconciled, package built from committed code (tools/make_package.py). Re-run of a-08, dp6-07, a-01, d-01, v-06 after the citation separator fix: 5/5 pass (a-08 now answered).
 
 ## Approved-sources list from the organizers (docs/approved_sources_links.txt): audit and gap-filling in progress
 Done: see docs/sources_audit.md (icadb books + encyclopedias, Dorar fiqh encyclopedia ingested; what is missing and what the owner must bring is listed there).
