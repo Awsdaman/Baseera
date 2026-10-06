@@ -31,6 +31,7 @@ class _ScrubQuery(logging.Filter):
 
 
 logging.getLogger("uvicorn.access").addFilter(_ScrubQuery())
+import asyncio
 import collections
 import itertools
 import time
@@ -304,10 +305,14 @@ def verify(body: VerifyBody, request: Request):
     return _run_verify(body.text)
 
 
+_stt_slot = asyncio.Semaphore(1)
+
+
 @app.post("/api/transcribe")
 async def transcribe(request: Request, language: str | None = Query(None, pattern="^(ar|en)$")):
     """Ask by voice: raw 16 kHz mono PCM16 in the body -> text for the question box. Audio is never stored."""
     from core import speech as S
+    rate_limit(request, "transcribe", 10)
     max_bytes = S.SAMPLE_RATE * 2 * (S.MAX_SECONDS + 1)
     if int(request.headers.get("content-length") or 0) > max_bytes:  # refuse before buffering the upload
         raise HTTPException(413, "audio too long")
@@ -317,7 +322,8 @@ async def transcribe(request: Request, language: str | None = Query(None, patter
         if len(data) > max_bytes:
             raise HTTPException(413, "audio too long")
     try:
-        text = await run_in_threadpool(S.transcribe, data, language)
+        async with _stt_slot:  # one transcription at a time: Whisper on the CPU must not starve the LLM server of cores
+            text = await run_in_threadpool(S.transcribe, data, language)
     except S.AudioError as e:
         raise HTTPException(400, str(e))
     except Exception:
