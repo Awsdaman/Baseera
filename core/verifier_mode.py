@@ -260,8 +260,8 @@ def _idf_sum(words) -> float:
         for r in rows:
             _df.update({_stem(w) for w in normalize_ar(r[0]).split()})
         _df["__n__"] = len(rows)
-    n = _df["__n__"]
-    return sum(math.log(n / max(_df.get(w, 0), 1)) for w in words)
+    n = max(_df["__n__"], 1)  # empty index (not ingested yet): avoid log(0)
+    return sum(math.log(max(n / max(_df.get(w, 0), 1), 1.0)) for w in words)
 
 
 def content_words(words: list[str]) -> list[str]:
