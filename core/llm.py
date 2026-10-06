@@ -166,7 +166,7 @@ class OpenAICompatibleLLM:
             _use_system_trust_store()
         import openai
         retries = int(os.environ.get("LLM_MAX_RETRIES", 1 if local else 2))  # a hung local call must not block for 3 x timeout
-        self.client = openai.OpenAI(api_key=api_key, base_url=base_url, timeout=float(os.environ.get("LLM_TIMEOUT", 300)), max_retries=retries)
+        self.client = openai.OpenAI(api_key=api_key, base_url=base_url, timeout=float(os.environ.get("LLM_TIMEOUT", 120 if local else 300)), max_retries=retries)
 
     def _is_reasoning(self, model: str) -> bool:
         return not self.local and model.lower().startswith(self.REASONING_PREFIXES)
@@ -240,16 +240,102 @@ def judge_model() -> str:
     return JUDGE_MODEL if jp == provider_name() else _models(jp)["judge"]
 
 
+class LLMBusy(RuntimeError):
+    """Waited too long for a free model slot (the live demo has one GPU)."""
+
+
+_tls_job = threading.local()
+
+
+@contextlib.contextmanager
+def request_seq(seq: int):
+    """Jobs started earlier get the model first (a question already in progress is not overtaken by newcomers)."""
+    prev = getattr(_tls_job, "seq", 0)
+    _tls_job.seq = seq
+    try:
+        yield
+    finally:
+        _tls_job.seq = prev
+
+
+class FairGate:
+    """Counting gate that admits waiters in (job sequence, arrival) order, with a timeout instead of waiting forever."""
+
+    def __init__(self, capacity: int):
+        import heapq
+        self._hq = heapq
+        self.capacity, self.active, self._waiting, self._n = max(1, capacity), 0, [], 0
+        self._cond = threading.Condition()
+
+    def acquire(self, seq: int = 0, timeout: float | None = None):
+        import time
+        deadline = None if timeout is None else time.monotonic() + timeout
+        with self._cond:
+            self._n += 1
+            entry = (seq, self._n)
+            self._hq.heappush(self._waiting, entry)
+            while not (self.active < self.capacity and self._waiting[0] == entry):
+                left = None if deadline is None else deadline - time.monotonic()
+                if left is not None and left <= 0:
+                    self._waiting.remove(entry)
+                    self._hq.heapify(self._waiting)
+                    self._cond.notify_all()
+                    raise LLMBusy("no free model slot, please try again")
+                self._cond.wait(left)
+            self._hq.heappop(self._waiting)
+            self.active += 1
+
+    def release(self):
+        with self._cond:
+            self.active -= 1
+            self._cond.notify_all()
+
+    def stats(self) -> dict:
+        with self._cond:
+            return {"active": self.active, "waiting": len(self._waiting), "capacity": self.capacity}
+
+
+GATE: FairGate | None = None
+
+
+class GatedLLM:
+    def __init__(self, inner, gate: FairGate):
+        self.inner, self.gate = inner, gate
+
+    def complete(self, model, system, user, max_tokens=1500, temperature=None, effort=None):
+        self.gate.acquire(getattr(_tls_job, "seq", 0), float(os.environ.get("QUEUE_TIMEOUT_S", 240)))
+        try:
+            return self.inner.complete(model, system, user, max_tokens=max_tokens, temperature=temperature, effort=effort)
+        finally:
+            self.gate.release()
+
+
+def queue_stats() -> dict:
+    return GATE.stats() if GATE else {"active": 0, "waiting": 0, "capacity": 0}
+
+
+def ping() -> bool:
+    """Tiny uncached model call (startup warm-up and keep-alive, so the local server never unloads the model)."""
+    llm = get_llm()
+    while isinstance(llm, CachedLLM):
+        llm = llm.inner
+    with no_thinking():
+        llm.complete(ROUTER_MODEL, "Reply with: ok", "ping", max_tokens=8)
+    return True
+
+
 class CachedLLM:
     """LLM_CACHE=1 (evals / development only): identical requests are answered from data/cache/llm, so re-running an
-    unchanged prompt costs nothing. The key covers provider, model, prompts and every sampling parameter."""
+    unchanged prompt costs nothing. The key covers provider, model, prompts and every sampling parameter.
+    LLM_CACHE=readonly (live demo): lookups only, nothing is ever written, so no question text reaches the disk."""
 
     def __init__(self, inner, tag: str):
         import hashlib
         from pathlib import Path
         self.inner, self.tag, self._sha = inner, tag, hashlib.sha256
         self.dir = Path(__file__).resolve().parent.parent / "data" / "cache" / "llm"
-        self.dir.mkdir(parents=True, exist_ok=True)
+        if os.environ.get("LLM_CACHE") != "readonly":
+            self.dir.mkdir(parents=True, exist_ok=True)
 
     def complete(self, model, system, user, max_tokens=1500, temperature=None, effort=None):
         mode = [thinking_off(), os.environ.get("LOCAL_THINKING_GENERATE")] if self.tag == "local" else None
@@ -258,7 +344,7 @@ class CachedLLM:
         if f.exists():
             return f.read_text(encoding="utf-8")
         out = self.inner.complete(model, system, user, max_tokens=max_tokens, temperature=temperature, effort=effort)
-        if out.strip():  # only successful, non-empty completions are cached (errors propagate; an empty reply must be retried)
+        if out.strip() and os.environ.get("LLM_CACHE") != "readonly":  # only successful, non-empty completions are cached (errors propagate; an empty reply must be retried)
             f.write_text(out, encoding="utf-8")
         return out
 
@@ -272,7 +358,11 @@ def _build(p):
         llm = OpenAICompatibleLLM(local=True)
     else:
         raise LLMUnavailable("no LLM configured: set ANTHROPIC_API_KEY or OPENAI_API_KEY (or LLM_PROVIDER=local) in .env")
-    return CachedLLM(llm, p) if os.environ.get("LLM_CACHE") == "1" else llm
+    global GATE
+    if GATE is None:  # one shared gate: the GPU (or the API quota) serves a few calls at a time, the rest wait in order
+        GATE = FairGate(int(os.environ.get("MAX_CONCURRENT_ANSWERS", 2 if p == "local" else 8)))
+    llm = GatedLLM(llm, GATE)
+    return CachedLLM(llm, p) if os.environ.get("LLM_CACHE") in ("1", "readonly") else llm
 
 
 def get_judge_llm():

@@ -63,3 +63,55 @@ def test_health_hides_internal_addresses_and_reports_readiness():
     from fastapi.testclient import TestClient
     j = TestClient(m.app).get("/api/health").json()
     assert "base_url" not in str(j) and "database_empty" in j and "vectors_ready" in j
+
+
+def _wait_job(jid, tries=100):
+    import time
+    for _ in range(tries):
+        j = client.get(f"/api/jobs/{jid}").json()
+        if j["state"] in ("done", "error"):
+            return j
+        time.sleep(0.05)
+    raise AssertionError("job did not finish")
+
+
+def test_job_lifecycle_hides_internal_fields_and_unknown_job_is_404(monkeypatch):
+    monkeypatch.setattr(pipeline, "ask", lambda q, lang=None, debug=False: {"status": "answered", "debug": {"x": 1}, "verification_errors": ["secret"], "blocks": []})
+    r = client.post("/api/jobs", json={"kind": "ask", "text": "سؤال"})
+    assert r.status_code == 200 and r.json()["position"] == 0
+    j = _wait_job(r.json()["job"])
+    assert j["state"] == "done" and j["result"]["status"] == "answered" and "debug" not in j["result"] and "verification_errors" not in j["result"]
+    assert client.get("/api/jobs/doesnotexist").status_code == 404
+
+
+def test_job_failure_is_reported_without_the_text(monkeypatch):
+    def boom(q, lang=None, debug=False):
+        raise RuntimeError("secret question text")
+
+    monkeypatch.setattr(pipeline, "ask", boom)
+    j = _wait_job(client.post("/api/jobs", json={"kind": "ask", "text": "سؤال"}).json()["job"])
+    assert j == {"state": "error", "error": "failed"}
+
+
+def test_job_queue_refuses_when_full_and_validates(monkeypatch):
+    import threading
+    gate = threading.Event()
+    monkeypatch.setattr(pipeline, "ask", lambda q, lang=None, debug=False: (gate.wait(5), {"status": "answered", "blocks": []})[1])
+    monkeypatch.setenv("MAX_QUEUE", "1")
+    monkeypatch.setenv("RATE_LIMIT_PER_MINUTE", "0")
+    m._jobs.clear()
+    codes = [client.post("/api/jobs", json={"kind": "ask", "text": f"q{i}"}).status_code for i in range(m._capacity() + 2)]
+    gate.set()
+    assert codes[:-1] == [200] * (len(codes) - 1) and codes[-1] == 503
+    assert client.post("/api/jobs", json={"kind": "other", "text": "x"}).status_code == 422
+    assert client.post("/api/jobs", json={"kind": "ask", "text": "x" * 2001}).status_code == 422
+
+
+def test_rate_limit_uses_the_real_client_address_behind_the_tunnel(monkeypatch):
+    monkeypatch.setenv("TRUST_CF_IP", "1")
+    monkeypatch.setenv("RATE_LIMIT_PER_MINUTE", "2")
+    m._hits.clear()
+    monkeypatch.setattr(pipeline, "ask", lambda q, lang=None, debug=False: {"status": "answered", "blocks": []})
+    post = lambda ip: client.post("/api/ask", json={"question": "س"}, headers={"cf-connecting-ip": ip}).status_code
+    assert [post("1.1.1.1"), post("1.1.1.1"), post("1.1.1.1")] == [200, 200, 429]
+    assert post("2.2.2.2") == 200                    # another judge is not affected

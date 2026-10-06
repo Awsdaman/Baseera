@@ -242,3 +242,46 @@ def test_default_prompt_is_unchanged_and_local_profile_adds_the_checklist(monkey
     assert local[0] == default[0] and "CHECKLIST" in local[1] and local[1].index("PASSAGES") < local[1].index("CHECKLIST")
     retry = G.build_prompts("q", "ب", "ar", ps, error=["Citation [[x]] was NOT retrieved for this question"], previous="p")[1]
     assert "FIX:" in retry and "PASSAGES list" in retry
+
+
+def test_fair_gate_serves_older_jobs_first_and_times_out():
+    import threading
+    import time
+    g = L.FairGate(1)
+    g.acquire(0)
+    order = []
+
+    def waiter(seq):
+        g.acquire(seq, timeout=5)
+        order.append(seq)
+        g.release()
+
+    ts = [threading.Thread(target=waiter, args=(s,)) for s in (7, 3, 5)]
+    for t in ts:
+        t.start()
+        time.sleep(0.05)
+    assert g.stats() == {"active": 1, "waiting": 3, "capacity": 1}
+    g.release()
+    for t in ts:
+        t.join()
+    assert order == [3, 5, 7]                       # lowest job sequence first, not arrival order
+    g.acquire(0)
+    with pytest.raises(L.LLMBusy):
+        g.acquire(1, timeout=0.1)
+    assert g.stats()["waiting"] == 0
+
+
+def test_readonly_cache_reads_but_never_writes(tmp_path, monkeypatch):
+    class Inner:
+        def complete(self, *a, **k):
+            return "fresh"
+
+    monkeypatch.setenv("LLM_CACHE", "readonly")
+    c = L.CachedLLM(Inner(), "unit-test-provider")
+    c.dir = tmp_path
+    assert c.complete("m", "s", "u") == "fresh"
+    assert list(tmp_path.iterdir()) == []           # privacy: the live demo never writes question text to disk
+    monkeypatch.setenv("LLM_CACHE", "1")
+    c.complete("m", "s", "u")
+    monkeypatch.setenv("LLM_CACHE", "readonly")
+    assert c.complete("m", "s", "u") == "fresh" and len(list(tmp_path.iterdir())) == 1

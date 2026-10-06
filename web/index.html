@@ -475,6 +475,7 @@ const I18N = {
    ex:{pillars:'ما هي أركان الإسلام؟', personal:'سؤال عن حالة شخصية', kaaba:'لماذا يعبد المسلمون الكعبة؟', tawhid:'ترجم كلمة التوحيد', viral:'رسالة منتشرة'},
    exText:{pillars:'ما هي أركان الإسلام؟', personal:'أنا في دولة كذا، هل يجوز لي فعل كذا في زواجي؟', kaaba:'لماذا يعبد المسلمون الكعبة؟', tawhid:'ترجم كلمة التوحيد إلى الإنجليزية', viral:VIRAL},
    themeDark:'الوضع الليلي', themeLight:'الوضع النهاري', langBtn:'English', fontSize:'حجم الخط', fontSmaller:'تصغير الخط', fontLarger:'تكبير الخط', newQ:'سؤال جديد',
+   queued:'طلبك في قائمة الانتظار — ترتيبك {n} (نُجيب عن سؤالين في الوقت نفسه، الانتظار المتوقع نحو {s} ثانية)', busy:'الخدمة مشغولة الآن، يُرجى المحاولة بعد دقيقة.', rate:'عدد الطلبات كبير من هذا الجهاز، يُرجى الانتظار قليلًا ثم المحاولة.', timeout:'استغرق الطلب وقتًا أطول من المتوقع. يُرجى المحاولة مرة أخرى.', restarted:'أُعيد تشغيل الخدمة أثناء طلبك، يُرجى إرسال السؤال مرة أخرى.',
    loading:'جارٍ البحث في المصادر المعتمدة والتحقق …', gen:'شرح مُولَّد بالذكاء الاصطناعي', quran:'نص قرآني (مجمع الملك فهد)', hadith:'حديث نبوي', tafsir:'تفسير — كلام المفسّر وليس نصًّا قرآنيًّا',
    glossary:'مصطلح معتمد', notice:'ملاحظة من بصيرة', corr:'تصحيح نص الآية', sources:'المصادر', referrals:'مراجع موثوقة', grade:'الدرجة', listen:'استمع', translation:'الترجمة (Noor International)',
    st:{answered:'', abstained:'لم أجد ما يكفي في المصادر — بدل التخمين، هذه مراجع تساعدك:', referral:'سؤالك يخص حالة شخصية — معلومات عامة فقط وإحالة لمختص:', retrieval_only:'خدمة التوليد غير مفعّلة — هذه أقرب المصادر:'},
@@ -515,6 +516,7 @@ const I18N = {
    ex:{pillars:'Five pillars', personal:'Personal question', kaaba:'Why the Kaaba?', tawhid:'Translate Tawhid', viral:'Viral message'},
    exText:{pillars:'What are the five pillars of Islam?', personal:'I live in another country; am I allowed to do this in my marriage?', kaaba:'Why do Muslims worship the Kaaba?', tawhid:'How do you translate the word Tawhid into English?', viral:VIRAL},
    themeDark:'Dark mode', themeLight:'Light mode', langBtn:'العربية', fontSize:'Text size', fontSmaller:'Smaller text', fontLarger:'Larger text', newQ:'New question',
+   queued:'You are in line — position {n} (we answer two questions at a time, about {s}s wait)', busy:'The service is busy right now, please try again in a minute.', rate:'Too many requests from this device, please wait a moment and try again.', timeout:'The request took longer than expected. Please try again.', restarted:'The service restarted while handling your request, please send it again.',
    loading:'Searching approved sources and verifying …', gen:'AI-generated explanation', quran:'Quran text (King Fahd Complex)', hadith:'Prophetic hadith', tafsir:'Tafsir — the commentator\'s words, not Quran text',
    glossary:'Approved term', notice:'Note from Baseera', corr:'Verse text correction', sources:'Sources', referrals:'Trusted references', grade:'Grade', listen:'Listen', translation:'Translation (Noor International)',
    st:{answered:'', abstained:'I did not find enough in the approved sources — rather than guess, here are places to look:', referral:'Your question is a personal case — general information only, plus a referral:', retrieval_only:'Answer generation is not enabled — here are the closest sources:'},
@@ -656,7 +658,7 @@ $$('[data-tool]').forEach(b => b.onclick = () => {
 });
 
 /* ---------------- rendering ---------------- */
-const loading = () => `<div class="loading"><span class="spin"></span>${esc(T().loading)}</div>`;
+const loading = (msg) => `<div class="loading" id="loadmsg"><span class="spin"></span><span id="loadtxt">${esc(msg || T().loading)}</span></div>`;
 function withCites(t) { return esc(t).replace(/\[(\d+)\]/g, (m, n) => `<sup><a href="#src-${n}">[${n}]</a></sup>`).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); }
 function diffHtml(diff) {
   return (diff || []).map(d => d.op === 'equal' ? `<span>${esc(d.text)}</span>`
@@ -781,6 +783,27 @@ function head(text) {
 document.addEventListener('click', e => {
   if (e.target.closest('#newQ')) { $('#out').innerHTML = ''; hideFeatures(false); $('#q').value = ''; growQ(); window.scrollTo({ top: 0, behavior: 'smooth' }); $('#q').focus(); }
 });
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+async function runJob(kind, body) {
+  const r = await fetch('/api/jobs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind, text: body.question || body.text, language: body.language || null }) });
+  if (r.status === 429) throw new Error('rate');
+  if (r.status === 503) throw new Error('busy');
+  if (!r.ok) throw new Error('err');
+  const { job } = await r.json();
+  const t0 = Date.now();
+  while (Date.now() - t0 < 300000) {
+    await sleep(1500);
+    const s = await fetch('/api/jobs/' + job);
+    if (s.status === 404) throw new Error('restarted');
+    if (!s.ok) throw new Error('err');
+    const d = await s.json();
+    if (d.state === 'done') return d.result;
+    if (d.state === 'error') throw new Error(d.error === 'busy' ? 'busy' : 'err');
+    const el = document.getElementById('loadtxt');
+    if (el) el.textContent = d.position > 0 ? T().queued.replace('{n}', d.position).replace('{s}', d.est_wait_s) : T().loading;
+  }
+  throw new Error('timeout');
+}
 async function call(url, body, btn, kind) {
   const text = body.question || body.text;
   $('#go').disabled = true;
@@ -788,15 +811,16 @@ async function call(url, body, btn, kind) {
   $('#out').innerHTML = head(text) + loading();
   $('#out').scrollIntoView({ behavior: 'smooth', block: 'start' });
   try {
-    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
-    if (!r.ok) throw new Error(r.status);
-    const d = await r.json();
+    const d = await runJob(kind, body);
     const html = (d.status === 'verified' && d.verify) ? renderVerify({ ...d.verify, ai_disclosure: d.ai_disclosure })
                : d.claims ? renderVerify(d) : renderAsk(d);
     lastCtx = { question: text, outcome: outcomeFrom(d) };
     $('#out').innerHTML = head(text) + html + reportHtml(); wireReport();
     HISTORY.push({ kind, text, time: new Date().toLocaleTimeString(L === 'ar' ? 'ar' : 'en', { hour: '2-digit', minute: '2-digit' }), html: head(text) + html + reportHtml(), ctx: lastCtx });
-  } catch (e) { $('#out').innerHTML = head(text) + `<div class="status warn">${esc(T().err)}</div>`; }
+  } catch (e) {
+    const m = ['rate', 'busy', 'timeout', 'restarted'].includes(e.message) ? T()[e.message] : T().err;
+    $('#out').innerHTML = head(text) + `<div class="status warn">${esc(m)}</div>`;
+  }
   $('#go').disabled = false;
 }
 let MODE = 'ask';

@@ -32,10 +32,21 @@ class _ScrubQuery(logging.Filter):
 
 logging.getLogger("uvicorn.access").addFilter(_ScrubQuery())
 import collections
+import itertools
 import time
+import uuid
+from concurrent.futures import ThreadPoolExecutor
 
 _hits: dict[str, collections.deque] = collections.defaultdict(collections.deque)
-_llm_gate = threading.BoundedSemaphore(int(os.environ.get("MAX_CONCURRENT_ANSWERS", 2)))   # one GPU: extra askers wait in line instead of piling up
+
+
+def client_ip(request: Request) -> str:
+    """Behind the Cloudflare tunnel every request comes from 127.0.0.1: TRUST_CF_IP=1 (uvicorn bound to 127.0.0.1 only) uses the real address."""
+    if os.environ.get("TRUST_CF_IP") == "1":
+        ip = request.headers.get("cf-connecting-ip")
+        if ip:
+            return ip[:64]
+    return request.client.host if request.client else "?"
 
 
 def rate_limit(request: Request, bucket: str, per_minute: int):
@@ -43,7 +54,7 @@ def rate_limit(request: Request, bucket: str, per_minute: int):
     limit = int(os.environ.get("RATE_LIMIT_PER_MINUTE", per_minute))
     if limit <= 0:
         return
-    key = f"{bucket}:{request.client.host if request.client else '?'}"
+    key = f"{bucket}:{client_ip(request)}"
     q, now = _hits[key], time.time()
     while q and now - q[0] > 60:
         q.popleft()
@@ -52,7 +63,7 @@ def rate_limit(request: Request, bucket: str, per_minute: int):
     q.append(now)
 
 
-_VECTORS = {"ready": False}
+_VECTORS = {"ready": False, "llm": False}
 
 
 def _warm():
@@ -62,6 +73,29 @@ def _warm():
         _VECTORS["ready"] = True
     except Exception as e:  # offline first run: retrieval falls back to keyword search; /api/health says so
         logging.getLogger("uvicorn.error").warning("embedding model unavailable (%s): keyword search only", str(e)[:100])
+
+
+def _warm_llm():
+    from core import llm as L
+    try:
+        _VECTORS["llm"] = L.ping()
+    except Exception:
+        _VECTORS["llm"] = False
+
+
+def _keepalive():
+    """Local model server: a small call every few minutes while idle keeps the model loaded in VRAM (no cold start for the next judge)."""
+    from core import llm as L
+    from core.embedding import embed_texts
+    every = int(os.environ.get("KEEPALIVE_S", 240))
+    while True:
+        time.sleep(every)
+        try:
+            if L.queue_stats()["active"] == 0:
+                embed_texts(["ping"])
+                _VECTORS["llm"] = L.ping()
+        except Exception:
+            _VECTORS["llm"] = False
 
 
 @asynccontextmanager
@@ -78,6 +112,10 @@ async def lifespan(_app):
         pass
     if os.environ.get("WARM_EMBEDDINGS", "1") == "1":  # load the retrieval model in the background so the first question is not slow
         threading.Thread(target=_warm, daemon=True).start()
+    from core import llm as L
+    if L.provider_name() == "local" and os.environ.get("WARM_LLM", "1") == "1":
+        threading.Thread(target=_warm_llm, daemon=True).start()
+        threading.Thread(target=_keepalive, daemon=True).start()
     yield
 
 
@@ -100,11 +138,12 @@ def health():
             reachable = False
     llm = {"provider": d.get("provider"), "configured": L.llm_available(), "reachable": reachable}
     return {"ok": sum(counts.values()) > 0, "llm": llm, "passages": counts, "database_empty": sum(counts.values()) == 0,
-            "vectors_ready": _VECTORS["ready"], "verses": con.execute("SELECT count(*) FROM quran").fetchone()[0]}
+            "vectors_ready": _VECTORS["ready"], "llm_warm": _VECTORS["llm"], "queue": L.queue_stats(), "verses": con.execute("SELECT count(*) FROM quran").fetchone()[0]}
 
 
 @app.get("/api/retrieve")
-def retrieve(q: str = Query(..., min_length=1, max_length=500), dorar: bool = False, vectors: bool = True):
+def retrieve(request: Request, q: str = Query(..., min_length=1, max_length=500), dorar: bool = False, vectors: bool = True):
+    rate_limit(request, "retrieve", 20)
     dorar = dorar and os.environ.get("BASEERA_DEBUG") == "1"   # live Dorar calls are not available to anonymous callers
     return {"query": q, "results": R.retrieve(q, vectors=vectors, dorar=dorar)}
 
@@ -126,14 +165,110 @@ class VerifyBody(BaseModel):
     text: str = Field(..., min_length=1, max_length=6000)
 
 
-@app.post("/api/ask")
-def ask(body: AskBody, request: Request):
-    rate_limit(request, "ask", 30)
-    with _llm_gate:
-        resp = pipeline.ask(body.question, body.language)  # never debug=True here
+def _run_ask(question, language):
+    resp = pipeline.ask(question, language)  # never debug=True here
     for internal in ("verification_errors", "debug"):  # may contain model-written text / raw outputs: dev and eval use only
         resp.pop(internal, None)
     return resp
+
+
+def _run_verify(text):
+    return {"mode": "verify", **verifier_mode.verify_text(text), "ai_disclosure": pipeline.DISCLOSURE["ar"]}
+
+
+# ---- jobs: a question is a short job the browser polls (Cloudflare drops any single request after ~100 s) ----
+_jobs: dict[str, dict] = {}
+_jobs_lock = threading.Lock()
+_job_counter = itertools.count(1)
+_durations: collections.deque = collections.deque(maxlen=10)
+_executor = ThreadPoolExecutor(max_workers=int(os.environ.get("JOB_WORKERS", 8)))
+JOB_TTL_S = 180
+
+
+def _capacity() -> int:
+    from core import llm as L
+    return L.GATE.capacity if L.GATE else int(os.environ.get("MAX_CONCURRENT_ANSWERS", 2))
+
+
+def _purge_jobs(now: float):
+    for k in [k for k, j in _jobs.items() if j["state"] in ("done", "error") and now - j["finished"] > JOB_TTL_S]:
+        del _jobs[k]
+
+
+def _job_main(jid: str, kind: str, payload: str, language):
+    from core import llm as L
+    t0 = time.time()
+    with _jobs_lock:
+        _jobs[jid]["state"] = "running"
+        seq = _jobs[jid]["seq"]
+    try:
+        with L.request_seq(seq):
+            res = _run_ask(payload, language) if kind == "ask" else _run_verify(payload)
+        out = {"state": "done", "result": res}
+    except Exception as e:  # never log the text; the class name is enough
+        logging.getLogger("uvicorn.error").warning("job failed: %s", type(e).__name__)
+        out = {"state": "error", "error": "busy" if type(e).__name__ == "LLMBusy" else "failed"}
+    with _jobs_lock:
+        _durations.append(time.time() - t0)
+        _jobs[jid].update(out, finished=time.time())
+
+
+def _position(jid: str) -> int:
+    """0 = being served, n = n-th in line beyond the free slots (jobs are served in start order). Call with the lock held."""
+    ahead = sorted(j["seq"] for j in _jobs.values() if j["state"] in ("queued", "running"))
+    r = ahead.index(_jobs[jid]["seq"])
+    return max(0, r - _capacity() + 1)
+
+
+class JobBody(BaseModel):
+    kind: str = Field(..., pattern="^(ask|verify)$")
+    text: str = Field(..., min_length=1, max_length=6000)
+    language: str | None = None
+
+
+@app.post("/api/jobs")
+def create_job(body: JobBody, request: Request):
+    rate_limit(request, "ask" if body.kind == "ask" else "verify", 30)
+    if body.kind == "ask" and len(body.text) > 2000:
+        raise HTTPException(422, "question too long")
+    now = time.time()
+    with _jobs_lock:
+        _purge_jobs(now)
+        pending = sum(1 for j in _jobs.values() if j["state"] in ("queued", "running"))
+        if pending >= _capacity() + int(os.environ.get("MAX_QUEUE", 10)):
+            raise HTTPException(503, "busy")
+        jid = uuid.uuid4().hex[:16]
+        _jobs[jid] = {"state": "queued", "seq": next(_job_counter), "created": now}
+        pos = _position(jid)
+    _executor.submit(_job_main, jid, body.kind, body.text, body.language)
+    return {"job": jid, "position": pos}
+
+
+@app.get("/api/jobs/{jid}")
+async def job_status(jid: str):
+    with _jobs_lock:
+        j = _jobs.get(jid)
+        if j is None:
+            raise HTTPException(404, "unknown job")
+        if j["state"] == "done":
+            return {"state": "done", "result": j["result"]}
+        if j["state"] == "error":
+            return {"state": "error", "error": j["error"]}
+        pos = _position(jid)
+        avg = (sum(_durations) / len(_durations)) if _durations else 45.0
+        return {"state": j["state"], "position": pos, "est_wait_s": int(avg * (pos / _capacity() + 0.5)) if pos else 0}
+
+
+@app.get("/api/queue")
+async def queue():
+    from core import llm as L
+    return L.queue_stats()
+
+
+@app.post("/api/ask")
+def ask(body: AskBody, request: Request):
+    rate_limit(request, "ask", 30)
+    return _run_ask(body.question, body.language)
 
 
 @app.post("/api/report")
@@ -158,7 +293,7 @@ def privacy():
 @app.post("/api/verify")
 def verify(body: VerifyBody, request: Request):
     rate_limit(request, "verify", 30)
-    return {"mode": "verify", **verifier_mode.verify_text(body.text), "ai_disclosure": pipeline.DISCLOSURE["ar"]}
+    return _run_verify(body.text)
 
 
 @app.post("/api/transcribe")
@@ -183,7 +318,8 @@ async def transcribe(request: Request, language: str | None = Query(None, patter
 
 
 @app.get("/api/audio/{surah}")
-def audio(surah: int):
+def audio(surah: int, request: Request):
+    rate_limit(request, "audio", 20)
     """Recitation audio for a surah (mp3quran, cached). Optional demo feature."""
     from core import audio as A
     if not 1 <= surah <= 114:

@@ -20,3 +20,7 @@ data/questions/
 evals/reports/bulk-*
 evals/reports/reliability-*
 dist/
+
+!.env.demo.example
+logs/
+demo_url.txt
