@@ -70,6 +70,8 @@ flowchart TD
 | mp3quran.net | optional recitation audio on verse cards | API |
 | islamqa.info, binbaz.org.sa, binothaimeen.net | referral links only (never scraped) | links |
 
+**Reviewers / judges:** `docs/QUICKSTART.md` is the five-minute path, and `python tools/make_package.py` builds `dist/Baseera-working-copy.zip` (the committed code plus the ready-built sources database, so nothing needs ingesting). A fresh `git clone` has no database (it is git-ignored: sources are third-party), so use that zip or run the ingest below.
+
 ## Run it
 
 Requires Python 3.13 (3.11+ should work). First time:
