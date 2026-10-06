@@ -155,3 +155,26 @@ def test_basmala_question_is_contested_not_level_alef(fake_llm):
     from core.router import route
     fake_llm(router=['{"level": "أ", "intent": "ask", "language": "ar", "term": null}'])
     assert route("هل البسملة آية من سورة الفاتحة؟")["level"] == "ج"
+
+
+def test_standalone_abi_is_personal_but_abu_bakr_and_companions_are_not():
+    from core.router import heuristic_route
+    assert heuristic_route("من هو ابي بكر الصديق؟")["level"] != "د"
+    assert heuristic_route("ما فضل الصحابي الجليل؟")["level"] != "د"
+    assert heuristic_route("ابي اعرف حكم عقدي مع شركتي")["level"] == "د"
+
+
+def test_generic_can_i_questions_are_not_personal_cases():
+    from core.router import heuristic_route
+    for q in ("Can I pray with shoes on?", "Should I pay zakat on gold?", "هل يجوز لي الصلاة بالحذاء؟"):
+        assert heuristic_route(q)["level"] != "د", q
+    for q in ("My husband refuses to pray, can I leave him?", "هل يجوز لي أن أطلق زوجتي وهي حامل؟"):
+        assert heuristic_route(q)["level"] == "د", q
+
+
+def test_first_person_medical_cases_are_personal_cases(fake_llm):
+    from core.router import heuristic_route, route
+    for q in ("أنا مريض بالسكر هل يجوز أن أفطر؟", "I have diabetes, may I skip fasting?", "I am pregnant, can I fast in Ramadan?", "عندي ضغط ودوخة هل أصوم؟"):
+        assert heuristic_route(q)["level"] == "د", q
+    fake_llm(router=['{"level": "ب", "intent": "ask", "language": "ar", "term": null}'])
+    assert route("أنا مريض بالسكر هل يجوز أن أفطر؟")["level"] == "د"          # the model said ب: code escalates

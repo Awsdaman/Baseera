@@ -56,10 +56,33 @@ def parse(html: str) -> list[dict]:
     return out
 
 
+_down_until = 0.0
+BREAKER_SECONDS = 300
+
+
 def search(query: str, page: int = 1) -> list[dict]:
+    """Live Dorar lookup with a circuit breaker: after a failed call Dorar is skipped for 5 minutes (instead of retrying with long waits on
+    every hadith), so Verify mode still answers quickly from HadeethEnc when Dorar is blocked or offline. Cached queries never touch the network."""
+    global _down_until
     params = {"skey": query}
     if page > 1:
         params["page"] = page
-    data = get_json(URL, params, delay=1.0)
+    import time
+    if time.time() < _down_until and not _cached(params):
+        raise RuntimeError("Dorar skipped (circuit breaker open after a recent failure)")
+    try:
+        data = get_json(URL, params, delay=1.0, retries=2)
+    except Exception:
+        _down_until = time.time() + BREAKER_SECONDS
+        raise
     html = (data.get("ahadith") or {}).get("result", "")
     return parse(html)
+
+
+def _cached(params: dict) -> bool:
+    import hashlib
+    import json
+
+    from core.http import CACHE
+    key = hashlib.sha1((URL + json.dumps(params or {}, sort_keys=True)).encode()).hexdigest()
+    return (CACHE / f"{key}.json").exists()

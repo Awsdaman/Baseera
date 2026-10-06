@@ -21,6 +21,7 @@ REFERRALS = [
     {"name": "موقع الشيخ ابن عثيمين", "url": "https://binothaimeen.net"},
 ]
 MIN_GENERAL_SCORE = 0.026  # general-info cards must be found by BOTH keyword and vector search (RRF of two top-10 ranks)
+EXTRA_FROM_ENGLISH = 4  # passages from the English-wording search kept next to the Arabic-search results
 EXTRA_FROM_ORIGINAL = 3  # extra passages taken from a search with the user's own wording
 PER_TYPE_ASK = {"quran": 4, "hadith": 4, "qa": 4, "tafsir": 2, "term": 2}
 
@@ -50,6 +51,10 @@ TEXT = {
         "ar": "أتفهّم أن ما تمرّ به قد يكون صعبًا، وأشكرك على مشاركته معي. سأعرض لك فيما يلي ما ورد في المصادر المعتمدة بلطف ووضوح.",
         "en": "I understand that what you are going through may be difficult, and I thank you for sharing it. Below is what the approved sources say, offered gently and clearly.",
     },
+    "service": {
+        "ar": "تعذّر الوصول إلى خدمة توليد الإجابة مؤقتًا (النموذج غير متاح أو لم يُضبط). هذا لا يعني أن المصادر لا تحتوي على جواب؛ يرجى المحاولة بعد قليل أو الرجوع إلى المراجع الموثوقة أدناه.",
+        "en": "The answer-generation service could not be reached right now (the model is unavailable or not configured). This does not mean the sources have no answer; please try again shortly or use the trusted references below.",
+    },
     "clarify": {
         "ar": "لم أفهم ما الذي تريد مني أن أُثبته؛ فلم تذكر نصّ الكلام أو الحكم المقصود. يمكنك كتابة العبارة أو الحكم الذي تسأل عنه، وسأبحث له في المصادر المعتمدة. ولن أذكر لك حديثًا أو آية لا صلة لها بما تقصده.",
         "en": "I could not tell what you want me to prove: the statement or ruling you mean was not included. Please write it out and I will look for it in the approved sources. I will not show you a hadith or verse that has no clear connection to what you mean.",
@@ -72,7 +77,9 @@ def _resp(status, route_info, lang, **kw):
 def _card(p, n):
     return {"n": n, "id": p["id"], "type": p["type"], "source": p["source"], "title": p.get("title"),
             "reference_url": p.get("reference_url"), "grade": p.get("grade"),
-            "text": (p.get("text") or "")[:400], "text_en": (p.get("text_en") or "")[:300] or None}
+            # HadeethEnc's terms forbid deleting part of a hadith: hadith cards carry the full text; other long passages are excerpts
+            "text": (p.get("text") or "") if p["type"] == "hadith" else (p.get("text") or "")[:400],
+            "text_en": (p.get("text_en") or "") if p["type"] == "hadith" else ((p.get("text_en") or "")[:300] or None)}
 
 
 def term_response(info, lang):
@@ -101,7 +108,12 @@ def personal_response(question, info, lang):
                  answer_text=blocks[0]["text"], refer_label=t["refer"]["en" if lang == "en" else "ar"])
 
 
+SERVICE_REASONS = ("llm_error", "llm_empty", "llm_truncated")
+
+
 def abstain_response(info, lang, reason="insufficient_evidence", sources=None, errors=None, text_key="abstain"):
+    if reason in SERVICE_REASONS:  # an outage must not read as "the sources do not cover this"
+        text_key = "service"
     msg = TEXT[text_key]["en" if lang == "en" else "ar"]
     return _resp("abstained", info, lang, blocks=[{"kind": "notice", "text": msg}], referrals=REFERRALS,
                  answer_text=msg, abstain_reason=reason, verification_errors=errors or [], sources=sources or [])
@@ -202,6 +214,12 @@ def _ask(question: str, lang: str | None = None, trace: dict | None = None) -> d
     trace["canonical_question"] = search_q
     fix_blocks, fix_ids = _corrections(question, lang)
     passages = R.retrieve(search_q, per_type=PER_TYPE_ASK)
+    ar_q = info.get("search_ar") if lang != "ar" else None
+    if ar_q:  # the sources and the keyword index are Arabic: a non-Arabic question is also searched in Arabic (answer language is unchanged)
+        trace["search_ar"] = ar_q
+        ar_ps = R.retrieve(ar_q, per_type=PER_TYPE_ASK)
+        have = {p["id"] for p in ar_ps}
+        passages = ar_ps + [p for p in passages if p["id"] not in have][:EXTRA_FROM_ENGLISH]
     if search_q != question:  # the user's own wording can find sources the restatement misses: add a few new ones
         have = {p["id"] for p in passages}
         passages += [p for p in R.retrieve(question, per_type=PER_TYPE_ASK) if p["id"] not in have][:EXTRA_FROM_ORIGINAL]

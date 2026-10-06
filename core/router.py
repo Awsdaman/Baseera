@@ -14,7 +14,7 @@ LEVELS = ("أ", "ب", "ج", "د")
 INTENTS = ("ask", "verify", "translate_term")
 
 SYSTEM = """You are the routing component of Baseera, an Islamic Q&A assistant. Classify the user message.
-Return ONLY a JSON object: {"level": "أ|ب|ج|د", "intent": "ask|verify|translate_term", "language": "ar|en|other", "term": "<term or null>", "canonical_question": "<...>", "claim": "<... or null>"}
+Return ONLY a JSON object: {"level": "أ|ب|ج|د", "intent": "ask|verify|translate_term", "language": "ar|en|other", "term": "<term or null>", "canonical_question": "<...>", "canonical_question_ar": "<...>", "claim": "<... or null>"}
 
 Levels (content sensitivity):
 - أ: stable basics: Quran, authentic hadith, pillars of Islam/faith, basic seerah, basic ethics, definitions.
@@ -29,22 +29,31 @@ A hostile or accusatory question about Islam is still level ب (answer wisely), 
 Language is the language of the message itself.
 canonical_question: rewrite the message as ONE clear, self-contained question in the SAME language, naming the topic and what is asked, so a search engine can find the sources.
   Example: 'هل هذا الحكم "حكم أذكار الصباح واجبة" صحيح؟'  ->  'ما حكم أذكار الصباح، وهل هي واجبة؟'.  Keep an already-clear question as it is.
+canonical_question_ar: the approved sources are Arabic. When the message is NOT Arabic, write the same self-contained question in Arabic (Islamic terms in their standard Arabic form, e.g. wudu = الوضوء, zakah = الزكاة, tawaf = الطواف) for searching; when the message is already Arabic, null.
 claim: if the user quotes or asserts a statement and asks whether it is correct, put that statement here (without the surrounding question); otherwise null.
 A message that only reports a narration with no question, e.g. 'عن فلان رضي الله عنه قال: سمعت النبي ﷺ يقول: «...»' or 'قال رسول الله ﷺ: «...»', is verify even without words like "تحقق" or "صحيح؟".
 Output the JSON object only, on one line, with nothing before or after it."""
 
+AR = "ء-ي"   # a standalone Arabic word: not glued to other letters (so "ابي" never matches inside "الصحابي")
 _PERSONAL = re.compile(
-    r"(هل يجوز لي|هل يحق لي|هل يصح لي|ما حكم (?:زواجي|طلاقي|عقدي)|في زواجي|زوجتي|زوجي|طلقت|طلاقي|عقد(?:ي| العمل| الايجار)|"
-    r"انا في دوله|أنا في دولة|حالتي|مشكلتي|ابي|أبي يرفض|اختلفت مع)")
+    r"(ما حكم (?:زواجي|طلاقي|عقدي)|في زواجي|زوجتي|زوجي|طلقت|طلاقي|عقد(?:ي| العمل| الايجار)|انا في دوله|أنا في دولة|حالتي|مشكلتي|"
+    r"(?<![" + AR + r"])(?:ابي|أبي) يرفض|اختلفت مع|"
+    r"(?<![" + AR + r"])(?:انا|أنا) (?:مريض|مريضه|مريضة|حامل|مصاب|مصابه|مصابة|مدين|متزوج|متزوجه|متزوجة|مطلق|مطلقه|مطلقة)|"
+    r"(?:عندي|لدي|اعاني من|أعاني من) (?:السكر|سكر|ضغط|مرض|سرطان|امراض|أمراض|فشل|ربو|صرع))")
+# generic first-person openers are personal only together with a strong personal marker (see strong_personal)
+_PERSONAL_OPENER = re.compile(r"(هل يجوز لي|هل يحق لي|هل يصح لي)")
 _PERSONAL_EN = re.compile(
-    r"\b(am i allowed|can i|should i|my (?:wife|husband|marriage|divorce|contract|landlord|boss|father|mother|case)|"
-    r"i live in|i am in (?:the )?[a-z]+ and|is my (?:marriage|contract|prayer|fast) valid)\b", re.I)
+    r"\b(my (?:wife|husband|marriage|divorce|contract|landlord|boss|father|mother|case|medication|treatment|doctor)|"
+    r"i live in|i am in (?:the )?[a-z]+ and|is my (?:marriage|contract|prayer|fast) valid|"
+    r"i (?:have|am|was) (?:diabetes|diabetic|pregnant|sick|ill|diagnosed|on medication|taking medication)|i have (?:cancer|asthma|epilepsy|high blood pressure))\b", re.I)
+_PERSONAL_OPENER_EN = re.compile(r"\b(am i allowed|can i|should i|may i)\b", re.I)
+
 # Level د needs a real personal case: a family / marriage / money-contract / legal / medical situation OF THE ASKER, or an explicit "my case".
 # A model router sometimes sends ordinary worship-practice questions ("a person forgot a pillar of Hajj, what must he do?", "does an injection
 # break the fast?") to د, which would hide a perfectly answerable general question behind a referral. Such a د is demoted to ج (attributed
 # positions + a scholar-referral note, never a personal ruling) unless the text shows a strong personal marker.
 _STRONG_PERSONAL = re.compile(
-    r"(زوج|طلاق|طلقت|خلع|ميراث|ورثه|وصيه|عقد|شركه|قرض|ديني|راتبي|وظيفتي|مديري|كفيلي|محكمه|قضيتي|سجن|حامل|حملي|ادويتي|طبيبي|مرضي|ابني|ابنتي|امي|ابي|اخي|اختي|جاري|حالتي|مشكلتي|عندي|لدي)")
+    r"(زوج|طلاق|طلقت|خلع|ميراث|ورثه|وصيه|عقد|شركه|قرض|ديني|راتبي|وظيفتي|مديري|كفيلي|محكمه|قضيتي|سجن|حامل|حملي|ادويتي|طبيبي|مرضي|ابني|ابنتي|امي|(?<![ء-ي])ابي(?![ء-ي])|اخي|اختي|جاري|حالتي|مشكلتي|عندي|لدي|(?<![ء-ي])انا (?:مريض|حامل|مصاب|مدين|متزوج|مطلق)|(?:اعاني|اعاني) من)")
 _STRONG_PERSONAL_EN = re.compile(r"(my (?:wife|husband|marriage|divorce|contract|landlord|boss|father|mother|son|daughter|brother|sister|case|doctor|job|salary)|i live in|am i allowed)", re.I)
 
 
@@ -86,7 +95,8 @@ def heuristic_route(text: str) -> dict:
     t = normalize_ar(text)
     lang = detect_language(text)
     level, intent, term = "ب", "ask", None
-    if _PERSONAL.search(text) or _PERSONAL_EN.search(text):
+    if (_PERSONAL.search(text) or _PERSONAL_EN.search(text)
+            or ((_PERSONAL_OPENER.search(text) or _PERSONAL_OPENER_EN.search(text)) and strong_personal(text))):
         level = "د"
     elif _DISPUTE.search(text) or _CONTESTED.search(t):
         level = "ج"
@@ -165,7 +175,8 @@ def route(text: str) -> dict:
         out = {"level": level, "intent": intent, "language": j.get("language") or h["language"],
                "term": j.get("term") if j.get("term") not in (None, "null", "") else h["term"], "source": "llm",
                "canonical_question": _clean(j.get("canonical_question")) or h["canonical_question"],
-               "claim": _clean(j.get("claim")) or claim_h}
+               "claim": _clean(j.get("claim")) or claim_h,
+               "search_ar": _clean(j.get("canonical_question_ar")) if re.search("[؀-ۿ]", j.get("canonical_question_ar") or "") else None}
     except Exception as e:  # never fail the request because routing failed
         h["router_error"] = str(e)[:200]
         return h

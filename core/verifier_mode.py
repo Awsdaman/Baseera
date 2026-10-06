@@ -17,6 +17,7 @@ from core.db import connect
 from core.normalize import normalize_ar
 
 MAX_INPUT = 6000
+MAX_CLAIMS = 8
 VERSE_MISQUOTE_MIN = 0.72      # word-level similarity to call a claim a "misquoted" verse
 SIM_TIE = 0.08                 # a curated (HadeethEnc) wording this close to the best one is preferred
 HADITH_WORD_SIM_MIN = 0.80    # word-level similarity that also counts as the same hadith (catches short claims missing a word)
@@ -432,6 +433,7 @@ def check_quote(claim_text: str, claimed_ref: str | None = None, attributed_to: 
 
 def verify_text(text: str) -> dict:
     claims, how = extract_claims(text)
+    claims = claims[:MAX_CLAIMS]  # a pasted chain message can hold dozens; each hadith may cost live lookups
     results = []
     for c in claims:
         if c["type"] == "verse":

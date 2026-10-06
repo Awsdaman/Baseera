@@ -262,3 +262,33 @@ def test_glossary_term_in_the_question_always_reaches_the_generator(fake_llm, mo
              generate=["INSUFFICIENT_EVIDENCE"])
     out = pipeline.ask("ما معنى التوحيد لشخص لم يسمع بالمصطلح من قبل؟", debug=True)
     assert "term:glossary:2" in out["debug"]["retrieved_ids"]
+
+
+def test_english_question_is_also_searched_in_arabic(fake_llm, monkeypatch):
+    from core import retrieve as R
+    seen = []
+    real = R.retrieve
+    monkeypatch.setattr(R, "retrieve", lambda q, per_type=None, vectors=False, dorar=False: (seen.append(q), real(q, per_type=per_type, vectors=False))[1])
+    fake_llm(router=['{"level": "ب", "intent": "ask", "language": "en", "term": null, "canonical_question": "Can prayers be combined because of rain?", '
+                     '"canonical_question_ar": "هل يجوز الجمع بين الصلاتين بسبب المطر؟", "claim": null}'],
+             generate=["INSUFFICIENT_EVIDENCE"])
+    out = pipeline.ask("Can a woman put prayers together because of rain?", debug=True)
+    assert "هل يجوز الجمع بين الصلاتين بسبب المطر؟" in seen and out["debug"]["search_ar"].startswith("هل يجوز")
+    assert out["language"] == "en"                                          # the answer stays in the user's language
+
+
+def test_arabic_in_the_arabic_field_is_required_and_arabic_questions_skip_it(fake_llm):
+    fake_llm(router=['{"level": "ب", "intent": "ask", "language": "en", "term": null, "canonical_question": "q", "canonical_question_ar": "still English", "claim": null}'],
+             generate=["INSUFFICIENT_EVIDENCE"])
+    assert "search_ar" not in pipeline.ask("What is zakah?", debug=True)["debug"]
+
+
+def test_service_outage_is_not_reported_as_missing_evidence(fake_llm, monkeypatch):
+    def down(*a, **k):
+        raise ConnectionError("LM Studio is not running")
+    monkeypatch.setattr(pipeline, "generate", down)
+    fake_llm(router=['{"level": "ب", "intent": "ask", "language": "ar", "term": null}'])
+    r = pipeline.ask("ما حكم أذكار الصباح؟")
+    assert r["abstain_reason"] == "llm_error" and "تعذّر الوصول" in r["answer_text"] and "لم أجد" not in r["answer_text"]
+    en = pipeline.ask("What is the ruling on morning adhkar?")
+    assert "could not be reached" in en["answer_text"]

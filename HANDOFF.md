@@ -27,6 +27,21 @@ Open quality points the judge/support check raised (not fixed): contested-fiqh g
 - Opt-in learning loop (see README "Learning over time"): `core/reports.py`, `/api/report`, `/api/privacy`, report box in the UI, `tools/review.py`, `core/rewrites.py`, `data/curated/`. 226 tests pass.
 - Last full live eval after these changes (55 cases, before the last router/extractor stability fixes): 53/55; the two misses (v-02, v-03) were the router calling pasted hadiths "ask" and are fixed and re-run green. A fresh full run is advisable.
 
+## PENDING TODO (decided 2026-10-06, deadline that day 11:59 PM; saved so nothing is forgotten)
+Independent review findings to fix (all with tests, no GPU needed), in this order:
+1. English typed-scripture hole: verify.py checks only Arabic; add a check against the retrieved verses' English translation (text_en) / hadith English (H1).
+2. Router: `_PERSONAL` matches "ابي" as a substring (Abu Bakr -> level د) and bare "can i/should i"; add first-person medical patterns ("أنا مريض", "I have diabetes", "I am pregnant") to _PERSONAL/_STRONG_PERSONAL (H6, H7).
+3. Dorar: circuit breaker + retries=1 + short timeout + cap of ~8 claims; ship data/cache in the package (H2).
+4. Distinct "service problem" message for llm_error / llm_empty / llm_truncated (not "not enough evidence"); startup DB-empty check; warm up bge-m3 at startup with a vectors_ready flag in /api/health (H3, H4, H9).
+5. Commit the uncommitted search_ar (English->Arabic search) change; rebuild the zip from HEAD (git archive) incl. data/cache; link it in README/QUICKSTART (private hand-over to judges, not a public Release, because it contains third-party sources) (H4, H5).
+6. Pin requirements.txt; add LICENSE + NOTICE (credits for HadeethEnc, KFGQPC, QuranEnc, Dorar, icadb, Bayyinat); do not truncate hadith cards (H8, H10).
+7. Docs honesty: test count 267, remove the stale "live LLM unverified" paragraph, retrieval 13/14 + rerun, commit the 17-case rerun and a reliability summary, golden = 55 cases, HANDOFF stale step (L, section 3 of the review).
+8. Small API hardening: transcribe body size check, drop public dorar=true on /api/retrieve, per-IP rate limit + a semaphore around LLM calls, health endpoint exposes less.
+Then re-run golden + reliability once on the final build.
+
+## Approved-sources list from the organizers (docs/approved_sources_links.txt): audit and gap-filling in progress
+We want the best possible sources for the questions (it scores points). See docs/sources_audit.md once written.
+
 ## FINAL VERSION (2026-10-06): everything below was re-run on the final build
 - Golden 55 (Gemma 4 12B local, judge gpt-5.5): behaviour 100%, citations/verse fidelity 100%, correct abstention 7/7, false abstention 0/32, forced abstention 0/41, judge 4.86. 17 glossary-related cases re-run after the last retrieval fix: 17/17.
 - Reliability (evals/reliability.py, 51 q): should-answer 14/14, no-source 16/16, disputed 6/6, paraphrase outcome 5/5 (levels differ in 3 groups).

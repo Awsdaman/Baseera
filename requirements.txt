@@ -1,15 +1,17 @@
-fastapi
-uvicorn[standard]
-anthropic
-openai
-python-dotenv
-httpx
-beautifulsoup4
-rapidfuzz
-chromadb
-sentence-transformers
-transformers
-pymupdf
-python-docx
-pytest
-truststore
+# Versions below are the ones Baseera was built and tested with (Python 3.13). chromadb is pinned exactly because the shipped
+# vector index (data/db/chroma) was written by this version.
+fastapi==0.142.2
+uvicorn[standard]==0.54.0
+anthropic==1.11.0
+openai==3.24.0
+python-dotenv==1.2.4
+httpx==0.28.1
+beautifulsoup4==4.15.0
+rapidfuzz==3.14.6
+chromadb==1.5.9
+sentence-transformers==6.1.0
+transformers==5.18.0
+pymupdf==1.28.2
+python-docx==1.2.0
+pytest==9.1.1
+truststore==0.10.4

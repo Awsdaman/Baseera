@@ -223,6 +223,45 @@ def _check_leaks(text: str, retrieved: dict, errors: list[str]):
                 break
 
 
+_EN_QUOTES = [re.compile(p, re.S) for p in ('"([^"]{1,1500})"', "“([^”]{1,1500})”")]
+EN_QUOTE_WORDS = 5       # a quoted English string of this many words that matches retrieved scripture is a recitation
+EN_LONG_RUN = 9          # an unquoted near-copy of this many words (or most of the source) counts as typed scripture
+EN_CUTOFF = 90
+
+
+def _norm_en(t: str) -> str:
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9Ā-ɏ ]+", " ", (t or "").lower())).strip()
+
+
+def _check_english_leaks(text: str, retrieved: dict, errors: list[str]):
+    """English answers: the model sees the English translation of every retrieved verse and hadith, so it must not type those either.
+    The Arabic checks cannot see English text; this one compares quoted strings and long runs with the retrieved English texts."""
+    sources = [(p["id"], p["type"], _norm_en(p.get("text_en") or "")) for p in retrieved.values() if p["type"] in ("quran", "hadith") and p.get("text_en")]
+    sources = [x for x in sources if x[2]]
+    if not sources:
+        return
+    clean = CITE.sub(" ", PLACEHOLDER.sub(" ", text))
+
+    def hit(n: str, quoted: bool):
+        words = len(n.split())
+        if words < (EN_QUOTE_WORDS if quoted else EN_LONG_RUN):
+            return None
+        for pid, kind, src in sources:
+            if fuzz.partial_ratio(n, src) >= EN_CUTOFF and (quoted or words >= EN_LONG_RUN or len(n) >= COVER_RATIO * len(src)):
+                return pid, kind
+        return None
+    for rx in _EN_QUOTES:
+        for m in rx.finditer(clean):
+            h = hit(_norm_en(m.group(1)), True)
+            if h:
+                errors.append(f"{'Quran' if h[1] == 'quran' else 'Hadith'} text written by the model inside quotation marks (use a {{{{{h[1]}:...}}}} placeholder; "
+                              f"paraphrase in your own words instead): {m.group(1)[:60]}")
+    for chunk in re.split(r"[.!?;:" + chr(10) + r"]+", clean):
+        h = hit(_norm_en(chunk), False)
+        if h:
+            errors.append(f"Text resembling retrieved {h[1]} {h[0]} written by the model (use a placeholder or paraphrase): {chunk.strip()[:60]}")
+
+
 def _is_leak(chunk_norm: str, nwords: int, source_norm: str) -> bool:
     """A near-copy counts as typed sacred text when it is a long run (>= LONG_RUN_WORDS) or covers most of the source.
     Short stock phrases ("حج البيت لمن استطاع إليه سبيلا") that explanations legitimately reuse are allowed;
@@ -282,6 +321,8 @@ def verify_answer(text: str, retrieved: list[dict], lang: str = "ar") -> VerifyR
 
     _check_quotes(text, by_id, errors)
     _check_leaks(text, by_id, errors)
+    if lang == "en":
+        _check_english_leaks(text, by_id, errors)
 
     # At least one real source must be shown or cited; a {{note:...}} is code-owned text and never counts as a source.
     if not CITE.search(text) and not any(m.group(1) != "note" for m in PLACEHOLDER.finditer(text)):

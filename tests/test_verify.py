@@ -317,3 +317,27 @@ def test_quoted_shahada_alone_is_allowed_but_a_verse_next_to_it_is_still_caught(
     verse = R.get_passage(KURSI)["text"]
     bad = verify_answer(f"قال: «لا إله إلا الله {normalize_ar(verse)}» [[quran:2:255]]", ps)
     assert not bad.ok                                   # the shahada exemption does not hide a typed verse
+
+
+# ---------------------------------------------------------------- English answers may not type scripture either
+def test_english_answer_quoting_the_saheeh_translation_is_rejected():
+    ps = P(KURSI)
+    en = R.get_passage(KURSI)["text_en"]
+    r = verify_answer(f'Allah says "{en}" and this is the greatest verse of the Quran. [[quran:2:255]]', ps, "en")
+    assert not r.ok and any("Quran text written" in e for e in r.errors), r.errors
+
+
+def test_english_answer_that_copies_a_long_run_without_quotes_is_rejected():
+    ps = P(KURSI)
+    en = R.get_passage(KURSI)["text_en"]
+    r = verify_answer(f"The verse teaches that {en[:260]} [[quran:2:255]]", ps, "en")
+    assert not r.ok
+
+
+def test_english_paraphrase_and_placeholders_are_allowed():
+    ps = P(KURSI, "tafsir:muyassar:2:255")
+    ok = verify_answer("This verse describes Allah's greatness and His knowledge of everything, and is among the most beloved verses to recite for protection. "
+                       "[[tafsir:muyassar:2:255]]\n\n{{quran:2:255}}", ps, "en")
+    assert ok.ok, ok.errors
+    short = verify_answer('The Quran calls Him "the Ever-Living, the Sustainer of existence" in this verse, as the tafsir explains at length for readers. [[quran:2:255]]', ps, "en")
+    assert not any("Quran text written" in e for e in short.errors)       # a 5-word attribute inside quotes is below the recitation threshold
