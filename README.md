@@ -83,6 +83,26 @@ python ingest/build_all.py                            # ingest everything + embe
 uvicorn api.main:app                                  # http://127.0.0.1:8000
 ```
 
+### Test it with a free local model (Gemma 4 12B, no API key)
+
+The tested local model needs **no key**: it runs on your own machine through [LM Studio](https://lmstudio.ai) (a 16 GB GPU is enough; 7 GB download).
+
+1. In LM Studio, download `gemma-4-12b-it` (Q4_K_M, from the `unsloth/gemma-4-12b-it-GGUF` repo), load it, and start the local server (default `http://localhost:1234`). Command line: `lms load gemma-4-12b-it --gpu max --parallel 1` then `lms server start`.
+2. Put these lines in your own `.env` (never commit it; no secret is needed):
+
+```
+LLM_PROVIDER=local
+LOCAL_BASE_URL=http://localhost:1234/v1
+LOCAL_MODEL=gemma-4-12b-it
+LOCAL_NO_THINK=1
+LLM_GEN_MAX_TOKENS=1500
+LLM_ROUTER_MAX_TOKENS=600
+```
+
+3. `uvicorn api.main:app` and open http://127.0.0.1:8000 (an answer takes about 30-60 s on a 16 GB GPU).
+
+No GPU? One teammate can enable "Serve on Local Network" in LM Studio and the others set `LOCAL_BASE_URL=http://<that-computer-ip>:1234/v1` (same network only; the server has no password, so do not expose it to the internet). Cloud models also work: set `LLM_PROVIDER=openai` or `anthropic` with your own key in `.env`.
+
 Manual files (from https://qurancomplex.gov.sa/quran-dev): `data/raw/quran/kfgqpc_hafs_v30.zip`, `data/raw/tafsir/hafs_tafseerMouaser_v3.zip`.
 
 Without `ANTHROPIC_API_KEY` the app still runs: routing falls back to heuristics, level-د referral, glossary translation and **Verify mode** work, and Ask returns the closest approved sources (`retrieval_only`) instead of a generated answer. Nothing is ever fabricated.
