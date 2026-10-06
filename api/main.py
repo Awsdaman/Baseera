@@ -116,6 +116,9 @@ async def lifespan(_app):
     if L.provider_name() == "local" and os.environ.get("WARM_LLM", "1") == "1":
         threading.Thread(target=_warm_llm, daemon=True).start()
         threading.Thread(target=_keepalive, daemon=True).start()
+    if os.environ.get("SPEECH_PRELOAD") == "1":
+        from core import speech
+        speech.preload()  # load the voice model in the background so the first recording does not wait for it
     yield
 
 
@@ -137,8 +140,13 @@ def health():
         except Exception:
             reachable = False
     llm = {"provider": d.get("provider"), "configured": L.llm_available(), "reachable": reachable}
-    return {"ok": sum(counts.values()) > 0, "llm": llm, "passages": counts, "database_empty": sum(counts.values()) == 0,
+    return {"ok": sum(counts.values()) > 0, "llm": llm, "speech": _speech_status(), "passages": counts, "database_empty": sum(counts.values()) == 0,
             "vectors_ready": _VECTORS["ready"], "llm_warm": _VECTORS["llm"], "queue": L.queue_stats(), "verses": con.execute("SELECT count(*) FROM quran").fetchone()[0]}
+
+
+def _speech_status() -> dict:
+    from core import speech
+    return speech.describe()
 
 
 @app.get("/api/retrieve")
