@@ -37,7 +37,7 @@ Frontend: single RTL Arabic page served by FastAPI (plain HTML/CSS/JS), Arabic/E
 ## Data sources
 Local index: Quran Complex Hafs JSON (use `kfgqpc_hafs_v30`, real Unicode + tashkeel, 6236 verses; NOT `hafs_smart_v8` whose main text is private-use glyphs), HadeethEnc (ar+en), QuranEnc (`english_saheeh`, Arabic tafsir `arabic_moyassar`; local Muyassar zip also in data/raw/tafsir), Bayyinat Q&A PDF (`data/raw/bayyinat/bayyinat_qa.pdf`, chunk by question), glossary (data.pdf p.7 + icadb).
 Live (cache everything in data/cache/): Dorar `dorar.net/dorar_api.json` (needs browser User-Agent; Cloudflare 403 otherwise; returns HTML snippets), icadb (`icadb.com/api/docs/?format=openapi`), mp3quran (`https://www.mp3quran.net/api/v3/...`, use `www`).
-Referral links only (never scrape): islamqa.info, binbaz.org.sa, binothaimeen.net.
+Referral links only (never scrape): islamqa.info, binbaz.org.sa, binothaimeen.net. Exception, by the owner's explicit request (2026-10-06): a small local test bank of islamqa.info question TITLES only (no answers), collected politely from public listing pages (robots.txt allows it), kept in git-ignored `data/questions/`, never published or used as an answer source.
 
 ## Phases
 0 setup + API probing | 1 ingestion + hybrid retrieval | 2 router/generate/verify | 3 verify mode | 4 evals | 5 polish + demo + README.
