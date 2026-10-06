@@ -14,6 +14,7 @@ Get-Content .env.demo | ForEach-Object {
   $l = ($_ -split '#')[0].Trim()
   if ($l -match '^([^=]+)=(.*)$') { [Environment]::SetEnvironmentVariable($Matches[1].Trim(), $Matches[2].Trim(), "Process") }
 }
+$cf = if (Get-Command cloudflared -ErrorAction SilentlyContinue) { "cloudflared" } elseif (Test-Path "C:\Program Files (x86)\cloudflared\cloudflared.exe") { "& 'C:\Program Files (x86)\cloudflared\cloudflared.exe'" } else { Log "cloudflared not found: winget install Cloudflare.cloudflared"; exit 1 }
 $py = if (Test-Path .venv\Scripts\python.exe) { (Resolve-Path .venv\Scripts\python.exe).Path } else { "python" }
 
 # 2. keep Windows awake for as long as this window is open
@@ -41,7 +42,7 @@ function Start-Supervised($name, $cmd) {
 }
 Start-Supervised "app" "& '$py' -m uvicorn api.main:app --host 127.0.0.1 --port $Port --workers 1 --no-access-log"
 Remove-Item logs\cloudflared.log -ErrorAction SilentlyContinue
-Start-Supervised "tunnel" "cloudflared tunnel --no-autoupdate --loglevel warn --url http://127.0.0.1:$Port 2>&1 | Tee-Object -FilePath logs\cloudflared.log -Append"
+Start-Supervised "tunnel" "$cf tunnel --no-autoupdate --loglevel warn --url http://127.0.0.1:$Port 2>&1 | Tee-Object -FilePath logs\cloudflared.log -Append"
 Log "app and tunnel started"
 
 # 5. watchdog: report the public URL (it changes if the tunnel restarts) and restart a hung app
