@@ -36,11 +36,19 @@ def embed_texts(texts: list[str], query: bool = False) -> list[list[float]]:
         return model().encode(texts, batch_size=16, normalize_embeddings=True, show_progress_bar=False).tolist()
 
 
+_CHROMA_LOCK = threading.Lock()
+
+
 @lru_cache(maxsize=1)
-def chroma_client():
+def _chroma_client():
     import chromadb
     CHROMA_DIR.mkdir(parents=True, exist_ok=True)
     return chromadb.PersistentClient(path=str(CHROMA_DIR))
+
+
+def chroma_client():
+    with _CHROMA_LOCK:  # two requests creating the client at once fail with a RustBindingsAPI error (they then lose vector search)
+        return _chroma_client()
 
 
 def passage_embed_text(r) -> str:

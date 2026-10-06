@@ -71,6 +71,8 @@ def _warm():
     try:
         from core.embedding import embed_texts
         embed_texts(["warm-up"])
+        from core.embedding import chroma_client
+        chroma_client()
         _VECTORS["ready"] = True
     except Exception as e:  # offline first run: retrieval falls back to keyword search; /api/health says so
         logging.getLogger("uvicorn.error").warning("embedding model unavailable (%s): keyword search only", str(e)[:100])
