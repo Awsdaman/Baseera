@@ -23,7 +23,7 @@ REFERRALS = [
 MIN_GENERAL_SCORE = 0.026  # general-info cards must be found by BOTH keyword and vector search (RRF of two top-10 ranks)
 EXTRA_FROM_ENGLISH = 4  # passages from the English-wording search kept next to the Arabic-search results
 EXTRA_FROM_ORIGINAL = 3  # extra passages taken from a search with the user's own wording
-PER_TYPE_ASK = {"quran": 4, "hadith": 4, "qa": 4, "tafsir": 2, "term": 2}
+PER_TYPE_ASK = {"quran": 4, "hadith": 4, "qa": 10, "tafsir": 2, "term": 2}  # qa: 4 curated + 3 fiqh encyclopedia + 2 books + 1 reference card (core/retrieve.py QA_GROUPS)
 
 TEXT = {
     "personal": {

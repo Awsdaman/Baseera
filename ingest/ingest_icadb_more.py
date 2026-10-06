@@ -45,8 +45,13 @@ def main():
         for c in cards(ext):
             fields = {s["field_name"]: (s["text"] or "").strip() for s in sorted(c.get("sentences", []), key=lambda s: s["field_order"])}
             title = (fields.get(title_field) if title_field else None) or c["name"]
-            body = [f"{k}: {v}" for k, v in fields.items() if v and v != "-" and not any(w in k for w in SKIP_FIELD_WORDS)]
-            text = "\n".join(body)
+            if ptype == "term" and slug in ("yaseer", "huruf"):
+                # dictionary entries: "word: meaning" only. The field labels ("الكلمة", "الكتاب") would match every question that says "كلمة"
+                word = fields.get("الكلمة") or fields.get("الحرف") or c["name"]
+                text = f"{word}: {fields.get('المعنى', '')}".strip()
+            else:
+                body = [f"{k}: {v}" for k, v in fields.items() if v and v != "-" and not any(w in k for w in SKIP_FIELD_WORDS)]
+                text = "\n".join(body)
             if len(text) < 20:
                 continue
             rows.append({"id": f"{ptype}:icadb-{slug}:{c['external_id']}", "type": ptype, "source": f"icadb-{slug}", "title": title.strip()[:160],

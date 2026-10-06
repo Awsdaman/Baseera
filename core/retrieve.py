@@ -37,13 +37,16 @@ def _fts_query(query: str) -> str:
     return " OR ".join('"%s"' % t.replace('"', "") for t in toks)
 
 
-def keyword_search(query: str, ptype: str, k: int = 30) -> list[str]:
+def keyword_search(query: str, ptype: str, k: int = 30, sources: tuple | None = None) -> list[str]:
     q = _fts_query(query)
     if not q:
         return []
-    rows = con().execute(
-        "SELECT f.id FROM passages_fts f JOIN passages p ON p.id=f.id "
-        "WHERE passages_fts MATCH ? AND p.type=? ORDER BY bm25(passages_fts) LIMIT ?", (q, ptype, k)).fetchall()
+    sql = ("SELECT f.id FROM passages_fts f JOIN passages p ON p.id=f.id WHERE passages_fts MATCH ? AND p.type=?")
+    args: list = [q, ptype]
+    if sources:
+        sql += " AND p.source IN (%s)" % ",".join("?" * len(sources))
+        args += list(sources)
+    rows = con().execute(sql + " ORDER BY bm25(passages_fts) LIMIT ?", (*args, k)).fetchall()
     return [r["id"] for r in rows]
 
 
@@ -91,6 +94,20 @@ def verse_ref_lookup(query: str) -> list[dict]:
     return out
 
 
+# Q&A slots are filled group by group in this order (n = how many the caller wants): curated Q&A first, then the fiqh encyclopedia,
+# then the books (keyword only, numerous, so a small share), then reference cards (people, places, sects, Names of Allah).
+QA_GROUPS = [("curated", ("icadb", "bayyinat"), 4), ("fiqh", ("dorar-feqhia",), 3), ("books", ("icadb-books",), 2),
+             ("reference", ("icadb-aalam", "icadb-places", "icadb-firaq", "icadb-asma"), 1)]
+_src_cache: dict[str, str] = {}
+
+
+def _source_of(pid: str) -> str | None:
+    if pid not in _src_cache:
+        r = con().execute("SELECT source FROM passages WHERE id=?", (pid,)).fetchone()
+        _src_cache[pid] = r["source"] if r else None
+    return _src_cache[pid]
+
+
 def retrieve(query: str, per_type: dict | None = None, vectors: bool = True, dorar: bool = False) -> list[dict]:
     per_type = per_type or DEFAULT_PER_TYPE
     results, seen = [], set()
@@ -107,6 +124,26 @@ def retrieve(query: str, per_type: dict | None = None, vectors: bool = True, dor
     for ptype in TYPES:
         n = per_type.get(ptype, 0)
         if not n:
+            continue
+        if ptype == "qa":  # the Q&A type now mixes curated Q&A, a fiqh encyclopedia, reference cards and 40k book chunks: rank each group on its own
+            vec = []
+            if vectors:
+                try:
+                    vec = vector_search(query, "qa")
+                except Exception as e:
+                    print("vector search unavailable:", e)
+            picked = []
+            for _name, srcs, share in QA_GROUPS:
+                kw = keyword_search(query, "qa", sources=srcs)
+                vv = [i for i in vec if _source_of(i) in srcs]
+                picked += [(pid, sc) for pid, sc in sorted(rrf([kw, vv] if vv else [kw]).items(), key=lambda x: -x[1])[:share]]
+            for pid, sc in picked[:n]:
+                if pid in seen:
+                    continue
+                row = con().execute("SELECT * FROM passages WHERE id=?", (pid,)).fetchone()
+                if row:
+                    results.append(_row_to_result(row, sc))
+                    seen.add(pid)
             continue
         rankings = [keyword_search(query, ptype)]
         if vectors:

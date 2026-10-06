@@ -28,7 +28,9 @@ def main():
     have.update(got["ids"])
     # tafsir passages are long and numerous; they stay keyword-searchable and always link to their verse.
     skip = set(os.environ.get("EMBED_SKIP_TYPES", "tafsir").split(","))
-    rows = [r for r in con.execute("SELECT id,type,title,text_ar,text_en,meta FROM passages").fetchall() if r["type"] not in skip]
+    skip_sources = set(filter(None, os.environ.get("EMBED_SKIP_SOURCES", "icadb-books").split(",")))  # ~40k book chunks stay keyword-searchable (CPU embedding is ~4/s)
+    rows = [r for r in con.execute("SELECT id,type,source,title,text_ar,text_en,meta FROM passages").fetchall()
+            if r["type"] not in skip and r["source"] not in skip_sources]
     rows.sort(key=lambda r: len(passage_embed_text(r)))  # similar lengths per batch = less padding
     todo = [r for r in rows if r["id"] not in have]
     print(f"{len(rows)} passages, {len(have)} already embedded, {len(todo)} to do", flush=True)
