@@ -462,8 +462,8 @@ const I18N = {
    micStart:'اسأل بصوتك', micStop:'إيقاف التسجيل', micRec:'جارٍ التسجيل … اضغط للإيقاف', micWork:'جارٍ تحويل الصوت إلى نص …', micDone:'راجِع النص وصحّحه قبل الإرسال — التعرّف على الصوت قد يخطئ.', micErr:'تعذّر تحويل الصوت، اكتب سؤالك.', micDenied:'لم يُسمح باستخدام الميكروفون.', micNote:' الصوت يُعالَج مؤقتًا في الذاكرة ولا يُحفظ.',
    hello:'مرحبا بك', toolsTab:'الأدوات', hideSide:'إخفاء اللوحة الجانبية', showSide:'إظهار اللوحة الجانبية', openMenu:'فتح القائمة', closeMenu:'إغلاق القائمة', navHome:'الرئيسية', navHistory:'المحادثات السابقة', navSources:'المصادر', navAbout:'حول بصيرة', verseRef:'[طه: 114]',
    welcome:'مرحباً بك في بصيرة', subtitle:'مساعدك الذكي للبحث في المعرفة الإسلامية من مصادر موثوقة',
-   askTitle:'اسأل سؤالًا', askHint:'اسأل عن أي مسألة، وتصلك الإجابة مع مصادرها الموثقة.', verifyHint:'الصق رسالة متداولة فيها آيات أو أحاديث، ونبيّن لك صحتها ومصدرها.', askPh:'اكتب سؤالك هنا بالعربية أو English …', send:'إرسال', examples:'أمثلة مقترحة:',
-   verifyTitle:'تحقق من النص', verifyLead:'الصق رسالة أو مقطعاً فيه آيات أو أحاديث للتحقق من صحته ومعرفة مصادره.', verifyPh:'الصق نصاً فيه آيات أو أحاديث…', verify:'تحقق',
+   askTitle:'اسأل سؤالًا', askHint:'اسأل عن أي مسألة، وتصلك الإجابة مع مصادرها الموثقة.', verifyHint:'الصق رسالة متداولة فيها آيات أو أحاديث، ونبيّن لك صحتها ومصدرها. ضع الآية أو الحديث بين أقواس: ﴿ ﴾ للآية و« » للحديث.', askPh:'اكتب سؤالك هنا بالعربية أو English …', send:'إرسال', examples:'أمثلة مقترحة:',
+   verifyTitle:'تحقق من النص', verifyLead:'الصق رسالة أو مقطعاً فيه آيات أو أحاديث للتحقق من صحته ومعرفة مصادره.', verifyPh:'الصق نصاً فيه آيات أو أحاديث بين أقواس ﴿ ﴾ « »…', verify:'تحقق',
    disclosure:'بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا. تجيب من مصادر معتمدة وتعرض مراجعها، ولا تخزّن بياناتك الشخصية.',
    f1:'مصادر موثوقة', f1s:'من كتب ومواقع معتمدة', f2:'إجابات مدعومة', f2s:'مع ذكر المصدر والموضع', f3:'التحقق من المعلومات', f3s:'لضمان الدقة والمصداقية', f4:'إحالة للمختص', f4s:'عند عدم توفر مصدر كافٍ',
    quickTools:'أدوات سريعة', t1:'أركان الإسلام', t2:'أذكار وأدعية', t3:'أحكام العبادات', t4:'سيرة النبي ﷺ',
@@ -505,8 +505,8 @@ const I18N = {
    micStart:'Ask by voice', micStop:'Stop recording', micRec:'Recording … tap to stop', micWork:'Transcribing …', micDone:'Review and correct the text before sending — speech recognition can make mistakes.', micErr:'Could not transcribe, please type your question.', micDenied:'Microphone access was denied.', micNote:' Audio is processed in memory and not stored.',
    hello:'Welcome', toolsTab:'Tools', hideSide:'Hide side panel', showSide:'Show side panel', openMenu:'Open menu', closeMenu:'Close menu', navHome:'Home', navHistory:'Previous questions', navSources:'Sources', navAbout:'About Baseera', verseRef:'[Taha: 114]',
    welcome:'Welcome to Baseera', subtitle:'Your AI assistant for Islamic knowledge from trusted sources',
-   askTitle:'Ask a question', askHint:'Ask about any topic and get an answer with its trusted sources.', verifyHint:'Paste a forwarded message with verses or hadiths and we will check it and show its sources.', askPh:'Type your question in English or Arabic …', send:'Send', examples:'Try:',
-   verifyTitle:'Verify a text', verifyLead:'Paste a message or passage with verses or hadiths to check it and see its sources.', verifyPh:'Paste text with verses or hadiths…', verify:'Verify',
+   askTitle:'Ask a question', askHint:'Ask about any topic and get an answer with its trusted sources.', verifyHint:'Paste a forwarded message with verses or hadiths and we will check it and show its sources. Put each verse or hadith between brackets: ﴿ ﴾ for a verse, « » for a hadith.', askPh:'Type your question in English or Arabic …', send:'Send', examples:'Try:',
+   verifyTitle:'Verify a text', verifyLead:'Paste a message or passage with verses or hadiths to check it and see its sources.', verifyPh:'Paste text with verses or hadiths between brackets ﴿ ﴾ « »…', verify:'Verify',
    disclosure:'Baseera is an AI-powered tool, not a scholar or mufti. It answers from approved sources, shows its references, and stores no personal data.',
    f1:'Trusted sources', f1s:'Approved books and sites', f2:'Supported answers', f2s:'With the source and its place', f3:'Verification', f3s:'For accuracy and reliability', f4:'Referral', f4s:'When the sources are not enough',
    quickTools:'Quick tools', t1:'Pillars of Islam', t2:'Remembrance & supplication', t3:'Rulings of worship', t4:'Life of the Prophet ﷺ',
@@ -795,12 +795,19 @@ async function runJob(kind, body) {
   if (!r.ok) throw new Error('err');
   const { job } = await r.json();
   const t0 = Date.now();
+  let bad = 0;
   while (Date.now() - t0 < 300000) {
     await sleep(1500);
-    const s = await fetch('/api/jobs/' + job);
-    if (s.status === 404) throw new Error('restarted');
-    if (!s.ok) throw new Error('err');
-    const d = await s.json();
+    let d;
+    try {  // one dropped poll (network blip, a 502/524 from the tunnel) must not abandon a job that is still running
+      const s = await fetch('/api/jobs/' + job);
+      if (s.status === 404) throw new Error('restarted');
+      if (!s.ok) throw new Error('poll');
+      d = await s.json(); bad = 0;
+    } catch (e) {
+      if (e.message === 'restarted' || ++bad >= 4) throw new Error(e.message === 'restarted' ? 'restarted' : 'err');
+      continue;
+    }
     if (d.state === 'done') return d.result;
     if (d.state === 'error') throw new Error(d.error === 'busy' ? 'busy' : 'err');
     const el = document.getElementById('loadtxt');

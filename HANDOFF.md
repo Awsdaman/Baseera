@@ -1,5 +1,7 @@
 # HANDOFF — where we stopped (2026-10-03)
 
+> **Historical notes.** The current status (290 tests passing, the local Gemma 4 12B path run live end to end, the live demo) is in `README.md`; the live-demo operation is in the README section "Live demo" and `start_demo.ps1`. Test counts and "not re-run" remarks below are from 2026-10-03.
+
 Read this first in a new session, then CLAUDE.md and README.md. Voice input ("ask by voice"): `docs/VOICE_HANDOFF.md`.
 
 ## State of the project

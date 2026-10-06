@@ -34,7 +34,7 @@ Open http://127.0.0.1:8000 : the **Ask** tab answers with citation cards; the **
 ## 4. Check it
 
 ```bash
-python -m pytest -q                       # about 280 tests
+python -m pytest -q                       # about 290 tests
 python evals/run_evals.py --offline       # the part of the golden set that needs no model
 ```
 

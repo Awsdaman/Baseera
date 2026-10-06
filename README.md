@@ -241,7 +241,7 @@ A reviewer (you) then decides, with `python -m tools.review ...`: `approve-test`
 
 ## Privacy
 
-Without an opt-in report: no accounts, no analytics, no database of questions: requests are processed in memory. The access log strips query strings (so `/api/retrieve?q=…` is not logged). Third parties that receive text: **Anthropic** (the question and retrieved passages, for routing/generation), **Dorar** (hadith wording from a pasted message, to look up grades) and **mp3quran** (surah number only). API responses from Dorar/icadb/HadeethEnc are cached on disk in `data/cache/` (keyed by hash of the request; the request text itself is not stored).
+Without an opt-in report: no accounts, no analytics, no database of questions: requests are processed in memory. The access log strips query strings (so `/api/retrieve?q=…` is not logged). Third parties that receive text: **none for the live demo** (the model runs locally); with a hosted provider configured (**Anthropic** or **OpenAI**) the question and retrieved passages go to that provider for routing/generation. Also **Dorar** **Dorar** (hadith wording from a pasted message, to look up grades; the cached Dorar results can reveal which hadiths were looked up, never the pasted text) and **mp3quran** (surah number only). API responses from Dorar/icadb/HadeethEnc are cached on disk in `data/cache/` (keyed by hash of the request; the request text itself is not stored).
 
 ## Assumptions and limits (read these)
 
