@@ -12,16 +12,18 @@ One page for reviewers. Every statement here is enforced by code in this reposit
 | icadb Q&A and terminology | Scholarly Q&A, approved term translations | local DB |
 | Bayyinat Q&A (263 entries) | Doubts and objections | local DB |
 | Dorar al-Saniyyah (live API, cached) | Hadith grades for Verify mode | cached |
+| icadb books (about 335 of the organizers' 345), Q&A, dictionary of Quranic words, notable people, places, sects, Names of Allah | Scholarly explanations and reference cards | local DB (books: keyword search) |
+| Dorar al-Saniyyah Fiqh Encyclopedia (2,489 articles) | Positions of the schools with references | local DB, links back to dorar.net |
 | Challenge glossary (data pack) | Approved term translations, override machine translation | code |
 
-Nothing else is searched. Referral links (islamqa.info, binbaz.org.sa, binothaimeen.net) are only shown as links, never scraped. We did not add sources to cover more fiqh: coverage of detailed practical fiqh is limited, and Baseera says so instead (section 3).
+Nothing else is searched: every source is on the organizers' approved list (`docs/approved_sources_links.txt`; the audit is in `docs/sources_audit.md`). Referral links (islamqa.info, binbaz.org.sa, binothaimeen.net) are only shown as links, never scraped. We did not add sources to cover more fiqh: coverage of detailed practical fiqh is limited, and Baseera says so instead (section 3).
 
 ## 2. How a citation works (the model never writes scripture)
 
 1. The question is routed (level أ/ب/ج/د, intent) and the approved sources are searched (keyword + semantic, fused).
 2. The model sees only the retrieved passages, each with an id such as `qa:icadb:26239`, `quran:2:255`, `hadith:hadeethenc:4560`.
 3. It may only emit **placeholders** (`{{quran:2:255}}`, `{{hadith:hadeethenc:4560}}`, `{{tafsir:2:255}}`) and **citations** (`[[qa:icadb:26239]]`).
-4. **Pure code** (`core/verify.py`, no model) then rejects the answer if: a cited or placeholder id was not retrieved for this question; the model typed Quran or hadith words itself (fuzzy scan against the whole Mushaf and the retrieved hadith); text is in Quran brackets or in unattributed quotation marks; any 8+ word stretch has no citation; Latin words appear in an Arabic answer.
+4. **Pure code** (`core/verify.py`, no model) then rejects the answer if: a cited or placeholder id was not retrieved for this question; the model typed Quran or hadith words itself (fuzzy scan against the whole Mushaf and the retrieved hadith; for English answers also against the English translations of the retrieved verses and hadiths); text is in Quran brackets or in unattributed quotation marks; any 8+ word stretch has no citation; Latin words appear in an Arabic answer.
 5. A rejected answer gets one retry that names each error and its exact fix; a second rejection becomes an honest "not enough evidence" reply with referral links. Nothing unverified is ever shown.
 6. On acceptance, code substitutes the **exact stored text** for each placeholder, numbers the citations, and the UI shows Quran, hadith (with grade), tafsir, and the generated explanation in separate blocks. Hadith grades come only from HadeethEnc / Dorar, never from the model.
 

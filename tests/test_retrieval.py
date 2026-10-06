@@ -68,3 +68,13 @@ def test_dorar_live_results_are_optional_and_graded(monkeypatch):
     res = R.retrieve("إنما الأعمال بالنيات", dorar=True)
     d = [r for r in res if r["source"] == "dorar"]
     assert d and d[0]["grade"] == "صحيح"
+
+
+def test_new_sources_can_be_switched_off_without_code_changes(monkeypatch):
+    from core import retrieve as R
+    q = "هل بخاخ الربو يفطر الصائم؟"
+    on = {p["source"] for p in R.retrieve(q, per_type={"qa": 10}, vectors=False)}
+    assert "dorar-feqhia" in on
+    monkeypatch.setenv("DISABLE_SOURCES", "icadb-books,dorar-feqhia")
+    off = {p["source"] for p in R.retrieve(q, per_type={"qa": 10}, vectors=False)}
+    assert "dorar-feqhia" not in off and "icadb-books" not in off and off & {"icadb", "bayyinat"}

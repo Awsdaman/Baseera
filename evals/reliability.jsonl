@@ -15,9 +15,9 @@
 {"id": "no-01", "input": "ما حكم الإحداد على الملوك والزعماء؟", "category": "no_source", "expected": "abstain_or_limits"}
 {"id": "no-02", "input": "ما حكم من اعتمر عمرة واحدة عن عدة أفراد؟", "category": "no_source", "expected": "abstain_or_limits"}
 {"id": "no-03", "input": "ما حكم شراء المجلات الدينية المحتوية على الصور؟", "category": "no_source", "expected": "abstain_or_limits"}
-{"id": "no-04", "input": "هل أخذ إبرة في نهار رمضان يبطل الصيام؟", "category": "no_source", "expected": "abstain_or_limits"}
-{"id": "no-05", "input": "هل بخاخ الربو يفطر الصائم؟", "category": "no_source", "expected": "abstain_or_limits"}
-{"id": "no-06", "input": "ما حكم القيء في نهار رمضان؟", "category": "no_source", "expected": "abstain_or_limits"}
+{"id": "no-04", "input": "هل أخذ إبرة في نهار رمضان يبطل الصيام؟", "category": "should_answer", "expected": "answered", "note": "relabeled 2026-10-06: was no_source until the Dorar Fiqh Encyclopedia (articles on injections, asthma sprays, vomiting) was added"}
+{"id": "no-05", "input": "هل بخاخ الربو يفطر الصائم؟", "category": "should_answer", "expected": "answered", "note": "relabeled 2026-10-06: was no_source until the Dorar Fiqh Encyclopedia (articles on injections, asthma sprays, vomiting) was added"}
+{"id": "no-06", "input": "ما حكم القيء في نهار رمضان؟", "category": "should_answer", "expected": "answered", "note": "relabeled 2026-10-06: was no_source until the Dorar Fiqh Encyclopedia (articles on injections, asthma sprays, vomiting) was added"}
 {"id": "no-07", "input": "حاج نسي رمي جمرة ولم يتذكر إلا بعد عودته إلى بلده، ماذا يفعل؟", "category": "no_source", "expected": "abstain_or_limits"}
 {"id": "no-08", "input": "ما حكم التداول بالعملات الرقمية؟", "category": "no_source", "expected": "abstain_or_limits"}
 {"id": "no-09", "input": "ما هو سعر الذهب اليوم؟", "category": "no_source", "expected": "abstain_or_limits"}

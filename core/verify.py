@@ -60,6 +60,10 @@ def _canon_id(i: str, by_id: dict) -> str:
         ids = [f"quran:{m[1]}:{a}" for a in range(int(m[2]), int(m[3]) + 1)]
         if all(x in by_id for x in ids):
             return ", ".join(ids)
+    key = re.sub(r"[^A-Za-z0-9]", "", i).lower()   # separator slips ("qa:icadb:aalam:7" for "qa:icadb-aalam:7"): accepted only when exactly ONE retrieved id matches
+    hits = [k for k in by_id if re.sub(r"[^A-Za-z0-9]", "", k).lower() == key]
+    if len(hits) == 1:
+        return hits[0]
     return i  # unknown: left as written so the normal "NOT retrieved" error names it
 
 

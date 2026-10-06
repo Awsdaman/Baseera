@@ -3,6 +3,7 @@
 Every result: {source, id, text, text_en, title, reference_url, grade, type, meta, score}
 """
 import json
+import os
 import re
 import sqlite3
 import threading
@@ -133,7 +134,11 @@ def retrieve(query: str, per_type: dict | None = None, vectors: bool = True, dor
                 except Exception as e:
                     print("vector search unavailable:", e)
             picked = []
+            off = set(filter(None, os.environ.get("DISABLE_SOURCES", "").split(",")))  # rollback switch: DISABLE_SOURCES=icadb-books,dorar-feqhia
             for _name, srcs, share in QA_GROUPS:
+                srcs = tuple(x for x in srcs if x not in off)
+                if not srcs:
+                    continue
                 kw = keyword_search(query, "qa", sources=srcs)
                 vv = [i for i in vec if _source_of(i) in srcs]
                 picked += [(pid, sc) for pid, sc in sorted(rrf([kw, vv] if vv else [kw]).items(), key=lambda x: -x[1])[:share]]

@@ -341,3 +341,11 @@ def test_english_paraphrase_and_placeholders_are_allowed():
     assert ok.ok, ok.errors
     short = verify_answer('The Quran calls Him "the Ever-Living, the Sustainer of existence" in this verse, as the tafsir explains at length for readers. [[quran:2:255]]', ps, "en")
     assert not any("Quran text written" in e for e in short.errors)       # a 5-word attribute inside quotes is below the recitation threshold
+
+
+def test_separator_slip_in_a_citation_id_is_repaired_only_when_unambiguous():
+    by = {"qa:icadb-aalam:10387": {"id": "qa:icadb-aalam:10387"}, "qa:icadb:36072": {"id": "qa:icadb:36072"}}
+    assert normalize_citations("نص [[qa:icadb:aalam:10387, qa:icadb:36072]]", by) == "نص [[qa:icadb-aalam:10387, qa:icadb:36072]]"
+    assert normalize_citations("نص [[qa:icadb:99999]]", by) == "نص [[qa:icadb:99999]]"          # not a separator slip: still rejected later
+    two = {"qa:x-1:5": {}, "qa:x:1-5": {}}
+    assert normalize_citations("[[qa:x:1:5]]", two) == "[[qa:x:1:5]]"                           # ambiguous: left alone

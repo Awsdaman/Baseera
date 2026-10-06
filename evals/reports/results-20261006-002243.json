@@ -1,0 +1,3264 @@
+{
+ "meta": "LIVE run on local: router=gemma-4-12b-it, generator=gemma-4-12b-it, judge=gemma-4-12b-it · 17 cases · 2026-10-06 00:11",
+ "summary": {
+  "router_accuracy": [
+   100.0,
+   17
+  ],
+  "retrieval_recall": [
+   100.0,
+   5
+  ],
+  "citation_rate": [
+   100.0,
+   14
+  ],
+  "verse_fidelity": [
+   100.0,
+   15
+  ],
+  "correct_abstention_rate": [
+   null,
+   0
+  ],
+  "false_abstention_rate": [
+   0.0,
+   12
+  ],
+  "verifier_forced_abstention_rate": [
+   0.0,
+   14
+  ],
+  "support_flag_rate": [
+   0.0,
+   43
+  ],
+  "behavior_pass_rate": [
+   100.0,
+   17
+  ],
+  "evidence_order_rate": [
+   100.0,
+   5
+  ],
+  "router_llm_rate": [
+   100.0,
+   16
+  ],
+  "runtime_abstentions": [
+   0,
+   17
+  ],
+  "first_attempt_pass_rate": [
+   92.9,
+   14
+  ],
+  "gen_output_tokens_mean": [
+   110,
+   17
+  ],
+  "verify_mode_pass_rate": [
+   100.0,
+   2
+  ],
+  "judge_score_avg_of_5": [
+   null,
+   0
+  ],
+  "router_level_أ": [
+   100.0,
+   4
+  ],
+  "router_level_ب": [
+   100.0,
+   11
+  ],
+  "router_level_ج": [
+   100.0,
+   2
+  ],
+  "router_level_د": [
+   null,
+   0
+  ]
+ },
+ "patterns": {},
+ "results": [
+  {
+   "id": "dp6-03",
+   "input": "هل الإسلام انتشر بالسيف؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": null,
+   "answer_excerpt": "الأصل في انتشار الإسلام أنه تم بالدعوة إلى الله تعالى بالحجة والبيان [1]. وقد بلغ النبي ﷺ دعوة الإسلام في مكة لمدة ثلاثة عشر عاماً، ثم فُتحت المدينة بالدعوة قبل أن يُؤمر بالقتال [1].\n\n﴿هُوَ ٱلَّذِيٓ أَرۡسَلَ رَسُولَهُۥ بِٱلۡهُدَىٰ وَدِينِ ٱلۡحَقِّ لِيُظۡهِرَهُۥ عَلَى ٱلدِّينِ كُلِّهِۦۚ وَكَفَىٰ بِٱللَّهِ شَهِيدࣰا﴾ [الفَتۡحِ: 28]\n\nيوضح القرآن الكريم أن الله أرسل رسوله بالهدى ودين الحق ليظهره على ال",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:17:69",
+     "quran:3:19",
+     "quran:30:25",
+     "quran:48:28",
+     "hadith:hadeethenc:66247",
+     "hadith:hadeethenc:65085",
+     "hadith:hadeethenc:65550",
+     "hadith:hadeethenc:66292",
+     "qa:icadb:36112",
+     "qa:bayyinat:229",
+     "qa:icadb:26117",
+     "qa:bayyinat:66",
+     "tafsir:muyassar:6:90",
+     "tafsir:muyassar:6:144",
+     "term:glossary:10",
+     "term:glossary:1",
+     "quran:6:90",
+     "quran:6:144",
+     "quran:3:85",
+     "quran:61:7",
+     "quran:9:29"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "الأصل في انتشار الإسلام أنه تم بالدعوة إلى الله تعالى بالحجة والبيان [[qa:icadb:36112]]. وقد بلغ النبي ﷺ دعوة الإسلام في مكة لمدة ثلاثة عشر عاماً، ثم فُتحت المدينة بالدعوة قبل أن يُؤمر بالقتال [[qa:icadb:36112]].\n\n{{quran:48:28}}\n\nيوضح القرآن الكريم أن الله أرسل رسوله بالهدى ودين الحق ليظهره على الدين كله [[quran:48:28]]. كما يذكر التفسير أن الإسلام هو دعوة جميع الناس إلى الطريق المستقيم وتذكير لهم بما ينفعهم [[tafsir:muyassar:6:90]].\n\n{{quran:6:90}}\n\nأما عن دور القوة، فقد أُيِّدَ السيف لمن يقف في وجه الدعوة الإسلامية أو يحاربها [[qa:icadb:36112]]. وقد شرع الجهاد حتى تصل الدعوة ويحكم الإسلام، وهو ما يؤدي لسعادة ونجاة الناس [[qa:icadb:36112]]. كما أن الفتوحات كان لها أثر في انتشار الإسلام من خلال إقامة المسلمين في البلاد الجديدة واتصال أهلها بهم ومعرفتهم بحقائق الدين وآدابه [[qa:bayyinat:229]].\n\n{{quran:9:29}}\n\nوقد حث القرآن على التعامل مع المعتدين بأسلوب خاص نتيجة اعتداءهم، بينما لم يأتِ الإسلام للظلم أو العدوان بل لرفع الظلم والعدوان [[qa:bayyinat:66]]. كما شرع الإسلام الجزية لمن لا يريد الدخول في الدين مقابل حمايتهم، مما أقر السكينة والوئام بين الديانات المختلفة [[qa:icadb:36112]].\n\n{{note:no_ruling}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "الأصل في انتشار الإسلام أنه تم بالدعوة إلى الله تعالى بالحجة والبيان . وقد بلغ النبي ﷺ دعوة الإسلام في مكة لمدة ثلاثة عشر عاماً، ثم فُتحت المدينة بالدعوة قبل أن يُؤمر بالقتال .",
+        "cites": [
+         "qa:icadb:36112",
+         "qa:icadb:36112"
+        ],
+        "best_id": "qa:icadb:36112",
+        "score": 0.8655
+       },
+       {
+        "text": "يوضح القرآن الكريم أن الله أرسل رسوله بالهدى ودين الحق ليظهره على الدين كله . كما يذكر التفسير أن الإسلام هو دعوة جميع الناس إلى الطريق المستقيم وتذكير لهم بما ينفعهم .",
+        "cites": [
+         "quran:48:28",
+         "tafsir:muyassar:6:90"
+        ],
+        "best_id": "quran:48:28",
+        "score": 0.7692
+       },
+       {
+        "text": "أما عن دور القوة، فقد أُيِّدَ السيف لمن يقف في وجه الدعوة الإسلامية أو يحاربها . وقد شرع الجهاد حتى تصل الدعوة ويحكم الإسلام، وهو ما يؤدي لسعادة ونجاة الناس . كما أن الفتوحات كان لها أثر في انتشار الإسلام من خلال إقامة المسلمين في البلاد الجديدة واتصال أهلها بهم ومعرفتهم بحقائق الدين وآدابه .",
+        "cites": [
+         "qa:icadb:36112",
+         "qa:icadb:36112",
+         "qa:bayyinat:229"
+        ],
+        "best_id": "qa:bayyinat:229",
+        "score": 0.7306
+       },
+       {
+        "text": "وقد حث القرآن على التعامل مع المعتدين بأسلوب خاص نتيجة اعتداءهم، بينما لم يأتِ الإسلام للظلم أو العدوان بل لرفع الظلم والعدوان . كما شرع الإسلام الجزية لمن لا يريد الدخول في الدين مقابل حمايتهم، مما أقر السكينة والوئام بين الديانات المختلفة .",
+        "cites": [
+         "qa:bayyinat:66",
+         "qa:icadb:36112"
+        ],
+        "best_id": "qa:bayyinat:66",
+        "score": 0.7795
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "هل انتشر الإسلام عن طريق السيف أم بالدعوة والوسائل الأخرى؟",
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "هل انتشر الإسلام عن طريق السيف أم بالدعوة والوسائل الأخرى؟",
+     "claim": null,
+     "original": "هل الإسلام انتشر بالسيف؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "الأصل في انتشار الإسلام أنه تم بالدعوة إلى الله تعالى بالحجة والبيان [1]. وقد بلغ النبي ﷺ دعوة الإسلام في مكة لمدة ثلاثة عشر عاماً، ثم فُتحت المدينة بالدعوة قبل أن يُؤمر بالقتال [1].\n\n﴿هُوَ ٱلَّذِيٓ أَرۡسَلَ رَسُولَهُۥ بِٱلۡهُدَىٰ وَدِينِ ٱلۡحَقِّ لِيُظۡهِرَهُۥ عَلَى ٱلدِّينِ كُلِّهِۦۚ وَكَفَىٰ بِٱللَّهِ شَهِيدࣰا﴾ [الفَتۡحِ: 28]\n\nيوضح القرآن الكريم أن الله أرسل رسوله بالهدى ودين الحق ليظهره على الدين كله [2]. كما يذكر التفسير أن الإسلام هو دعوة جميع الناس إلى الطريق المستقيم وتذكير لهم بما ينفعهم [3].\n\n﴿أُوْلَٰٓئِكَ ٱلَّذِينَ هَدَى ٱللَّهُۖ فَبِهُدَىٰهُمُ ٱقۡتَدِهۡۗ قُل لَّآ أَسۡـَٔلُكُمۡ عَلَيۡهِ أَجۡرًاۖ إِنۡ هُوَ إِلَّا ذِكۡرَىٰ لِلۡعَٰلَمِينَ﴾ [الأَنۡعَامِ: 90]\n\nأما عن دور القوة، فقد أُيِّدَ السيف لمن يقف في وجه الدعوة الإسلامية أو يحاربها [1]. وقد شرع الجهاد حتى تصل الدعوة ويحكم الإسلام، وهو ما يؤدي لسعادة ونجاة الناس [1]. كما أن الفتوحات كان لها أثر في انتشار الإسلام من خلال إقامة المسلمين في البلاد الجديدة واتصال أهلها بهم ومعرفتهم بحقائق الدين وآدابه [5].\n\n﴿قَٰتِلُواْ ٱلَّذِينَ لَا يُؤۡمِنُونَ بِٱللَّهِ وَلَا بِٱلۡيَوۡمِ ٱلۡأٓخِرِ وَلَا يُحَرِّمُونَ مَا حَرَّمَ ٱللَّهُ وَرَسُولُهُۥ وَلَا يَدِينُونَ دِينَ ٱلۡحَقِّ مِنَ ٱلَّذِينَ أُوتُواْ ٱلۡكِتَٰبَ حَتَّىٰ يُعۡطُواْ ٱلۡجِزۡيَةَ عَن يَدࣲ وَهُمۡ صَٰغِرُونَ﴾ [التَّوۡبَةِ: 29]\n\nوقد حث القرآن على التعامل مع المعتدين بأسلوب خاص نتيجة اعتداءهم، بينما لم يأتِ الإسلام للظلم أو العدوان بل لرفع الظلم والعدوان [7]. كما شرع الإسلام الجزية لمن لا يريد الدخول في الدين مقابل حمايتهم، مما أقر السكينة والوئام بين الديانات المختلفة [1].\n\nملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "الأصل في انتشار الإسلام أنه تم بالدعوة إلى الله تعالى بالحجة والبيان [1]. وقد بلغ النبي ﷺ دعوة الإسلام في مكة لمدة ثلاثة عشر عاماً، ثم فُتحت المدينة بالدعوة قبل أن يُؤمر بالقتال [1]."
+     },
+     {
+      "kind": "quran",
+      "ref": "48:28",
+      "surah_name_ar": "الفَتۡحِ",
+      "text_ar": "هُوَ ٱلَّذِيٓ أَرۡسَلَ رَسُولَهُۥ بِٱلۡهُدَىٰ وَدِينِ ٱلۡحَقِّ لِيُظۡهِرَهُۥ عَلَى ٱلدِّينِ كُلِّهِۦۚ وَكَفَىٰ بِٱللَّهِ شَهِيدࣰا",
+      "text_en": "It is He who sent His Messenger with guidance and the religion of truth to manifest it over all religion. And sufficient is Allāh as Witness.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:48:28"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/48#28"
+     },
+     {
+      "kind": "explanation",
+      "text": "يوضح القرآن الكريم أن الله أرسل رسوله بالهدى ودين الحق ليظهره على الدين كله [2]. كما يذكر التفسير أن الإسلام هو دعوة جميع الناس إلى الطريق المستقيم وتذكير لهم بما ينفعهم [3]."
+     },
+     {
+      "kind": "quran",
+      "ref": "6:90",
+      "surah_name_ar": "الأَنۡعَامِ",
+      "text_ar": "أُوْلَٰٓئِكَ ٱلَّذِينَ هَدَى ٱللَّهُۖ فَبِهُدَىٰهُمُ ٱقۡتَدِهۡۗ قُل لَّآ أَسۡـَٔلُكُمۡ عَلَيۡهِ أَجۡرًاۖ إِنۡ هُوَ إِلَّا ذِكۡرَىٰ لِلۡعَٰلَمِينَ",
+      "text_en": "Those are the ones whom Allāh has guided, so from their guidance take an example. Say, \"I ask of you for it [i.e., this message] no payment. It is not but a reminder for the worlds.\"",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:6:90"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/6#90"
+     },
+     {
+      "kind": "explanation",
+      "text": "أما عن دور القوة، فقد أُيِّدَ السيف لمن يقف في وجه الدعوة الإسلامية أو يحاربها [1]. وقد شرع الجهاد حتى تصل الدعوة ويحكم الإسلام، وهو ما يؤدي لسعادة ونجاة الناس [1]. كما أن الفتوحات كان لها أثر في انتشار الإسلام من خلال إقامة المسلمين في البلاد الجديدة واتصال أهلها بهم ومعرفتهم بحقائق الدين وآدابه [5]."
+     },
+     {
+      "kind": "quran",
+      "ref": "9:29",
+      "surah_name_ar": "التَّوۡبَةِ",
+      "text_ar": "قَٰتِلُواْ ٱلَّذِينَ لَا يُؤۡمِنُونَ بِٱللَّهِ وَلَا بِٱلۡيَوۡمِ ٱلۡأٓخِرِ وَلَا يُحَرِّمُونَ مَا حَرَّمَ ٱللَّهُ وَرَسُولُهُۥ وَلَا يَدِينُونَ دِينَ ٱلۡحَقِّ مِنَ ٱلَّذِينَ أُوتُواْ ٱلۡكِتَٰبَ حَتَّىٰ يُعۡطُواْ ٱلۡجِزۡيَةَ عَن يَدࣲ وَهُمۡ صَٰغِرُونَ",
+      "text_en": "Fight against those who do not believe in Allāh or in the Last Day and who do not consider unlawful what Allāh and His Messenger have made unlawful and who do not adopt the religion of truth [i.e., Islām] from those who were given the Scripture - [fight] until they give the jizyah[466] willingly while they are humbled.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:9:29"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/9#29"
+     },
+     {
+      "kind": "explanation",
+      "text": "وقد حث القرآن على التعامل مع المعتدين بأسلوب خاص نتيجة اعتداءهم، بينما لم يأتِ الإسلام للظلم أو العدوان بل لرفع الظلم والعدوان [7]. كما شرع الإسلام الجزية لمن لا يريد الدخول في الدين مقابل حمايتهم، مما أقر السكينة والوئام بين الديانات المختلفة [1]."
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+      "note": "no_ruling"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:36112",
+      "type": "qa",
+      "source": "icadb",
+      "title": "هل انتشر الإسلام بحد السيف؟ إن كان الأمر كذلك، فكيف يمكن وصفه بأنه دين يدعو إلى السلام؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36112/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "quran:48:28",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الفَتۡحِ 28",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/48#28",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "tafsir:muyassar:6:90",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 6:90",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/6#90",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "quran:6:90",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الأَنۡعَامِ 90",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/6#90",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "qa:bayyinat:229",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "هل انتشَرَ الإسلامُ بالسيف؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 6,
+      "id": "quran:9:29",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "التَّوۡبَةِ 29",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/9#29",
+      "grade": null
+     },
+     {
+      "n": 7,
+      "id": "qa:bayyinat:66",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "ادِّعاءُ أن القرآنَ يدعو إلى إرهابِ غيرِ المسلِمين",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 8559,
+     "output": 473
+    }
+   },
+   "secs": 71.7
+  },
+  {
+   "id": "dp6-07",
+   "input": "ما معنى التوحيد لشخص لم يسمع بالمصطلح من قبل؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": null,
+   "answer_excerpt": "أتفهّم أن ما تمرّ به قد يكون صعبًا، وأشكرك على مشاركته معي. سأعرض لك فيما يلي ما ورد في المصادر المعتمدة بلطف ووضوح.\n\nالتوحيد هو جوهر الإسلام، ويعني إفراد الله عز وجل بالعبادة والربوبية [1][2]. بعبارة أبسط لمن لا يعرف المصطلح، هو الاعتقاد بأن الله وحده هو الخالق والرازق والمدبر لكل شيء في هذا الكون [3].\n\nكما يتضمن التوحيد أمرين أساسيين:\nأولاً، الإيمان بأن الله هو الرب الذي يملك كل شيء ولا شريك له ",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:3:19",
+     "quran:39:22",
+     "quran:6:125",
+     "quran:55:41",
+     "hadith:hadeethenc:65219",
+     "hadith:hadeethenc:65051",
+     "hadith:hadeethenc:65854",
+     "hadith:hadeethenc:8965",
+     "qa:icadb:26753",
+     "qa:icadb:26014",
+     "qa:icadb:26020",
+     "qa:icadb:26012",
+     "tafsir:muyassar:9:11",
+     "tafsir:muyassar:42:13",
+     "term:glossary:2",
+     "term:glossary:10",
+     "quran:9:11",
+     "quran:42:13",
+     "quran:9:6",
+     "quran:21:45",
+     "quran:90:7"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "التوحيد هو جوهر الإسلام، ويعني إفراد الله عز وجل بالعبادة والربوبية [[qa:icadb:26753, qa:icadb:26012]]. بعبارة أبسط لمن لا يعرف المصطلح، هو الاعتقاد بأن الله وحده هو الخالق والرازق والمدبر لكل شيء في هذا الكون [[qa:icadb:26020]].\n\nكما يتضمن التوحيد أمرين أساسيين:\nأولاً، الإيمان بأن الله هو الرب الذي يملك كل شيء ولا شريك له [[qa:icadb:26020]].\nثانياً، إخلاص العبادة لله وحده، فلا يُعبد أحد غيره، وهذا ما يعبر عنه بكلمة التوحيد \"لا إله إلا الله\"، ومعناها أنه لا معبود حقٌّ إلا الله [[qa:icadb:26014]].\n\nويشمل هذا المفهوم أيضاً الإيمان بأوصاف الله وأسمائه التي وردت في الوحي كما هي، دون تشبيهها بخلقه أو تعطيلها [[qa:icadb:26020, term:glossary:2]]. إن إقامة الدين تقوم على التوحيد وطاعة الله وعبادته وحده دون سواه [[tafsir:muyassar:42:13]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "التوحيد هو جوهر الإسلام، ويعني إفراد الله عز وجل بالعبادة والربوبية . بعبارة أبسط لمن لا يعرف المصطلح، هو الاعتقاد بأن الله وحده هو الخالق والرازق والمدبر لكل شيء في هذا الكون .",
+        "cites": [
+         "qa:icadb:26753",
+         "qa:icadb:26012",
+         "qa:icadb:26020"
+        ],
+        "best_id": "qa:icadb:26753",
+        "score": 0.7033
+       },
+       {
+        "text": "كما يتضمن التوحيد أمرين أساسيين: أولاً، الإيمان بأن الله هو الرب الذي يملك كل شيء ولا شريك له . ثانياً، إخلاص العبادة لله وحده، فلا يُعبد أحد غيره، وهذا ما يعبر عنه بكلمة التوحيد \"لا إله إلا الله\"، ومعناها أنه لا معبود حقٌّ إلا الله .",
+        "cites": [
+         "qa:icadb:26020",
+         "qa:icadb:26014"
+        ],
+        "best_id": "qa:icadb:26020",
+        "score": 0.7807
+       },
+       {
+        "text": "ويشمل هذا المفهوم أيضاً الإيمان بأوصاف الله وأسمائه التي وردت في الوحي كما هي، دون تشبيهها بخلقه أو تعطيلها . إن إقامة الدين تقوم على التوحيد وطاعة الله وعبادته وحده دون سواه .",
+        "cites": [
+         "qa:icadb:26020",
+         "term:glossary:2",
+         "tafsir:muyassar:42:13"
+        ],
+        "best_id": "qa:icadb:26020",
+        "score": 0.7406
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "ما هو تعريف التوحيد في الإسلام لشخص لا يعرف المصطلح؟",
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما هو تعريف التوحيد في الإسلام لشخص لا يعرف المصطلح؟",
+     "claim": null,
+     "original": "ما معنى التوحيد لشخص لم يسمع بالمصطلح من قبل؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "أتفهّم أن ما تمرّ به قد يكون صعبًا، وأشكرك على مشاركته معي. سأعرض لك فيما يلي ما ورد في المصادر المعتمدة بلطف ووضوح.\n\nالتوحيد هو جوهر الإسلام، ويعني إفراد الله عز وجل بالعبادة والربوبية [1][2]. بعبارة أبسط لمن لا يعرف المصطلح، هو الاعتقاد بأن الله وحده هو الخالق والرازق والمدبر لكل شيء في هذا الكون [3].\n\nكما يتضمن التوحيد أمرين أساسيين:\nأولاً، الإيمان بأن الله هو الرب الذي يملك كل شيء ولا شريك له [3].\nثانياً، إخلاص العبادة لله وحده، فلا يُعبد أحد غيره، وهذا ما يعبر عنه بكلمة التوحيد \"لا إله إلا الله\"، ومعناها أنه لا معبود حقٌّ إلا الله [4].\n\nويشمل هذا المفهوم أيضاً الإيمان بأوصاف الله وأسمائه التي وردت في الوحي كما هي، دون تشبيهها بخلقه أو تعطيلها [3][5]. إن إقامة الدين تقوم على التوحيد وطاعة الله وعبادته وحده دون سواه [6].\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "notice",
+      "text": "أتفهّم أن ما تمرّ به قد يكون صعبًا، وأشكرك على مشاركته معي. سأعرض لك فيما يلي ما ورد في المصادر المعتمدة بلطف ووضوح.",
+      "note": "empathy"
+     },
+     {
+      "kind": "explanation",
+      "text": "التوحيد هو جوهر الإسلام، ويعني إفراد الله عز وجل بالعبادة والربوبية [1][2]. بعبارة أبسط لمن لا يعرف المصطلح، هو الاعتقاد بأن الله وحده هو الخالق والرازق والمدبر لكل شيء في هذا الكون [3].\n\nكما يتضمن التوحيد أمرين أساسيين:\nأولاً، الإيمان بأن الله هو الرب الذي يملك كل شيء ولا شريك له [3].\nثانياً، إخلاص العبادة لله وحده، فلا يُعبد أحد غيره، وهذا ما يعبر عنه بكلمة التوحيد \"لا إله إلا الله\"، ومعناها أنه لا معبود حقٌّ إلا الله [4].\n\nويشمل هذا المفهوم أيضاً الإيمان بأوصاف الله وأسمائه التي وردت في الوحي كما هي، دون تشبيهها بخلقه أو تعطيلها [3][5]. إن إقامة الدين تقوم على التوحيد وطاعة الله وعبادته وحده دون سواه [6]."
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:26753",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو الإسلام؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26753/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:icadb:26012",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما دينك؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26012/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "qa:icadb:26020",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما أنواع التوحيد؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26020/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "qa:icadb:26014",
+      "type": "qa",
+      "source": "icadb",
+      "title": "اذكر كلمة التوحيد، وما معناها؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26014/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "term:glossary:2",
+      "type": "term",
+      "source": "glossary",
+      "title": "التوحيد",
+      "reference_url": "docs/data.pdf#page=7",
+      "grade": null
+     },
+     {
+      "n": 6,
+      "id": "tafsir:muyassar:42:13",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 42:13",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/42#13",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 7365,
+     "output": 355
+    }
+   },
+   "secs": 41.2
+  },
+  {
+   "id": "dp6-08",
+   "input": "ترجم كلمة التوحيد إلى الإنجليزية",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "translate_term",
+    "expected_behavior": "term"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "translate_term",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": true,
+   "hierarchy_ok": null,
+   "answer_excerpt": "أتفهّم أن ما تمرّ به قد يكون صعبًا، وأشكرك على مشاركته معي. سأعرض لك فيما يلي ما ورد في المصادر المعتمدة بلطف ووضوح.\n\nالترجمة المعتمدة لمصطلح «التوحيد» هي: Tawhid / Oneness of God.\nيفضل إبقاء المصطلح مع شرح معناه: إفراد الله بالربوبية والألوهية ووصفه بما جاء الوحي به من أسمائه الحسنى، ولا يختزل في ترجمة قد توحي بمجرد الوحدانية العددية.",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 0,
+   "trace": {
+    "retrieved_ids": [],
+    "attempts": [],
+    "route": {
+     "level": "أ",
+     "intent": "translate_term",
+     "language": "ar",
+     "term": "التوحيد",
+     "source": "llm",
+     "canonical_question": "ما هي الترجمة الإنجليزية لكلمة التوحيد؟",
+     "claim": null
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "أتفهّم أن ما تمرّ به قد يكون صعبًا، وأشكرك على مشاركته معي. سأعرض لك فيما يلي ما ورد في المصادر المعتمدة بلطف ووضوح.\n\nالترجمة المعتمدة لمصطلح «التوحيد» هي: Tawhid / Oneness of God.\nيفضل إبقاء المصطلح مع شرح معناه: إفراد الله بالربوبية والألوهية ووصفه بما جاء الوحي به من أسمائه الحسنى، ولا يختزل في ترجمة قد توحي بمجرد الوحدانية العددية.",
+    "blocks": [
+     {
+      "kind": "notice",
+      "text": "أتفهّم أن ما تمرّ به قد يكون صعبًا، وأشكرك على مشاركته معي. سأعرض لك فيما يلي ما ورد في المصادر المعتمدة بلطف ووضوح.",
+      "note": "empathy"
+     },
+     {
+      "kind": "notice",
+      "text": "الترجمة المعتمدة لمصطلح «التوحيد» هي: Tawhid / Oneness of God. [1]"
+     },
+     {
+      "kind": "glossary",
+      "term_ar": "التوحيد",
+      "term_en": "Tawhid / Oneness of God",
+      "usage_note_ar": "يفضل إبقاء المصطلح مع شرح معناه: إفراد الله بالربوبية والألوهية ووصفه بما جاء الوحي به من أسمائه الحسنى، ولا يختزل في ترجمة قد توحي بمجرد الوحدانية العددية."
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "term:glossary:2",
+      "type": "term",
+      "source": "glossary",
+      "title": "التوحيد",
+      "reference_url": "docs/data.pdf#page=7",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 1,
+     "input": 633,
+     "output": 54
+    }
+   },
+   "secs": 2.4
+  },
+  {
+   "id": "dp6-09",
+   "input": "لماذا يمنع الإسلام الحرية؟ أليس هذا دينا متخلفا؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": null,
+   "answer_excerpt": "يوضح الإسلام مبدأ عدم الإكراه في اعتناق الدين، حيث إن الدين موطنه القلب ولا يمكن فرضه قسرًا [1].\n\n«عن ابن عباس قال: كانت المرأة تكون مقلاتًا، فتجعل على نفسها إن عاش لها ولد أن تهوده، فلما أجليت بنو النضير كان فيهم من أبناء الأنصار، فقالوا: لا ندع أبناءنا، فأنزل الله عز وجل: {لا إكراه في الدين قد تبين الرشد من الغي} [البقرة: 256].» (رواه أبو داود — الدرجة: صحيح)\n\nوقد كفل الإسلام حقوقًا وواجبات للجم",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:6:125",
+     "quran:3:19",
+     "quran:18:68",
+     "quran:57:24",
+     "hadith:hadeethenc:65282",
+     "hadith:hadeethenc:8965",
+     "hadith:hadeethenc:66132",
+     "hadith:hadeethenc:4563",
+     "qa:icadb:36224",
+     "qa:bayyinat:69",
+     "qa:icadb:36094",
+     "qa:icadb:36082",
+     "tafsir:muyassar:12:83",
+     "tafsir:muyassar:2:132",
+     "term:glossary:1",
+     "term:glossary:10",
+     "quran:12:83",
+     "quran:2:132",
+     "quran:3:85",
+     "quran:58:8",
+     "quran:36:1"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "يوضح الإسلام مبدأ عدم الإكراه في اعتناق الدين، حيث إن الدين موطنه القلب ولا يمكن فرضه قسرًا [[qa:bayyinat:69]].\n\n{{hadith:hadeethenc:65282}}\n\nوقد كفل الإسلام حقوقًا وواجبات للجميع ضمن حدود الحرية والعدالة، كما عمل على تغيير نظرة المجتمع تجاه العبودية وتحرير العبيد بوسائل سلمية تدريجية [[qa:icadb:36224]]. كما يوجب الإسلام البر والإحسان إلى غير المسلمين الذين لا يحاربون المسلمين، بما في ذلك حسن الجوار ومشاركتهم مناسباتهم الاجتماعية كالأعراس [[qa:icadb:36082]].\n\n{{note:no_ruling}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "يوضح الإسلام مبدأ عدم الإكراه في اعتناق الدين، حيث إن الدين موطنه القلب ولا يمكن فرضه قسرًا .",
+        "cites": [
+         "qa:bayyinat:69"
+        ],
+        "best_id": "qa:bayyinat:69",
+        "score": 0.6102
+       },
+       {
+        "text": "وقد كفل الإسلام حقوقًا وواجبات للجميع ضمن حدود الحرية والعدالة، كما عمل على تغيير نظرة المجتمع تجاه العبودية وتحرير العبيد بوسائل سلمية تدريجية . كما يوجب الإسلام البر والإحسان إلى غير المسلمين الذين لا يحاربون المسلمين، بما في ذلك حسن الجوار ومشاركتهم مناسباتهم الاجتماعية كالأعراس .",
+        "cites": [
+         "qa:icadb:36224",
+         "qa:icadb:36082"
+        ],
+        "best_id": "qa:icadb:36224",
+        "score": 0.7823
+       }
+      ],
+      "relevance": {
+       "verdict": "partial",
+       "action": "note"
+      }
+     }
+    ],
+    "canonical_question": "ما موقف الإسلام من الحرية، وكيف يرد على تهمة أنه دين متخلف؟",
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما موقف الإسلام من الحرية، وكيف يرد على تهمة أنه دين متخلف؟",
+     "claim": "الإسلام يمنع الحرية وأنه دين متخلف",
+     "original": "لماذا يمنع الإسلام الحرية؟ أليس هذا دينا متخلفا؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "يوضح الإسلام مبدأ عدم الإكراه في اعتناق الدين، حيث إن الدين موطنه القلب ولا يمكن فرضه قسرًا [1].\n\n«عن ابن عباس قال: كانت المرأة تكون مقلاتًا، فتجعل على نفسها إن عاش لها ولد أن تهوده، فلما أجليت بنو النضير كان فيهم من أبناء الأنصار، فقالوا: لا ندع أبناءنا، فأنزل الله عز وجل: {لا إكراه في الدين قد تبين الرشد من الغي} [البقرة: 256].» (رواه أبو داود — الدرجة: صحيح)\n\nوقد كفل الإسلام حقوقًا وواجبات للجميع ضمن حدود الحرية والعدالة، كما عمل على تغيير نظرة المجتمع تجاه العبودية وتحرير العبيد بوسائل سلمية تدريجية [3]. كما يوجب الإسلام البر والإحسان إلى غير المسلمين الذين لا يحاربون المسلمين، بما في ذلك حسن الجوار ومشاركتهم مناسباتهم الاجتماعية كالأعراس [4].\n\nملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "يوضح الإسلام مبدأ عدم الإكراه في اعتناق الدين، حيث إن الدين موطنه القلب ولا يمكن فرضه قسرًا [1]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:65282",
+      "text_ar": "عن ابن عباس قال: كانت المرأة تكون مقلاتًا، فتجعل على نفسها إن عاش لها ولد أن تهوده، فلما أجليت بنو النضير كان فيهم من أبناء الأنصار، فقالوا: لا ندع أبناءنا، فأنزل الله عز وجل: {لا إكراه في الدين قد تبين الرشد من الغي} [البقرة: 256].",
+      "text_en": null,
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه أبو داود",
+      "reference": "سنن أبي داود (4/ 317) (2682)، شرح سنن أبي داود لابن رسلان (11/ 511)، النهاية في غريب الحديث و الأثر (162).",
+      "ids": [
+       "hadith:hadeethenc:65282"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/65282"
+     },
+     {
+      "kind": "explanation",
+      "text": "وقد كفل الإسلام حقوقًا وواجبات للجميع ضمن حدود الحرية والعدالة، كما عمل على تغيير نظرة المجتمع تجاه العبودية وتحرير العبيد بوسائل سلمية تدريجية [3]. كما يوجب الإسلام البر والإحسان إلى غير المسلمين الذين لا يحاربون المسلمين، بما في ذلك حسن الجوار ومشاركتهم مناسباتهم الاجتماعية كالأعراس [4]."
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+      "note": "no_ruling"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:bayyinat:69",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "هل القرآنُ يدعو إلى حرِّيَّةِ الاعتقاد؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "hadith:hadeethenc:65282",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "كانت المرأة تكون مقلاتًا فتجعل على نفسها إن عاش لها ولد أن تهوده",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/65282",
+      "grade": "صحيح"
+     },
+     {
+      "n": 3,
+      "id": "qa:icadb:36224",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما موقف الإسلام من الرِّق؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36224/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "qa:icadb:36082",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما موقف الإسلام من غير المسلمين الذين لا يحاربون الإسلام؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36082/version/1.0/sentences/",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 8987,
+     "output": 256
+    }
+   },
+   "secs": 43.2
+  },
+  {
+   "id": "dp6-12",
+   "input": "What does the word jihad mean in Islam?",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": true,
+   "answer_excerpt": "Jihad is broadly defined as exerting effort and striving to spread Islam, defend it, and protect its people [1]. It can also involve fighting against enemies of Islam [1].\n\nThe term encompasses various forms of struggle beyond physical combat. Scholars explain that jihad includes struggling against one's own self to refrain from sins [2]. Examples of this internal and personal striving include a m",
+   "lang": "en",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:36:58",
+     "quran:9:29",
+     "quran:73:5",
+     "quran:22:78",
+     "hadith:hadeethenc:3045",
+     "hadith:hadeethenc:64598",
+     "hadith:hadeethenc:4193",
+     "hadith:hadeethenc:2759",
+     "qa:icadb:36140",
+     "qa:icadb:36193",
+     "qa:icadb:26100",
+     "qa:icadb:36099",
+     "term:glossary:10",
+     "term:glossary:1"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "Jihad is broadly defined as exerting effort and striving to spread Islam, defend it, and protect its people [[qa:icadb:26100]]. It can also involve fighting against enemies of Islam [[qa:icadb:26100]].\n\nThe term encompasses various forms of struggle beyond physical combat. Scholars explain that jihad includes struggling against one's own self to refrain from sins [[qa:icadb:36193]]. Examples of this internal and personal striving include a mother enduring the pains of pregnancy, a student's dedication to their studies, or an individual defending their wealth, honor, and religion [[qa:icadb:36193]]. Furthermore, perseverance in acts of worship, such as prayer and fasting at their proper times, is considered a form of jihad [[qa:icadb:36193]].\n\nThe Quran instructs believers to strive for Allah with the striving due to Him [[quran:22:78]].\n\n{{quran:22:78}}\n\nIn addition to internal and spiritual struggles, there are specific contexts regarding physical defense. The Prophet ﷺ mentioned that one of the greatest forms of jihad is speaking a word of justice in the presence of an unjust ruler [[hadith:hadeethenc:3045]]. For women, the Prophet ﷺ indicated that their form of jihad is performing Hajj [[hadith:hadeethenc:64598]]. He also stated that the best jihad is a sincere Hajj [[hadith:hadeethenc:2759]].\n\n{{hadith:hadeethenc:3045}}\n\n{{hadith:hadeethenc:64598}}\n\n{{hadith:hadeethenc:2759}}\n\nIslam values life, and it is not permissible to fight peaceful civilians or those who do not engage in conflict against the faith [[qa:icadb:36193]]. The religion also prohibits mutilating the deceased during wars [[qa:icadb:36193]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "Jihad is broadly defined as exerting effort and striving to spread Islam, defend it, and protect its people . It can also involve fighting against enemies of Islam .",
+        "cites": [
+         "qa:icadb:26100",
+         "qa:icadb:26100"
+        ],
+        "best_id": "qa:icadb:26100",
+        "score": 0.7323
+       },
+       {
+        "text": "The term encompasses various forms of struggle beyond physical combat. Scholars explain that jihad includes struggling against one's own self to refrain from sins . Examples of this internal and personal striving include a mother enduring the pains of pregnancy, a student's dedication to their studies, or an individual defending their wealth, honor, and religion . Furthermore, perseverance in acts of worship, such as prayer and fasting at their proper times, is considered a form of jihad .",
+        "cites": [
+         "qa:icadb:36193",
+         "qa:icadb:36193",
+         "qa:icadb:36193"
+        ],
+        "best_id": "qa:icadb:36193",
+        "score": 0.7515
+       },
+       {
+        "text": "The Quran instructs believers to strive for Allah with the striving due to Him .",
+        "cites": [
+         "quran:22:78"
+        ],
+        "best_id": "quran:22:78",
+        "score": 0.6564
+       },
+       {
+        "text": "In addition to internal and spiritual struggles, there are specific contexts regarding physical defense. The Prophet ﷺ mentioned that one of the greatest forms of jihad is speaking a word of justice in the presence of an unjust ruler . For women, the Prophet ﷺ indicated that their form of jihad is performing Hajj . He also stated that the best jihad is a sincere Hajj .",
+        "cites": [
+         "hadith:hadeethenc:3045",
+         "hadith:hadeethenc:64598",
+         "hadith:hadeethenc:2759"
+        ],
+        "best_id": "hadith:hadeethenc:3045",
+        "score": 0.7337
+       },
+       {
+        "text": "Islam values life, and it is not permissible to fight peaceful civilians or those who do not engage in conflict against the faith . The religion also prohibits mutilating the deceased during wars .",
+        "cites": [
+         "qa:icadb:36193",
+         "qa:icadb:36193"
+        ],
+        "best_id": "qa:icadb:36193",
+        "score": 0.7044
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "What does the word jihad mean in Islam?",
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "en",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "What does the word jihad mean in Islam?",
+     "claim": null
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "Jihad is broadly defined as exerting effort and striving to spread Islam, defend it, and protect its people [1]. It can also involve fighting against enemies of Islam [1].\n\nThe term encompasses various forms of struggle beyond physical combat. Scholars explain that jihad includes struggling against one's own self to refrain from sins [2]. Examples of this internal and personal striving include a mother enduring the pains of pregnancy, a student's dedication to their studies, or an individual defending their wealth, honor, and religion [2]. Furthermore, perseverance in acts of worship, such as prayer and fasting at their proper times, is considered a form of jihad [2].\n\nThe Quran instructs believers to strive for Allah with the striving due to Him [3].\n\n﴿وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰهِيمَۚ هُوَ سَمَّىٰكُمُ ٱلۡمُسۡلِمِينَ مِن قَبۡلُ وَفِي هَٰذَا لِيَكُونَ ٱلرَّسُولُ شَهِيدًا عَلَيۡكُمۡ وَتَكُونُواْ شُهَدَآءَ عَلَى ٱلنَّاسِۚ فَأَقِيمُواْ ٱلصَّلَوٰةَ وَءَاتُواْ ٱلزَّكَوٰةَ وَٱعۡتَصِمُواْ بِٱللَّهِ هُوَ مَوۡلَىٰكُمۡۖ فَنِعۡمَ ٱلۡمَوۡلَىٰ وَنِعۡمَ ٱلنَّصِيرُ﴾ [الحَجِّ: 78]\n\nIn addition to internal and spiritual struggles, there are specific contexts regarding physical defense. The Prophet ﷺ mentioned that one of the greatest forms of jihad is speaking a word of justice in the presence of an unjust ruler [4]. For women, the Prophet ﷺ indicated that their form of jihad is performing Hajj [5]. He also stated that the best jihad is a sincere Hajj [6].\n\n«عَنْ أَبِي سَعِيدٍ الخُدْرِيِّ رضي الله عنه أَنَّ النَّبِيَّ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ قَالَ: «إِنَّ مِنْ أَعْظَمِ الجِهَادِ كَلِمَةَ عَدْلٍ عِنْدَ سُلْطَانٍ جَائِرٍ».» (رواه أبو داود والترمذي وابن ماجه وأحمد — الدرجة: حسن لغيره)\n\n«عن عائشة أم المؤمنين رضي الله عنها قالت: استأذنت النبي صلى الله عليه وسلم في الجهاد، فقال: «جهادكن الحج».» (رواه البخاري — الدرجة: صحيح)\n\n«عَنْ عَائِشَةَ أُمِّ المُؤْمِنِينَ رَضِيَ اللَّهُ عَنْهَا أَنَّهَا قَالَتْ: يَا رَسُولَ اللَّهِ، نَرَى الجِهَادَ أَفْضَلَ العَمَلِ، أَفَلاَ نُجَاهِدُ؟ قَالَ: «لَا، لَكُنَّ أَفْضَلُ الجِهَادِ: حَجٌّ مَبْرُورٌ».» (رواه البخاري — الدرجة: صحيح)\n\nIslam values life, and it is not permissible to fight peaceful civilians or those who do not engage in conflict against the faith [2]. The religion also prohibits mutilating the deceased during wars [2].\n\nFor the detailed rulings on this matter, please consult a qualified scholar or fatwa authority.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "Jihad is broadly defined as exerting effort and striving to spread Islam, defend it, and protect its people [1]. It can also involve fighting against enemies of Islam [1].\n\nThe term encompasses various forms of struggle beyond physical combat. Scholars explain that jihad includes struggling against one's own self to refrain from sins [2]. Examples of this internal and personal striving include a mother enduring the pains of pregnancy, a student's dedication to their studies, or an individual defending their wealth, honor, and religion [2]. Furthermore, perseverance in acts of worship, such as prayer and fasting at their proper times, is considered a form of jihad [2].\n\nThe Quran instructs believers to strive for Allah with the striving due to Him [3]."
+     },
+     {
+      "kind": "quran",
+      "ref": "22:78",
+      "surah_name_ar": "الحَجِّ",
+      "text_ar": "وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰهِيمَۚ هُوَ سَمَّىٰكُمُ ٱلۡمُسۡلِمِينَ مِن قَبۡلُ وَفِي هَٰذَا لِيَكُونَ ٱلرَّسُولُ شَهِيدًا عَلَيۡكُمۡ وَتَكُونُواْ شُهَدَآءَ عَلَى ٱلنَّاسِۚ فَأَقِيمُواْ ٱلصَّلَوٰةَ وَءَاتُواْ ٱلزَّكَوٰةَ وَٱعۡتَصِمُواْ بِٱللَّهِ هُوَ مَوۡلَىٰكُمۡۖ فَنِعۡمَ ٱلۡمَوۡلَىٰ وَنِعۡمَ ٱلنَّصِيرُ",
+      "text_en": "And strive for Allāh with the striving due to Him. He has chosen you and has not placed upon you in the religion any difficulty. [It is] the religion of your father, Abraham. He [i.e., Allāh] named you \"Muslims\" before [in former scriptures] and in this [revelation] that the Messenger may be a witness over you and you may be witnesses over the people. So establish prayer and give zakāh and hold fast to Allāh. He is your protector; and excellent is the protector, and excellent is the helper.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:22:78"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/22#78"
+     },
+     {
+      "kind": "explanation",
+      "text": "In addition to internal and spiritual struggles, there are specific contexts regarding physical defense. The Prophet ﷺ mentioned that one of the greatest forms of jihad is speaking a word of justice in the presence of an unjust ruler [4]. For women, the Prophet ﷺ indicated that their form of jihad is performing Hajj [5]. He also stated that the best jihad is a sincere Hajj [6]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:3045",
+      "text_ar": "عَنْ أَبِي سَعِيدٍ الخُدْرِيِّ رضي الله عنه أَنَّ النَّبِيَّ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ قَالَ: «إِنَّ مِنْ أَعْظَمِ الجِهَادِ كَلِمَةَ عَدْلٍ عِنْدَ سُلْطَانٍ جَائِرٍ».",
+      "text_en": "Abu Sa‘īd al-Khudri (may Allah be pleased with him) reported: The Prophet (may Allah's peace and blessings be upon him) said: \"Among the best of Jihad is to speak a word of justice to an oppressive ruler.\"",
+      "grade": "حسن لغيره",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه أبو داود والترمذي وابن ماجه وأحمد",
+      "reference": "سنن الترمذي (4/ 45) (2174).\nسنن أبي داود (6/ 400) (4344).\nسنن ابن ماجه (5/ 144) (4011).\nمسند أحمد (17/ 227) (11143).\nبهجة الناظرين شرح رياض الصالحين، لسليم الهلالي (1/ 283).\nشرح رياض الصالحين، لابن عثيمين (2/ 453).\nنزهة المتقين شرح رياض الصالحين، لمجموعة من الباحثين (1/ 216).",
+      "ids": [
+       "hadith:hadeethenc:3045"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/3045"
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:64598",
+      "text_ar": "عن عائشة أم المؤمنين رضي الله عنها قالت: استأذنت النبي صلى الله عليه وسلم في الجهاد، فقال: «جهادكن الحج».",
+      "text_en": "‘Ā’ishah (may Allah be pleased with her) reported: I asked for the permission of the Prophet (may Allah's peace and blessings be upon him) to make Jihad, so he said: \"Your Jihad is pilgrimage.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه البخاري",
+      "reference": "صحيح البخاري، المحقق: محمد زهير بن ناصر الناصر، الناشر دار طوق النجاة، الطبعة الأولى 1422هـ.\nتوضيح الأحكام من بلوغ المرام، لعبد الله بن عبد الرحمن البسام، مكتبة الأسدي، مكة، الطبعة الخامسة، 1423.\nمنحة العلام شرح بلوغ المرام، لعبد الله الفوزان، دار ابن الجوزي، الطبعة الأولى، 1428.\nبلوغ المرام من أدلة الأحكام، لأحمد بن علي بن حجر العسقلاني، تحقيق وتخريج وتعليق: سمير بن أمين الزهيري، الناشر: دار الفلق، الرياض، الطبعة: السابعة، 1424 هـ.\nسبل السلام،  لمحمد بن إسماعيل الصنعاني، الناشر: دار الحديث.",
+      "ids": [
+       "hadith:hadeethenc:64598"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/64598"
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:2759",
+      "text_ar": "عَنْ عَائِشَةَ أُمِّ المُؤْمِنِينَ رَضِيَ اللَّهُ عَنْهَا أَنَّهَا قَالَتْ: يَا رَسُولَ اللَّهِ، نَرَى الجِهَادَ أَفْضَلَ العَمَلِ، أَفَلاَ نُجَاهِدُ؟ قَالَ: «لَا، لَكُنَّ أَفْضَلُ الجِهَادِ: حَجٌّ مَبْرُورٌ».",
+      "text_en": "‘Ā’ishah, Mother of the Believers, (may Allah be pleased with her) reported saying: O Messenger of Allah, we consider Jihad the best deed; should we not perform Jihad? He said, \"No; rather, the best Jihad is Mabrūr (accepted) Hajj.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه البخاري",
+      "reference": "صحيح البخاري (2/ 133) (1520).\nبهجة الناظرين شرح رياض الصالحين، لسليم الهلالي (2/ 402).\nنزهة المتقين شرح رياض الصالحين، لمصطفى الخِن وغيره (2/ 902).\nشرح رياض الصالحين، لابن عثيمين (5/ 321).",
+      "ids": [
+       "hadith:hadeethenc:2759"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/2759"
+     },
+     {
+      "kind": "explanation",
+      "text": "Islam values life, and it is not permissible to fight peaceful civilians or those who do not engage in conflict against the faith [2]. The religion also prohibits mutilating the deceased during wars [2]."
+     },
+     {
+      "kind": "notice",
+      "text": "For the detailed rulings on this matter, please consult a qualified scholar or fatwa authority.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:26100",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو الجهاد في سبيل الله؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26100/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:icadb:36193",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو الجهاد؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36193/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:22:78",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الحَجِّ 78",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/22#78",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "hadith:hadeethenc:3045",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "إن من أعظم الجهاد كلمة عدل عند سلطان جائر",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/3045",
+      "grade": "حسن لغيره"
+     },
+     {
+      "n": 5,
+      "id": "hadith:hadeethenc:64598",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "قول عائشة: استأذنت النبي صلى الله عليه وسلم في الجهاد، فقال: «جهادكن الحج»",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/64598",
+      "grade": "صحيح"
+     },
+     {
+      "n": 6,
+      "id": "hadith:hadeethenc:2759",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "يا رسول الله، نرى الجهاد أفضل العمل، أفلا نجاهد؟ قال: لا، لكن أفضل الجهاد: حج مبرور",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/2759",
+      "grade": "صحيح"
+     }
+    ],
+    "ai_disclosure": "Baseera is an AI-powered tool, not a scholar or mufti. It answers only from approved sources and shows its references. No personal data is stored.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "en"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 7039,
+     "output": 496
+    }
+   },
+   "secs": 59.7
+  },
+  {
+   "id": "a-01",
+   "input": "ما هي أركان الإسلام؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": null,
+   "answer_excerpt": "يقوم الإسلام على خمسة أركان أساسية كما بينها الرسول ﷺ [1][2].\n\n«عَنْ عَبْدِ اللهِ بنِ عُمَر رضي الله عنهما قال: قال رسولُ الله صلى الله عليه وسلم: «بُنِيَ الْإِسْلَامُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لَا إِلَهَ إِلَّا اللهُ، وَأَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ، وَإِقَامِ الصَّلَاةِ، وَإِيتَاءِ الزَّكَاةِ، وَحَجِّ الْبَيْتِ، وَصَوْمِ رَمَضَانَ».» (متفق عليه — الدرجة: صحيح)\n\nأركان الإسلام هي:\n1. ال",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:3:19",
+     "quran:3:85",
+     "quran:33:35",
+     "quran:61:7",
+     "hadith:hadeethenc:65000",
+     "hadith:hadeethenc:66512",
+     "hadith:hadeethenc:65219",
+     "hadith:hadeethenc:65854",
+     "qa:icadb:36237",
+     "qa:icadb:26099",
+     "qa:icadb:26024",
+     "qa:icadb:36127",
+     "tafsir:muyassar:27:3",
+     "tafsir:muyassar:9:33",
+     "term:icadb:1676",
+     "term:glossary:1",
+     "quran:27:3",
+     "quran:9:33"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "يقوم الإسلام على خمسة أركان أساسية كما بينها الرسول ﷺ [[hadith:hadeethenc:65000, hadith:hadeethenc:66512]].\n\n{{hadith:hadeethenc:65000}}\n\nأركان الإسلام هي:\n1. الشهادة بأن لا إله إلا الله وأن محمداً عبده ورسوله، وهي تعني الاعتقاد بأنه لا معبود بحق إلا الله وحده، مع الإخلاص له والإنقياد لشرعه [[qa:icadb:36127]].\n2. إقامة الصلاة، وهي وسيلة دوام التواصل مع رب العالمين [[qa:icadb:36237, tafsir:muyassar:27:3]].\n3. إيتاء الزكاة، وهي عبادة تساعد على تغليب صفات البذل والعطاء على الشح والبخل من خلال إنفاق نسبة من المدخرات للفقراء والمساكين [[qa:icadb:36237]].\n4. صوم رمضان، وهو وسيلة لتقوية إرادة الإنسان وتحكمه بنفسه وتنمية مشاعر الرحمة والتآلف [[qa:icadb:36237]].\n5. حج البيت، وهو رمز للوحدة في التوجه للخالق على اختلاف الانتماءات البشرية والثقافات [[qa:icadb:36237]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "يقوم الإسلام على خمسة أركان أساسية كما بينها الرسول ﷺ .",
+        "cites": [
+         "hadith:hadeethenc:65000",
+         "hadith:hadeethenc:66512"
+        ],
+        "best_id": "hadith:hadeethenc:65000",
+        "score": 0.6715
+       },
+       {
+        "text": "أركان الإسلام هي: 1. الشهادة بأن لا إله إلا الله وأن محمداً عبده ورسوله، وهي تعني الاعتقاد بأنه لا معبود بحق إلا الله وحده، مع الإخلاص له والإنقياد لشرعه . 2. إقامة الصلاة، وهي وسيلة دوام التواصل مع رب العالمين . 3. إيتاء الزكاة، وهي عبادة تساعد على تغليب صفات البذل والعطاء على الشح والبخل من خلال إنفاق نسبة من المدخرات للفقراء والمساكين . 4. صوم رمضان، وهو وسيلة لتقوية إرادة الإنسان وتحكمه بنفسه وتنمية مشاعر الرحمة والتآلف . 5. حج البيت، وهو رمز للوحدة في التوجه للخالق على اختلاف الانتماءات البشرية والثقافات .",
+        "cites": [
+         "qa:icadb:36127",
+         "qa:icadb:36237",
+         "tafsir:muyassar:27:3",
+         "qa:icadb:36237",
+         "qa:icadb:36237",
+         "qa:icadb:36237"
+        ],
+        "best_id": "qa:icadb:36127",
+        "score": 0.8562
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "ما هي أركان الإسلام؟",
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما هي أركان الإسلام؟",
+     "claim": null
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "يقوم الإسلام على خمسة أركان أساسية كما بينها الرسول ﷺ [1][2].\n\n«عَنْ عَبْدِ اللهِ بنِ عُمَر رضي الله عنهما قال: قال رسولُ الله صلى الله عليه وسلم: «بُنِيَ الْإِسْلَامُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لَا إِلَهَ إِلَّا اللهُ، وَأَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ، وَإِقَامِ الصَّلَاةِ، وَإِيتَاءِ الزَّكَاةِ، وَحَجِّ الْبَيْتِ، وَصَوْمِ رَمَضَانَ».» (متفق عليه — الدرجة: صحيح)\n\nأركان الإسلام هي:\n1. الشهادة بأن لا إله إلا الله وأن محمداً عبده ورسوله، وهي تعني الاعتقاد بأنه لا معبود بحق إلا الله وحده، مع الإخلاص له والإنقياد لشرعه [3].\n2. إقامة الصلاة، وهي وسيلة دوام التواصل مع رب العالمين [4][5].\n3. إيتاء الزكاة، وهي عبادة تساعد على تغليب صفات البذل والعطاء على الشح والبخل من خلال إنفاق نسبة من المدخرات للفقراء والمساكين [4].\n4. صوم رمضان، وهو وسيلة لتقوية إرادة الإنسان وتحكمه بنفسه وتنمية مشاعر الرحمة والتآلف [4].\n5. حج البيت، وهو رمز للوحدة في التوجه للخالق على اختلاف الانتماءات البشرية والثقافات [4].\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "يقوم الإسلام على خمسة أركان أساسية كما بينها الرسول ﷺ [1][2]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:65000",
+      "text_ar": "عَنْ عَبْدِ اللهِ بنِ عُمَر رضي الله عنهما قال: قال رسولُ الله صلى الله عليه وسلم: «بُنِيَ الْإِسْلَامُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لَا إِلَهَ إِلَّا اللهُ، وَأَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ، وَإِقَامِ الصَّلَاةِ، وَإِيتَاءِ الزَّكَاةِ، وَحَجِّ الْبَيْتِ، وَصَوْمِ رَمَضَانَ».",
+      "text_en": "‘Abdullah ibn ‘Umar (may Allah be pleased with him and his father) reported that the Messenger of Allah (may Allah's peace and blessings be upon him) said: \"Islam is built on five: testifying that there is no god but Allah and that Muhammad is His slave and Messenger, establishing prayer, giving Zakah, performing Hajj to the (Sacred) House, and fasting Ramadān.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "متفق عليه",
+      "reference": "صحيح البخاري (1/ 11) (8)، صحيح مسلم (1/ 45) (16)، و(1/ 88) (82)، فتح الباري لابن رجب (1/ 22)، جامع العلوم والحكم (1/147)، شرح الأربعين لابن العطّار (ص 62)، شرح الأربعين النووية لعبد الكريم الخضير (ص 87)، فتح القوي المتين في شرح الأربعين للعباد (ص 29)، شرح الأربعين النووية لصالح آل الشيخ (ص 91 - 95)، التحفة الربانية لإسماعيل الأنصاري (ص 12).",
+      "ids": [
+       "hadith:hadeethenc:65000"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/65000"
+     },
+     {
+      "kind": "explanation",
+      "text": "أركان الإسلام هي:\n1. الشهادة بأن لا إله إلا الله وأن محمداً عبده ورسوله، وهي تعني الاعتقاد بأنه لا معبود بحق إلا الله وحده، مع الإخلاص له والإنقياد لشرعه [3].\n2. إقامة الصلاة، وهي وسيلة دوام التواصل مع رب العالمين [4][5].\n3. إيتاء الزكاة، وهي عبادة تساعد على تغليب صفات البذل والعطاء على الشح والبخل من خلال إنفاق نسبة من المدخرات للفقراء والمساكين [4].\n4. صوم رمضان، وهو وسيلة لتقوية إرادة الإنسان وتحكمه بنفسه وتنمية مشاعر الرحمة والتآلف [4].\n5. حج البيت، وهو رمز للوحدة في التوجه للخالق على اختلاف الانتماءات البشرية والثقافات [4]."
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "hadith:hadeethenc:65000",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "بني الإسلام على خمس",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/65000",
+      "grade": "صحيح"
+     },
+     {
+      "n": 2,
+      "id": "hadith:hadeethenc:66512",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "بني الإسلام على خمس",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/66512",
+      "grade": "صحيح"
+     },
+     {
+      "n": 3,
+      "id": "qa:icadb:36127",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هي أركان الإسلام الخمسة؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36127/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "qa:icadb:36237",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هي أركان الإسلام التي جاء بها النبي محمد؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36237/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "tafsir:muyassar:27:3",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 27:3",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/27#3",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 7696,
+     "output": 371
+    }
+   },
+   "secs": 49.6
+  },
+  {
+   "id": "a-04",
+   "input": "What are the five pillars of Islam?",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": null,
+   "answer_excerpt": "Islam is built upon five fundamental pillars as established by the Prophet Muhammad [1][2].\n\n«عَنْ عَبْدِ اللهِ بنِ عُمَر رضي الله عنهما قال: قال رسولُ الله صلى الله عليه وسلم: «بُنِيَ الْإِسْلَامُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لَا إِلَهَ إِلَّا اللهُ، وَأَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ، وَإِقَامِ الصَّلَاةِ، وَإِيتَاءِ الزَّكَاةِ، وَحَجِّ الْبَيْتِ، وَصَوْمِ رَمَضَانَ».» (متفق عليه — الدرجة: ",
+   "lang": "en",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:3:125",
+     "quran:89:7",
+     "quran:8:41",
+     "quran:31:10",
+     "hadith:hadeethenc:65000",
+     "hadith:hadeethenc:66512",
+     "hadith:hadeethenc:4543",
+     "hadith:hadeethenc:3144",
+     "qa:icadb:36170",
+     "qa:icadb:36127",
+     "qa:icadb:36140",
+     "qa:icadb:36237",
+     "term:glossary:10",
+     "term:glossary:1"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "Islam is built upon five fundamental pillars as established by the Prophet Muhammad [[hadith:hadeethenc:65000, hadith:hadeethenc:66512]].\n\n{{hadith:hadeethenc:65000}}\n\n{{hadith:hadeethenc:66512}}\n\nThe first pillar is the testimony of faith, which involves believing that there is no deity worthy of worship except Allah and that Muhammad is His servant and messenger [[qa:icadb:36127]]. This belief requires acknowledging Allah as the sole Creator and Provider while rejecting all false idols [[qa:icadb:36127]]. The second pillar is the establishment of prayer, which serves as a continuous connection with the Lord of the worlds [[qa:icadb:36237]]. The third pillar is giving Zakat, where a small portion of one's savings is given to the poor and needy to overcome greed and encourage generosity [[qa:icadb:36237]]. The fourth pillar is fasting during the month of Ramadan, which helps strengthen human will and cultivate feelings of mercy and harmony with others [[qa:icadb:36237]]. Finally, the fifth pillar is the Hajj, which involves performing specific rituals in Mecca to symbolize unity in devotion to Allah regardless of human differences [[qa:icadb:36237]].",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "Islam is built upon five fundamental pillars as established by the Prophet Muhammad .",
+        "cites": [
+         "hadith:hadeethenc:65000",
+         "hadith:hadeethenc:66512"
+        ],
+        "best_id": "hadith:hadeethenc:65000",
+        "score": 0.7428
+       },
+       {
+        "text": "The first pillar is the testimony of faith, which involves believing that there is no deity worthy of worship except Allah and that Muhammad is His servant and messenger . This belief requires acknowledging Allah as the sole Creator and Provider while rejecting all false idols . The second pillar is the establishment of prayer, which serves as a continuous connection with the Lord of the worlds . The third pillar is giving Zakat, where a small portion of one's savings is given to the poor and needy to overcome greed and encourage generosity . The fourth pillar is fasting during the month of Ramadan, which helps strengthen human will and cultivate feelings of mercy and harmony with others . Finally, the fifth pillar is the Hajj, which involves performing specific rituals in Mecca to symbolize unity in devotion to Allah regardless of human differences .",
+        "cites": [
+         "qa:icadb:36127",
+         "qa:icadb:36127",
+         "qa:icadb:36237",
+         "qa:icadb:36237",
+         "qa:icadb:36237",
+         "qa:icadb:36237"
+        ],
+        "best_id": "qa:icadb:36127",
+        "score": 0.6578
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "What are the five pillars of Islam?",
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "en",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "What are the five pillars of Islam?",
+     "claim": null
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "Islam is built upon five fundamental pillars as established by the Prophet Muhammad [1][2].\n\n«عَنْ عَبْدِ اللهِ بنِ عُمَر رضي الله عنهما قال: قال رسولُ الله صلى الله عليه وسلم: «بُنِيَ الْإِسْلَامُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لَا إِلَهَ إِلَّا اللهُ، وَأَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ، وَإِقَامِ الصَّلَاةِ، وَإِيتَاءِ الزَّكَاةِ، وَحَجِّ الْبَيْتِ، وَصَوْمِ رَمَضَانَ».» (متفق عليه — الدرجة: صحيح)\n\n«عَنْ أَبِي عَبْدِ الرَّحْمَنِ عَبْدِ اللَّهِ بْنِ عُمَرَ بْنِ الخَطَّابِ رَضِيَ اللَّهُ عَنْهُ قَالَ: سَمِعْتُ رَسُولَ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ يَقُولُ: «بُنِيَ الإِسْلَامُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لَا إلَهَ إلَّا اللَّهُ وَأَنَّ مُحَمَّدًا ‌عَبْدُهُ ‌وَرَسُولُهُ، وَإِقَامِ الصَّلَاةِ، وَإِيتَاءِ الزَّكَاةِ، وَحَجِّ الْبَيْتِ، وَصَوْمِ رَمَضَانَ».» (رواه البخاري ومسلم — الدرجة: صحيح)\n\nThe first pillar is the testimony of faith, which involves believing that there is no deity worthy of worship except Allah and that Muhammad is His servant and messenger [3]. This belief requires acknowledging Allah as the sole Creator and Provider while rejecting all false idols [3]. The second pillar is the establishment of prayer, which serves as a continuous connection with the Lord of the worlds [4]. The third pillar is giving Zakat, where a small portion of one's savings is given to the poor and needy to overcome greed and encourage generosity [4]. The fourth pillar is fasting during the month of Ramadan, which helps strengthen human will and cultivate feelings of mercy and harmony with others [4]. Finally, the fifth pillar is the Hajj, which involves performing specific rituals in Mecca to symbolize unity in devotion to Allah regardless of human differences [4].",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "Islam is built upon five fundamental pillars as established by the Prophet Muhammad [1][2]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:65000",
+      "text_ar": "عَنْ عَبْدِ اللهِ بنِ عُمَر رضي الله عنهما قال: قال رسولُ الله صلى الله عليه وسلم: «بُنِيَ الْإِسْلَامُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لَا إِلَهَ إِلَّا اللهُ، وَأَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ، وَإِقَامِ الصَّلَاةِ، وَإِيتَاءِ الزَّكَاةِ، وَحَجِّ الْبَيْتِ، وَصَوْمِ رَمَضَانَ».",
+      "text_en": "‘Abdullah ibn ‘Umar (may Allah be pleased with him and his father) reported that the Messenger of Allah (may Allah's peace and blessings be upon him) said: \"Islam is built on five: testifying that there is no god but Allah and that Muhammad is His slave and Messenger, establishing prayer, giving Zakah, performing Hajj to the (Sacred) House, and fasting Ramadān.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "متفق عليه",
+      "reference": "صحيح البخاري (1/ 11) (8)، صحيح مسلم (1/ 45) (16)، و(1/ 88) (82)، فتح الباري لابن رجب (1/ 22)، جامع العلوم والحكم (1/147)، شرح الأربعين لابن العطّار (ص 62)، شرح الأربعين النووية لعبد الكريم الخضير (ص 87)، فتح القوي المتين في شرح الأربعين للعباد (ص 29)، شرح الأربعين النووية لصالح آل الشيخ (ص 91 - 95)، التحفة الربانية لإسماعيل الأنصاري (ص 12).",
+      "ids": [
+       "hadith:hadeethenc:65000"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/65000"
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:66512",
+      "text_ar": "عَنْ أَبِي عَبْدِ الرَّحْمَنِ عَبْدِ اللَّهِ بْنِ عُمَرَ بْنِ الخَطَّابِ رَضِيَ اللَّهُ عَنْهُ قَالَ: سَمِعْتُ رَسُولَ اللَّهِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ يَقُولُ: «بُنِيَ الإِسْلَامُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لَا إلَهَ إلَّا اللَّهُ وَأَنَّ مُحَمَّدًا ‌عَبْدُهُ ‌وَرَسُولُهُ، وَإِقَامِ الصَّلَاةِ، وَإِيتَاءِ الزَّكَاةِ، وَحَجِّ الْبَيْتِ، وَصَوْمِ رَمَضَانَ».",
+      "text_en": "Abu ‘Abdur-Rahmān ‘Abdullah ibn ‘Umar ibn al-Khattāb (may Allah be pleased with him) reported: I heard the Messenger of Allah (ﷺ) say: \"Islam is built on five: testifying that there is no god but Allah and that Muhammad is His slave and Messenger, establishing prayer, giving Zakah, performing Hajj to the (Sacred) House, and fasting Ramadān.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه البخاري ومسلم",
+      "reference": "صحيح البخاري (1/ 11) (8).\nصحيح مسلم (1/ 45) (16)، و(1/ 88) (82).\nفتح الباري لابن رجب (1/ 22).\nجامع العلوم والحكم (1/147).\nشرح الأربعين لابن العطّار (ص 62).\nشرح الأربعين النووية لعبد الكريم الخضير (ص 87).\nفتح القوي المتين في شرح الأربعين للعباد (ص 29).\nشرح الأربعين النووية لصالح آل الشيخ (ص 91 - 95).\nالتحفة الربانية لإسماعيل الأنصاري (ص 12).",
+      "ids": [
+       "hadith:hadeethenc:66512"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/66512"
+     },
+     {
+      "kind": "explanation",
+      "text": "The first pillar is the testimony of faith, which involves believing that there is no deity worthy of worship except Allah and that Muhammad is His servant and messenger [3]. This belief requires acknowledging Allah as the sole Creator and Provider while rejecting all false idols [3]. The second pillar is the establishment of prayer, which serves as a continuous connection with the Lord of the worlds [4]. The third pillar is giving Zakat, where a small portion of one's savings is given to the poor and needy to overcome greed and encourage generosity [4]. The fourth pillar is fasting during the month of Ramadan, which helps strengthen human will and cultivate feelings of mercy and harmony with others [4]. Finally, the fifth pillar is the Hajj, which involves performing specific rituals in Mecca to symbolize unity in devotion to Allah regardless of human differences [4]."
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "hadith:hadeethenc:65000",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "بني الإسلام على خمس",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/65000",
+      "grade": "صحيح"
+     },
+     {
+      "n": 2,
+      "id": "hadith:hadeethenc:66512",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "بني الإسلام على خمس",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/66512",
+      "grade": "صحيح"
+     },
+     {
+      "n": 3,
+      "id": "qa:icadb:36127",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هي أركان الإسلام الخمسة؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36127/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "qa:icadb:36237",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هي أركان الإسلام التي جاء بها النبي محمد؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36237/version/1.0/sentences/",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "Baseera is an AI-powered tool, not a scholar or mufti. It answers only from approved sources and shows its references. No personal data is stored.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "en"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 6666,
+     "output": 354
+    }
+   },
+   "secs": 50.6
+  },
+  {
+   "id": "a-12",
+   "input": "ما فضل الصدق في الإسلام؟",
+   "expected": {
+    "expected_level": "أ",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "أ",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": true,
+   "answer_excerpt": "يعد الصدق من القيم العظيمة في الإسلام، حيث يمثل الإخبار بما يطابق الواقع في الأقوال والأفعال [1].\n\n﴿لِّيَجۡزِيَ ٱللَّهُ ٱلصَّٰدِقِينَ بِصِدۡقِهِمۡ وَيُعَذِّبَ ٱلۡمُنَٰفِقِينَ إِن شَآءَ أَوۡ يَتُوبَ عَلَيۡهِمۡۚ إِنَّ ٱللَّهَ كَانَ غَفُورࣰا رَّحِيمࣰا﴾ [الأَحۡزَابِ: 24]\n\nأخبر الله تعالى بأنه سيجازي الصادقين بصدقهم [2]. كما أن من أتى بالحق وصدق به يُعد من المتقين [3].\n\n«عَنْ عَبْدِ اللهِ بنِ مَسعُودٍ",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:39:33",
+     "quran:4:113",
+     "quran:10:60",
+     "quran:17:80",
+     "hadith:hadeethenc:5504",
+     "hadith:hadeethenc:4564",
+     "hadith:hadeethenc:3353",
+     "hadith:hadeethenc:3011",
+     "qa:icadb:26198",
+     "qa:icadb:36266",
+     "qa:icadb:26199",
+     "qa:bayyinat:203",
+     "tafsir:muyassar:4:94",
+     "tafsir:muyassar:4:100",
+     "term:glossary:1",
+     "term:glossary:10",
+     "quran:4:94",
+     "quran:4:100",
+     "quran:33:24",
+     "qa:icadb:36115"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "يعد الصدق من القيم العظيمة في الإسلام، حيث يمثل الإخبار بما يطابق الواقع في الأقوال والأفعال [[qa:icadb:26198]].\n\n{{quran:33:24}}\n\nأخبر الله تعالى بأنه سيجازي الصادقين بصدقهم [[quran:33:24]]. كما أن من أتى بالحق وصدق به يُعد من المتقين [[quran:39:33]].\n\n{{hadith:hadeethenc:5504}}\n\nأوضح النبي ﷺ أن الصدق يهدي إلى البر، والبر يؤدي إلى الجنة [[hadith:hadeethenc:5504, qa:icadb:26198]]. كما أن الصدق يمنح الإنسان الطمأنينة، بينما الكذب يورث الريبة والقلق [[hadith:hadeethenc:4564]].\n\n{{note:no_ruling}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "يعد الصدق من القيم العظيمة في الإسلام، حيث يمثل الإخبار بما يطابق الواقع في الأقوال والأفعال .",
+        "cites": [
+         "qa:icadb:26198"
+        ],
+        "best_id": "qa:icadb:26198",
+        "score": 0.67
+       },
+       {
+        "text": "أخبر الله تعالى بأنه سيجازي الصادقين بصدقهم . كما أن من أتى بالحق وصدق به يُعد من المتقين .",
+        "cites": [
+         "quran:33:24",
+         "quran:39:33"
+        ],
+        "best_id": "quran:33:24",
+        "score": 0.6964
+       },
+       {
+        "text": "أوضح النبي ﷺ أن الصدق يهدي إلى البر، والبر يؤدي إلى الجنة . كما أن الصدق يمنح الإنسان الطمأنينة، بينما الكذب يورث الريبة والقلق .",
+        "cites": [
+         "hadith:hadeethenc:5504",
+         "qa:icadb:26198",
+         "hadith:hadeethenc:4564"
+        ],
+        "best_id": "qa:icadb:26198",
+        "score": 0.8886
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "ما هو فضل الصدق في الإسلام؟",
+    "route": {
+     "level": "أ",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما هو فضل الصدق في الإسلام؟",
+     "claim": null,
+     "original": "ما فضل الصدق في الإسلام؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "أ",
+    "answer_text": "يعد الصدق من القيم العظيمة في الإسلام، حيث يمثل الإخبار بما يطابق الواقع في الأقوال والأفعال [1].\n\n﴿لِّيَجۡزِيَ ٱللَّهُ ٱلصَّٰدِقِينَ بِصِدۡقِهِمۡ وَيُعَذِّبَ ٱلۡمُنَٰفِقِينَ إِن شَآءَ أَوۡ يَتُوبَ عَلَيۡهِمۡۚ إِنَّ ٱللَّهَ كَانَ غَفُورࣰا رَّحِيمࣰا﴾ [الأَحۡزَابِ: 24]\n\nأخبر الله تعالى بأنه سيجازي الصادقين بصدقهم [2]. كما أن من أتى بالحق وصدق به يُعد من المتقين [3].\n\n«عَنْ عَبْدِ اللهِ بنِ مَسعُودٍ رضي الله عنه قَالَ: قَالَ رَسُولُ اللهِ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ: «عَلَيْكُمْ بِالصِّدْقِ، فَإِنَّ الصِّدْقَ يَهْدِي إِلَى الْبِرِّ، وَإِنَّ الْبِرَّ يَهْدِي إِلَى الْجَنَّةِ، وَمَا يَزَالُ الرَّجُلُ يَصْدُقُ وَيَتَحَرَّى الصِّدْقَ حَتَّى يُكْتَبَ عِنْدَ اللهِ صِدِّيقًا، وَإِيَّاكُمْ وَالْكَذِبَ، فَإِنَّ الْكَذِبَ يَهْدِي إِلَى الْفُجُورِ، وَإِنَّ الْفُجُورَ يَهْدِي إِلَى النَّارِ، وَمَا يَزَالُ الرَّجُلُ يَكْذِبُ وَيَتَحَرَّى الْكَذِبَ حَتَّى يُكْتَبَ عِنْدَ اللهِ كَذَّابًا».» (متفق عليه — الدرجة: صحيح)\n\nأوضح النبي ﷺ أن الصدق يهدي إلى البر، والبر يؤدي إلى الجنة [4][1]. كما أن الصدق يمنح الإنسان الطمأنينة، بينما الكذب يورث الريبة والقلق [5].\n\nملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "يعد الصدق من القيم العظيمة في الإسلام، حيث يمثل الإخبار بما يطابق الواقع في الأقوال والأفعال [1]."
+     },
+     {
+      "kind": "quran",
+      "ref": "33:24",
+      "surah_name_ar": "الأَحۡزَابِ",
+      "text_ar": "لِّيَجۡزِيَ ٱللَّهُ ٱلصَّٰدِقِينَ بِصِدۡقِهِمۡ وَيُعَذِّبَ ٱلۡمُنَٰفِقِينَ إِن شَآءَ أَوۡ يَتُوبَ عَلَيۡهِمۡۚ إِنَّ ٱللَّهَ كَانَ غَفُورࣰا رَّحِيمࣰا",
+      "text_en": "That Allāh may reward the truthful for their truth and punish the hypocrites if He wills or accept their repentance. Indeed, Allāh is ever Forgiving and Merciful.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:33:24"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/33#24"
+     },
+     {
+      "kind": "explanation",
+      "text": "أخبر الله تعالى بأنه سيجازي الصادقين بصدقهم [2]. كما أن من أتى بالحق وصدق به يُعد من المتقين [3]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:5504",
+      "text_ar": "عَنْ عَبْدِ اللهِ بنِ مَسعُودٍ رضي الله عنه قَالَ: قَالَ رَسُولُ اللهِ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ: «عَلَيْكُمْ بِالصِّدْقِ، فَإِنَّ الصِّدْقَ يَهْدِي إِلَى الْبِرِّ، وَإِنَّ الْبِرَّ يَهْدِي إِلَى الْجَنَّةِ، وَمَا يَزَالُ الرَّجُلُ يَصْدُقُ وَيَتَحَرَّى الصِّدْقَ حَتَّى يُكْتَبَ عِنْدَ اللهِ صِدِّيقًا، وَإِيَّاكُمْ وَالْكَذِبَ، فَإِنَّ الْكَذِبَ يَهْدِي إِلَى الْفُجُورِ، وَإِنَّ الْفُجُورَ يَهْدِي إِلَى النَّارِ، وَمَا يَزَالُ الرَّجُلُ يَكْذِبُ وَيَتَحَرَّى الْكَذِبَ حَتَّى يُكْتَبَ عِنْدَ اللهِ كَذَّابًا».",
+      "text_en": "‘Abdullah ibn Mas‘ūd (may Allah be pleased with him) reported: The Messenger of Allah (may Allah's peace and blessings be upon him) said: \"Adhere to truthfulness, for truthfulness leads to righteousness, and righteousness leads to Paradise. A man will keep telling the truth and strive to tell the truth until he is recorded with Allah as the most truthful. Beware of lying, for lying leads to wickedness and wickedness leads to Hellfire. A man will keep telling lies and strive to tell lies until he is recorded with Allah as a persistent liar.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "متفق عليه",
+      "reference": "صحيح البخاري (8/ 25) (6094).\nصحيح مسلم (4/ 2013) (2607).\nتوضيح الأحكام من بلوغ المرام، لعبد الله البسام (7/ 479).\nمنحة العلام في شرح بلوغ المرام، لعبد الله الفوزان (10/ 313).\nفتح ذي الجلال والإكرام، لابن عثيمين (6/ 417).\nسبل السلام بشرح بلوغ المرام، لمحمد الصنعاني (2/ 686).",
+      "ids": [
+       "hadith:hadeethenc:5504"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/5504"
+     },
+     {
+      "kind": "explanation",
+      "text": "أوضح النبي ﷺ أن الصدق يهدي إلى البر، والبر يؤدي إلى الجنة [4][1]. كما أن الصدق يمنح الإنسان الطمأنينة، بينما الكذب يورث الريبة والقلق [5]."
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+      "note": "no_ruling"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:26198",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو خلق الصدق؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26198/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "quran:33:24",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الأَحۡزَابِ 24",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/33#24",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:39:33",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الزُّمَرِ 33",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/39#33",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "hadith:hadeethenc:5504",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "عليكم بالصدق، فإن الصدق يهدي إلى البر، وإن البر يهدي إلى الجنة",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/5504",
+      "grade": "صحيح"
+     },
+     {
+      "n": 5,
+      "id": "hadith:hadeethenc:4564",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "دع ما يريبك إلى ما لا يريبك، فإن الصدق طمأنينة، وإن الكذب ريبة",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/4564",
+      "grade": "صحيح"
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 7515,
+     "output": 273
+    }
+   },
+   "secs": 38.3
+  },
+  {
+   "id": "b-01",
+   "input": "هل الإسلام يظلم المرأة؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": true,
+   "answer_excerpt": "إن الإسلام دين العدل الذي يحفظ حقوق المرأة ومكانتها وكرامتها [1]. وقد جاءت أحكام الشريعة لتناسب طبيعة تكوين المرأة وقدراتها التي وهبها الله لها، حيث خصّها بتكريمات معينة مقابل ما تتحمله من آلام الوضع والإنجاب [2].\n\n﴿إِنَّ ٱللَّهَ لَا يَظۡلِمُ ٱلنَّاسَ شَيۡـࣰٔا وَلَٰكِنَّ ٱلنَّاسَ أَنفُسَهُمۡ يَظۡلِمُونَ﴾ [يُونُسَ: 44]\n\nتؤكد الآية الكريمة أن الله سبحانه وتعالى لا يظلم الناس أبداً، بل إن الظلم هو فع",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:61:7",
+     "quran:6:125",
+     "quran:10:44",
+     "quran:33:73",
+     "hadith:hadeethenc:8905",
+     "hadith:hadeethenc:66062",
+     "hadith:hadeethenc:65940",
+     "hadith:hadeethenc:3468",
+     "qa:bayyinat:219",
+     "qa:bayyinat:218",
+     "qa:icadb:36216",
+     "qa:icadb:36121",
+     "tafsir:muyassar:20:81",
+     "tafsir:muyassar:10:44",
+     "term:glossary:1",
+     "term:glossary:10",
+     "quran:20:81"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "إن الإسلام دين العدل الذي يحفظ حقوق المرأة ومكانتها وكرامتها [[qa:bayyinat:218]]. وقد جاءت أحكام الشريعة لتناسب طبيعة تكوين المرأة وقدراتها التي وهبها الله لها، حيث خصّها بتكريمات معينة مقابل ما تتحمله من آلام الوضع والإنجاب [[qa:icadb:36216]].\n\n{{quran:10:44}}\n\nتؤكد الآية الكريمة أن الله سبحانه وتعالى لا يظلم الناس أبداً، بل إن الظلم هو فعل يصدر من البشر تجاه أنفسهم [[tafsir:muyassar:10:44]].\n\n{{hadith:hadeethenc:3468}}\n\nوقد أكد النبي ﷺ على حماية حق المرأة والضعيفين في المجتمع [[hadith:hadeethenc:3468]]. كما أن الأحكام المتعلقة بالمرأة، مثل تلك التي تخص التعامل معها في الزواج أو الحماية من الأذى، تهدف إلى حفظ كرامتها وليس إهانتها [[qa:bayyinat:219, hadith:hadeethenc:66062]].\n\n{{note:no_ruling}}\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "إن الإسلام دين العدل الذي يحفظ حقوق المرأة ومكانتها وكرامتها . وقد جاءت أحكام الشريعة لتناسب طبيعة تكوين المرأة وقدراتها التي وهبها الله لها، حيث خصّها بتكريمات معينة مقابل ما تتحمله من آلام الوضع والإنجاب .",
+        "cites": [
+         "qa:bayyinat:218",
+         "qa:icadb:36216"
+        ],
+        "best_id": "qa:bayyinat:218",
+        "score": 0.7802
+       },
+       {
+        "text": "تؤكد الآية الكريمة أن الله سبحانه وتعالى لا يظلم الناس أبداً، بل إن الظلم هو فعل يصدر من البشر تجاه أنفسهم .",
+        "cites": [
+         "tafsir:muyassar:10:44"
+        ],
+        "best_id": "tafsir:muyassar:10:44",
+        "score": 0.7967
+       },
+       {
+        "text": "وقد أكد النبي ﷺ على حماية حق المرأة والضعيفين في المجتمع . كما أن الأحكام المتعلقة بالمرأة، مثل تلك التي تخص التعامل معها في الزواج أو الحماية من الأذى، تهدف إلى حفظ كرامتها وليس إهانتها .",
+        "cites": [
+         "hadith:hadeethenc:3468",
+         "qa:bayyinat:219",
+         "hadith:hadeethenc:66062"
+        ],
+        "best_id": "qa:bayyinat:219",
+        "score": 0.6422
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "هل الإسلام يظلم المرأة؟",
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "هل الإسلام يظلم المرأة؟",
+     "claim": null
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "إن الإسلام دين العدل الذي يحفظ حقوق المرأة ومكانتها وكرامتها [1]. وقد جاءت أحكام الشريعة لتناسب طبيعة تكوين المرأة وقدراتها التي وهبها الله لها، حيث خصّها بتكريمات معينة مقابل ما تتحمله من آلام الوضع والإنجاب [2].\n\n﴿إِنَّ ٱللَّهَ لَا يَظۡلِمُ ٱلنَّاسَ شَيۡـࣰٔا وَلَٰكِنَّ ٱلنَّاسَ أَنفُسَهُمۡ يَظۡلِمُونَ﴾ [يُونُسَ: 44]\n\nتؤكد الآية الكريمة أن الله سبحانه وتعالى لا يظلم الناس أبداً، بل إن الظلم هو فعل يصدر من البشر تجاه أنفسهم [4].\n\n«عن أبي شريح خويلد بن عمرو الخزاعي و أبي هريرة رضي الله عنهما عن رسول الله صلى الله عليه وسلم قال: «اللَّهُمَّ إِنِّي أُحَرِّجُ حَقَّ الضَعِيفَين: اليَتِيم والمَرْأَة».» (حديث أبي شريح رواه النسائي. \nوحديث أبي هريرة رواه ابن ماجه وأحمد — الدرجة: حسن)\n\nوقد أكد النبي ﷺ على حماية حق المرأة والضعيفين في المجتمع [5]. كما أن الأحكام المتعلقة بالمرأة، مثل تلك التي تخص التعامل معها في الزواج أو الحماية من الأذى، تهدف إلى حفظ كرامتها وليس إهانتها [6][7].\n\nملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "إن الإسلام دين العدل الذي يحفظ حقوق المرأة ومكانتها وكرامتها [1]. وقد جاءت أحكام الشريعة لتناسب طبيعة تكوين المرأة وقدراتها التي وهبها الله لها، حيث خصّها بتكريمات معينة مقابل ما تتحمله من آلام الوضع والإنجاب [2]."
+     },
+     {
+      "kind": "quran",
+      "ref": "10:44",
+      "surah_name_ar": "يُونُسَ",
+      "text_ar": "إِنَّ ٱللَّهَ لَا يَظۡلِمُ ٱلنَّاسَ شَيۡـࣰٔا وَلَٰكِنَّ ٱلنَّاسَ أَنفُسَهُمۡ يَظۡلِمُونَ",
+      "text_en": "Indeed, Allāh does not wrong the people at all, but it is the people who are wronging themselves.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:10:44"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/10#44"
+     },
+     {
+      "kind": "explanation",
+      "text": "تؤكد الآية الكريمة أن الله سبحانه وتعالى لا يظلم الناس أبداً، بل إن الظلم هو فعل يصدر من البشر تجاه أنفسهم [4]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:3468",
+      "text_ar": "عن أبي شريح خويلد بن عمرو الخزاعي و أبي هريرة رضي الله عنهما عن رسول الله صلى الله عليه وسلم قال: «اللَّهُمَّ إِنِّي أُحَرِّجُ حَقَّ الضَعِيفَين: اليَتِيم والمَرْأَة».",
+      "text_en": "Abu Shurayh Khuwaylid ibn ‘Amr al-Khuzā‘i and Abu Hurayrah (may Allah be pleased with both of them) reported that the Messenger of Allah (may Allah's peace and blessings be upon him) said: \"O Allah, I declare strictly inviolable the rights of the two weak ones: the orphan and the woman.\"",
+      "grade": "حسن",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "حديث أبي شريح رواه النسائي. \nوحديث أبي هريرة رواه ابن ماجه وأحمد",
+      "reference": "بهجة الناظرين شرح رياض الصالحين، لسليم الهلالي، ط1، دار ابن الجوزي، الدمام، 1415هـ.\nدليل الفالحين لطرق رياض الصالحين، لمحمد علي بن محمد بن علان، ط4، اعتنى بها: خليل مأمون شيحا، دار المعرفة، بيروت، 1425هـ.\nرياض الصالحين، للنووي، ط1، تحقيق: ماهر ياسين الفحل، دار ابن كثير، دمشق، بيروت، 1428هـ.\nرياض الصالحين، ط4، تحقيق: عصام هادي، وزارة الأوقاف والشؤون الإسلامية القطرية، دار الريان، بيروت، 1428هـ.\nالسنن الكبرى للنسائي، تحقيق: حسن عبد المنعم شلبي، ط1، مؤسسة الرسالة - بيروت، 1421هـ.\nسنن ابن ماجه، تحقيق: محمد فؤاد عبد الباقي، دار إحياء الكتب العربية، فيصل عيسى البابي الحلبي.\nصحيح الجامع الصغير وزيادته، للألباني، ط3، المكتب الإسلامي، بيروت، 1408هـ.\nمسند الإمام أحمد بن حنبل، تحقيق: شعيب الأرنؤوط و عادل مرشد وآخرون، تحت إشراف: د عبد الله بن عبد المحسن التركي، (ط1)، مؤسسة الرسالة، 1421هـ.\nنزهة المتقين شرح رياض الصالحين، لمجموعة من الباحثين، ط14، مؤسسة الرسالة، 1407هـ.",
+      "ids": [
+       "hadith:hadeethenc:3468"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/3468"
+     },
+     {
+      "kind": "explanation",
+      "text": "وقد أكد النبي ﷺ على حماية حق المرأة والضعيفين في المجتمع [5]. كما أن الأحكام المتعلقة بالمرأة، مثل تلك التي تخص التعامل معها في الزواج أو الحماية من الأذى، تهدف إلى حفظ كرامتها وليس إهانتها [6][7]."
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+      "note": "no_ruling"
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:bayyinat:218",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "لماذا لا يُبيحُ الإسلامُ للمرأةِ أن تكونَ رأسَ الدولة؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:icadb:36216",
+      "type": "qa",
+      "source": "icadb",
+      "title": "هل حقق الإسلام للمرأة المساواة مع الرجل؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36216/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:10:44",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "يُونُسَ 44",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/10#44",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "tafsir:muyassar:10:44",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 10:44",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/10#44",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "hadith:hadeethenc:3468",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "اللهم إني أحرج حق الضعيفين: اليتيم والمرأة",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/3468",
+      "grade": "حسن"
+     },
+     {
+      "n": 6,
+      "id": "qa:bayyinat:219",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "ِالزعمُ أن الإسلامَ أباح ضربَ المرأةِ، ولم يكفُلْ لها حقَّ تقويمِ الزوج .َبالمِثلِ إذا نشَز",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 7,
+      "id": "hadith:hadeethenc:66062",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "المرأة عورة، فإذا خرجت استشرفها الشيطان",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/66062",
+      "grade": "صحيح"
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 7343,
+     "output": 333
+    }
+   },
+   "secs": 39.2
+  },
+  {
+   "id": "b-02",
+   "input": "ما معنى الجهاد في الإسلام؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": true,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": true,
+   "answer_excerpt": "الجهاد في الإسلام هو بذل الجهد والوسع في سبيل الله، ويشمل ذلك نشر الدين والدفاع عنه وعن أهله [1]. كما يتضمن الجهاد مجاهدة النفس للكف عن المعاصي، والمثابرة على العبادات كالصوم والصلاة، واجتهاد الأفراد في طلب العلم أو تحمل آلام الحياة [2].\n\n﴿وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰهِيمَۚ هُوَ سَمَّىٰكُم",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:3:85",
+     "quran:22:78",
+     "quran:61:7",
+     "quran:2:217",
+     "hadith:hadeethenc:5033",
+     "hadith:hadeethenc:3722",
+     "hadith:hadeethenc:3917",
+     "hadith:hadeethenc:2759",
+     "qa:icadb:26100",
+     "qa:icadb:36193",
+     "qa:bayyinat:230",
+     "qa:icadb:36099",
+     "tafsir:muyassar:9:20",
+     "tafsir:muyassar:9:45",
+     "term:glossary:1",
+     "term:glossary:10",
+     "quran:9:20",
+     "quran:9:45"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "الجهاد في الإسلام هو بذل الجهد والوسع في سبيل الله، ويشمل ذلك نشر الدين والدفاع عنه وعن أهله [[qa:icadb:26100]]. كما يتضمن الجهاد مجاهدة النفس للكف عن المعاصي، والمثابرة على العبادات كالصوم والصلاة، واجتهاد الأفراد في طلب العلم أو تحمل آلام الحياة [[qa:icadb:36193]].\n\n{{quran:22:78}}\n\nتوضح الآية الكريمة وجوب الجهاد في سبيل الله حق جهاده [[tafsir:muyassar:9:20]].\n\n{{hadith:hadeethenc:5033}}\n\nأشار النبي ﷺ إلى أن سياحة الأمة الحقيقية هي الجهاد في سبيل الله عز وجل [[hadith:hadeethenc:5033, hadith:hadeethenc:3722]].\n\n{{hadith:hadeethenc:3917}}\n\nوصف النبي ﷺ المجاهد في سبيل الله بأنه كالصائم القائم القانت بآيات الله الذي لا يفتر عن عبادته [[hadith:hadeethenc:3917]].\n\n{{hadith:hadeethenc:2759}}\n\nأوضح النبي ﷺ أن أفضل أنواع الجهاد هو الحج المبرور [[hadith:hadeethenc:2759]].\n\n{{note:no_ruling}}\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "الجهاد في الإسلام هو بذل الجهد والوسع في سبيل الله، ويشمل ذلك نشر الدين والدفاع عنه وعن أهله . كما يتضمن الجهاد مجاهدة النفس للكف عن المعاصي، والمثابرة على العبادات كالصوم والصلاة، واجتهاد الأفراد في طلب العلم أو تحمل آلام الحياة .",
+        "cites": [
+         "qa:icadb:26100",
+         "qa:icadb:36193"
+        ],
+        "best_id": "qa:icadb:36193",
+        "score": 0.8692
+       },
+       {
+        "text": "توضح الآية الكريمة وجوب الجهاد في سبيل الله حق جهاده .",
+        "cites": [
+         "tafsir:muyassar:9:20"
+        ],
+        "best_id": "tafsir:muyassar:9:20",
+        "score": 0.5076
+       },
+       {
+        "text": "أشار النبي ﷺ إلى أن سياحة الأمة الحقيقية هي الجهاد في سبيل الله عز وجل .",
+        "cites": [
+         "hadith:hadeethenc:5033",
+         "hadith:hadeethenc:3722"
+        ],
+        "best_id": "hadith:hadeethenc:5033",
+        "score": 0.8048
+       },
+       {
+        "text": "وصف النبي ﷺ المجاهد في سبيل الله بأنه كالصائم القائم القانت بآيات الله الذي لا يفتر عن عبادته .",
+        "cites": [
+         "hadith:hadeethenc:3917"
+        ],
+        "best_id": "hadith:hadeethenc:3917",
+        "score": 0.794
+       },
+       {
+        "text": "أوضح النبي ﷺ أن أفضل أنواع الجهاد هو الحج المبرور .",
+        "cites": [
+         "hadith:hadeethenc:2759"
+        ],
+        "best_id": "hadith:hadeethenc:2759",
+        "score": 0.7173
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "ما معنى الجهاد في الإسلام؟",
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما معنى الجهاد في الإسلام؟",
+     "claim": null
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "الجهاد في الإسلام هو بذل الجهد والوسع في سبيل الله، ويشمل ذلك نشر الدين والدفاع عنه وعن أهله [1]. كما يتضمن الجهاد مجاهدة النفس للكف عن المعاصي، والمثابرة على العبادات كالصوم والصلاة، واجتهاد الأفراد في طلب العلم أو تحمل آلام الحياة [2].\n\n﴿وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰهِيمَۚ هُوَ سَمَّىٰكُمُ ٱلۡمُسۡلِمِينَ مِن قَبۡلُ وَفِي هَٰذَا لِيَكُونَ ٱلرَّسُولُ شَهِيدًا عَلَيۡكُمۡ وَتَكُونُواْ شُهَدَآءَ عَلَى ٱلنَّاسِۚ فَأَقِيمُواْ ٱلصَّلَوٰةَ وَءَاتُواْ ٱلزَّكَوٰةَ وَٱعۡتَصِمُواْ بِٱللَّهِ هُوَ مَوۡلَىٰكُمۡۖ فَنِعۡمَ ٱلۡمَوۡلَىٰ وَنِعۡمَ ٱلنَّصِيرُ﴾ [الحَجِّ: 78]\n\nتوضح الآية الكريمة وجوب الجهاد في سبيل الله حق جهاده [4].\n\n«عن أبي أمامة رضي الله عنه : أن رجلا، قال: يا رسول الله، ائذن لي في السياحة. فقال النبي صلى الله عليه وسلم : «إن سياحة أمتي الجهاد في سبيل الله عز وجل ».» (رواه أبو داود — الدرجة: صحيح)\n\nأشار النبي ﷺ إلى أن سياحة الأمة الحقيقية هي الجهاد في سبيل الله عز وجل [5][6].\n\n«عن أبي هريرة رضي الله عنه قال: قيل: يا رسول الله، ما يعدل الجهاد في سبيل الله؟ قال: «لا تستطيعونه» فأعادوا عليه مرتين أو ثلاثًا كل ذلك يقول: «لا تستطيعونه»! ثم قال: «مثل المجاهد في سبيل الله كمثل الصائم القائم القانت بآيات الله لا يَفْتُرُ من صيام، ولا صلاة، حتى يرجع المجاهد في سبيل الله». \nوفي رواية البخاري: أن رجلاً قال: يا رسول الله، دلني على عمل يعْدِلُ الجهاد؟ قال: «لا أجده» ثم قال: «هل تستطيع إذا خرج المجاهد أن تدخل مسجدك فتقوم ولا تفتر، وتصوم ولا تفطر»؟ فقال: «ومن يستطيع ذلك؟!»» (متفق عليه، والرواية الثانية للبخاري — الدرجة: صحيح)\n\nوصف النبي ﷺ المجاهد في سبيل الله بأنه كالصائم القائم القانت بآيات الله الذي لا يفتر عن عبادته [7].\n\n«عَنْ عَائِشَةَ أُمِّ المُؤْمِنِينَ رَضِيَ اللَّهُ عَنْهَا أَنَّهَا قَالَتْ: يَا رَسُولَ اللَّهِ، نَرَى الجِهَادَ أَفْضَلَ العَمَلِ، أَفَلاَ نُجَاهِدُ؟ قَالَ: «لَا، لَكُنَّ أَفْضَلُ الجِهَادِ: حَجٌّ مَبْرُورٌ».» (رواه البخاري — الدرجة: صحيح)\n\nأوضح النبي ﷺ أن أفضل أنواع الجهاد هو الحج المبرور [8].\n\nملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "الجهاد في الإسلام هو بذل الجهد والوسع في سبيل الله، ويشمل ذلك نشر الدين والدفاع عنه وعن أهله [1]. كما يتضمن الجهاد مجاهدة النفس للكف عن المعاصي، والمثابرة على العبادات كالصوم والصلاة، واجتهاد الأفراد في طلب العلم أو تحمل آلام الحياة [2]."
+     },
+     {
+      "kind": "quran",
+      "ref": "22:78",
+      "surah_name_ar": "الحَجِّ",
+      "text_ar": "وَجَٰهِدُواْ فِي ٱللَّهِ حَقَّ جِهَادِهِۦۚ هُوَ ٱجۡتَبَىٰكُمۡ وَمَا جَعَلَ عَلَيۡكُمۡ فِي ٱلدِّينِ مِنۡ حَرَجࣲۚ مِّلَّةَ أَبِيكُمۡ إِبۡرَٰهِيمَۚ هُوَ سَمَّىٰكُمُ ٱلۡمُسۡلِمِينَ مِن قَبۡلُ وَفِي هَٰذَا لِيَكُونَ ٱلرَّسُولُ شَهِيدًا عَلَيۡكُمۡ وَتَكُونُواْ شُهَدَآءَ عَلَى ٱلنَّاسِۚ فَأَقِيمُواْ ٱلصَّلَوٰةَ وَءَاتُواْ ٱلزَّكَوٰةَ وَٱعۡتَصِمُواْ بِٱللَّهِ هُوَ مَوۡلَىٰكُمۡۖ فَنِعۡمَ ٱلۡمَوۡلَىٰ وَنِعۡمَ ٱلنَّصِيرُ",
+      "text_en": "And strive for Allāh with the striving due to Him. He has chosen you and has not placed upon you in the religion any difficulty. [It is] the religion of your father, Abraham. He [i.e., Allāh] named you \"Muslims\" before [in former scriptures] and in this [revelation] that the Messenger may be a witness over you and you may be witnesses over the people. So establish prayer and give zakāh and hold fast to Allāh. He is your protector; and excellent is the protector, and excellent is the helper.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:22:78"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/22#78"
+     },
+     {
+      "kind": "explanation",
+      "text": "توضح الآية الكريمة وجوب الجهاد في سبيل الله حق جهاده [4]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:5033",
+      "text_ar": "عن أبي أمامة رضي الله عنه : أن رجلا، قال: يا رسول الله، ائذن لي في السياحة. فقال النبي صلى الله عليه وسلم : «إن سياحة أمتي الجهاد في سبيل الله عز وجل ».",
+      "text_en": "Abu Umāmah (may Allah be pleased with him) reported: A man said: \"O Messenger of Allah, allow me to travel.\" The Prophet (may Allah's peace and blessings be upon him) said: \"The tourism of my Ummah is Jihad in the path of Allah, the Exalted.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه أبو داود",
+      "reference": "سنن أبي داود، تحقيق: محمد محيي الدين عبد الحميد، نشر: المكتبة العصرية، صيدا – بيروت.\nصحيح الجامع الصغير وزيادته، الألباني، المكتب الإسلامي، بيروت، الطبعة : الثالثة، 1408هـ ، 1988م\nنزهة المتقين شرح رياض الصالحين لمجموعة من الباحثين, مؤسسة الرسالة, الطبعة الرابعة عشر, 1407ه .\nدليل الفالحين لطرق رياض الصالحين لمحمد بن علان الصديقي, دار الكتاب العربي.\nمصابيح التنوير على صحيح الجامع الصغير، تأليف الألباني، إعداد معتز أحمد.\nبهجة الناظرين شرح رياض الصالحين، لسليم الهلالي, دار ابن الجوزي.\nكنوز رياض الصالحين بإشراف حمد العمار, دار كنوز إشبيليا, الطبعة الأولى, 1430ه .",
+      "ids": [
+       "hadith:hadeethenc:5033"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/5033"
+     },
+     {
+      "kind": "explanation",
+      "text": "أشار النبي ﷺ إلى أن سياحة الأمة الحقيقية هي الجهاد في سبيل الله عز وجل [5][6]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:3917",
+      "text_ar": "عن أبي هريرة رضي الله عنه قال: قيل: يا رسول الله، ما يعدل الجهاد في سبيل الله؟ قال: «لا تستطيعونه» فأعادوا عليه مرتين أو ثلاثًا كل ذلك يقول: «لا تستطيعونه»! ثم قال: «مثل المجاهد في سبيل الله كمثل الصائم القائم القانت بآيات الله لا يَفْتُرُ من صيام، ولا صلاة، حتى يرجع المجاهد في سبيل الله». \nوفي رواية البخاري: أن رجلاً قال: يا رسول الله، دلني على عمل يعْدِلُ الجهاد؟ قال: «لا أجده» ثم قال: «هل تستطيع إذا خرج المجاهد أن تدخل مسجدك فتقوم ولا تفتر، وتصوم ولا تفطر»؟ فقال: «ومن يستطيع ذلك؟!»",
+      "text_en": "Abu Hurayrah (may Allah be pleased with him) narrated that the Messenger of Allah (may Allah's peace and blessings be upon him) was asked: \"O Messenger of Allah, what is equivalent to Jihad in the cause of Allah?” He answered: “You can not do it.” The question was repeated twice or thrice to which he gave the same answer. Then he said: “The example of a Mujāhid in the cause of Allah is like a person who keeps fasting, praying and reciting the verses of Allah unfailingly until the Mujāhid returns.”\nIn the version narrated by Al-Bukhāri: A man said: \"O Messenger of Allah, show me a deed that equals Jihad.” The Prophet replied: \"I do not find one.\" Then he said: \"When the Mujāhid goes out for Jihad, can you enter your place of prayer and pray incessantly and fast without breaking your fast?\" The man replied: \"Who can do that!\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "متفق عليه، والرواية الثانية للبخاري",
+      "reference": "- رياض الصالحين من كلام سيد المرسلين؛ للإمام أبي زكريا النووي، تحقيق د. ماهر الفحل، دار ابن كثير-دمشق، الطبعة الأولى، 1428ه .\n- بهجة الناظرين شرح رياض الصالحين؛ تأليف سليم الهلالي، دار ابن الجوزي- الطبعة الأولى1418ه.\n- نزهة المتقين شرح رياض الصالحين؛ تأليف د. مصطفى الخِن وغيره، مؤسسة الرسالة-بيروت، الطبعة الرابعة عشر، 1407هـ.\n- صحيح البخاري –عناية محمد زهير الناصر، دار طوق النجاة، الطبعة الأولى، 1422هـ.\n- صحيح مسلم؛ حققه ورقمه محمد فؤاد عبد الباقي، دار عالم الكتب-الرياض، الطبعة الأولى، 1417هـ.\n- منار القاري شرح مختصر صحيح البخاري تأليف حمزة محمد قاسم مكتبة دار البيان، دمشق - الجمهورية العربية السورية، مكتبة المؤيد، الطائف - المملكة العربية السعودية 1410 هـ - 1990 م.\n- كنوز رياض الصالحين، لحمد بن ناصر العمار، دار كنوز إشبيليا- الطبعة الأولى1430ه.",
+      "ids": [
+       "hadith:hadeethenc:3917"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/3917"
+     },
+     {
+      "kind": "explanation",
+      "text": "وصف النبي ﷺ المجاهد في سبيل الله بأنه كالصائم القائم القانت بآيات الله الذي لا يفتر عن عبادته [7]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:2759",
+      "text_ar": "عَنْ عَائِشَةَ أُمِّ المُؤْمِنِينَ رَضِيَ اللَّهُ عَنْهَا أَنَّهَا قَالَتْ: يَا رَسُولَ اللَّهِ، نَرَى الجِهَادَ أَفْضَلَ العَمَلِ، أَفَلاَ نُجَاهِدُ؟ قَالَ: «لَا، لَكُنَّ أَفْضَلُ الجِهَادِ: حَجٌّ مَبْرُورٌ».",
+      "text_en": "‘Ā’ishah, Mother of the Believers, (may Allah be pleased with her) reported saying: O Messenger of Allah, we consider Jihad the best deed; should we not perform Jihad? He said, \"No; rather, the best Jihad is Mabrūr (accepted) Hajj.\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه البخاري",
+      "reference": "صحيح البخاري (2/ 133) (1520).\nبهجة الناظرين شرح رياض الصالحين، لسليم الهلالي (2/ 402).\nنزهة المتقين شرح رياض الصالحين، لمصطفى الخِن وغيره (2/ 902).\nشرح رياض الصالحين، لابن عثيمين (5/ 321).",
+      "ids": [
+       "hadith:hadeethenc:2759"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/2759"
+     },
+     {
+      "kind": "explanation",
+      "text": "أوضح النبي ﷺ أن أفضل أنواع الجهاد هو الحج المبرور [8]."
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+      "note": "no_ruling"
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:26100",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو الجهاد في سبيل الله؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26100/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:icadb:36193",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما هو الجهاد؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36193/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:22:78",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "الحَجِّ 78",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/22#78",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "tafsir:muyassar:9:20",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 9:20",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/9#20",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "hadith:hadeethenc:5033",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "إن سياحة أمتي الجهاد في سبيل الله عز وجل ",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/5033",
+      "grade": "صحيح"
+     },
+     {
+      "n": 6,
+      "id": "hadith:hadeethenc:3722",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "إن سِيَاحَة أُمَّتِي الجِهاد في سَبِيلِ الله عز وجل ",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/3722",
+      "grade": "صحيح"
+     },
+     {
+      "n": 7,
+      "id": "hadith:hadeethenc:3917",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "مَثَلُ المجاهد في سَبِيل الله كمَثل الصَائم القَائم القَانت بآيات الله لا يَفْتُر من صيام، ولا صلاة، حتى يَرْجِع المجاهد في سبيل الله",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/3917",
+      "grade": "صحيح"
+     },
+     {
+      "n": 8,
+      "id": "hadith:hadeethenc:2759",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "يا رسول الله، نرى الجهاد أفضل العمل، أفلا نجاهد؟ قال: لا، لكن أفضل الجهاد: حج مبرور",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/2759",
+      "grade": "صحيح"
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 8099,
+     "output": 383
+    }
+   },
+   "secs": 42.7
+  },
+  {
+   "id": "b-05",
+   "input": "هل يتعارض القرآن مع العلم الحديث؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": null,
+   "answer_excerpt": "لا يوجد تعارض بين القرآن الكريم وعلم الحديث، بل هما متكاملان كونهما وحيًا من عند الله تعالى [1]. فالقرآن الكريم هو كلام الله المحكم الذي لا شبهة فيه ولا تناقض [2][3][4].\n\nأما السنة النبوية، فهي وحي من الله أيضًا، حيث إن النبي ﷺ لا ينطق عن الهوى بل كلامه وحي [1]. والهدف من السنة هو تبيين المجمل، وتقييد المطلق، وتخصيص العام في القرآن [5]. لذا، لا يوجد في السنة الصحيحة ما يخالف القرآن أبدًا، وإنما قد",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:10:37",
+     "quran:2:31",
+     "quran:4:82",
+     "quran:44:26",
+     "hadith:hadeethenc:6084",
+     "hadith:hadeethenc:65760",
+     "hadith:hadeethenc:5913",
+     "hadith:hadeethenc:8265",
+     "qa:bayyinat:75",
+     "qa:bayyinat:144",
+     "qa:bayyinat:125",
+     "qa:bayyinat:39",
+     "tafsir:muyassar:22:54",
+     "tafsir:muyassar:85:21",
+     "term:glossary:7",
+     "term:icadb:1672",
+     "quran:22:54",
+     "quran:85:21",
+     "quran:55:2",
+     "quran:31:6",
+     "quran:36:69"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "لا يوجد تعارض بين القرآن الكريم وعلم الحديث، بل هما متكاملان كونهما وحيًا من عند الله تعالى [[qa:bayyinat:144]]. فالقرآن الكريم هو كلام الله المحكم الذي لا شبهة فيه ولا تناقض [[quran:4:82, tafsir:muyassar:22:54, tafsir:muyassar:85:21]].\n\nأما السنة النبوية، فهي وحي من الله أيضًا، حيث إن النبي ﷺ لا ينطق عن الهوى بل كلامه وحي [[qa:bayyinat:144]]. والهدف من السنة هو تبيين المجمل، وتقييد المطلق، وتخصيص العام في القرآن [[qa:bayyinat:125]]. لذا، لا يوجد في السنة الصحيحة ما يخالف القرآن أبدًا، وإنما قد يتوهم الإنسان وجود معارضة بين نصين بسبب عدم فهم السياق أو وقوعه في التوهم، وهناك دائمًا وجه للجمع بين النصوص التي يُظن بينها تعارض [[qa:bayyinat:125]].\n\nيُعد علم الحديث وسيلة لبيان درجة ثبوت ما نُقل عن النبي ﷺ من قول أو فعل أو تقرير [[term:glossary:7]]، وهو يخدم في إثبات صحة الأحاديث التي تُستخدم كأدلة في الشريعة [[qa:bayyinat:144]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "لا يوجد تعارض بين القرآن الكريم وعلم الحديث، بل هما متكاملان كونهما وحيًا من عند الله تعالى . فالقرآن الكريم هو كلام الله المحكم الذي لا شبهة فيه ولا تناقض .",
+        "cites": [
+         "qa:bayyinat:144",
+         "quran:4:82",
+         "tafsir:muyassar:22:54",
+         "tafsir:muyassar:85:21"
+        ],
+        "best_id": "tafsir:muyassar:22:54",
+        "score": 0.7199
+       },
+       {
+        "text": "أما السنة النبوية، فهي وحي من الله أيضًا، حيث إن النبي ﷺ لا ينطق عن الهوى بل كلامه وحي . والهدف من السنة هو تبيين المجمل، وتقييد المطلق، وتخصيص العام في القرآن . لذا، لا يوجد في السنة الصحيحة ما يخالف القرآن أبدًا، وإنما قد يتوهم الإنسان وجود معارضة بين نصين بسبب عدم فهم السياق أو وقوعه في التوهم، وهناك دائمًا وجه للجمع بين النصوص التي يُظن بينها تعارض .",
+        "cites": [
+         "qa:bayyinat:144",
+         "qa:bayyinat:125",
+         "qa:bayyinat:125"
+        ],
+        "best_id": "qa:bayyinat:144",
+        "score": 0.8178
+       },
+       {
+        "text": "يُعد علم الحديث وسيلة لبيان درجة ثبوت ما نُقل عن النبي ﷺ من قول أو فعل أو تقرير ، وهو يخدم في إثبات صحة الأحاديث التي تُستخدم كأدلة في الشريعة .",
+        "cites": [
+         "term:glossary:7",
+         "qa:bayyinat:144"
+        ],
+        "best_id": "qa:bayyinat:144",
+        "score": 0.6302
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "هل هناك تعارض بين القرآن الكريم وعلم الحديث؟",
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "هل هناك تعارض بين القرآن الكريم وعلم الحديث؟",
+     "claim": null,
+     "original": "هل يتعارض القرآن مع العلم الحديث؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "لا يوجد تعارض بين القرآن الكريم وعلم الحديث، بل هما متكاملان كونهما وحيًا من عند الله تعالى [1]. فالقرآن الكريم هو كلام الله المحكم الذي لا شبهة فيه ولا تناقض [2][3][4].\n\nأما السنة النبوية، فهي وحي من الله أيضًا، حيث إن النبي ﷺ لا ينطق عن الهوى بل كلامه وحي [1]. والهدف من السنة هو تبيين المجمل، وتقييد المطلق، وتخصيص العام في القرآن [5]. لذا، لا يوجد في السنة الصحيحة ما يخالف القرآن أبدًا، وإنما قد يتوهم الإنسان وجود معارضة بين نصين بسبب عدم فهم السياق أو وقوعه في التوهم، وهناك دائمًا وجه للجمع بين النصوص التي يُظن بينها تعارض [5].\n\nيُعد علم الحديث وسيلة لبيان درجة ثبوت ما نُقل عن النبي ﷺ من قول أو فعل أو تقرير [6]، وهو يخدم في إثبات صحة الأحاديث التي تُستخدم كأدلة في الشريعة [1].\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "لا يوجد تعارض بين القرآن الكريم وعلم الحديث، بل هما متكاملان كونهما وحيًا من عند الله تعالى [1]. فالقرآن الكريم هو كلام الله المحكم الذي لا شبهة فيه ولا تناقض [2][3][4].\n\nأما السنة النبوية، فهي وحي من الله أيضًا، حيث إن النبي ﷺ لا ينطق عن الهوى بل كلامه وحي [1]. والهدف من السنة هو تبيين المجمل، وتقييد المطلق، وتخصيص العام في القرآن [5]. لذا، لا يوجد في السنة الصحيحة ما يخالف القرآن أبدًا، وإنما قد يتوهم الإنسان وجود معارضة بين نصين بسبب عدم فهم السياق أو وقوعه في التوهم، وهناك دائمًا وجه للجمع بين النصوص التي يُظن بينها تعارض [5].\n\nيُعد علم الحديث وسيلة لبيان درجة ثبوت ما نُقل عن النبي ﷺ من قول أو فعل أو تقرير [6]، وهو يخدم في إثبات صحة الأحاديث التي تُستخدم كأدلة في الشريعة [1]."
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:bayyinat:144",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "مثلُ القرآنِ الكريم؟»ِّصحيحُ البخاري« هل",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "quran:4:82",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "النِّسَاءِ 82",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/4#82",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "tafsir:muyassar:22:54",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 22:54",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/22#54",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "tafsir:muyassar:85:21",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 85:21",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/85#21",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "qa:bayyinat:125",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "السنَّةُ لا تستقِلُّ بالتشريعِ؛ فالتشريعُ للقرآن",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 6,
+      "id": "term:glossary:7",
+      "type": "term",
+      "source": "glossary",
+      "title": "الحديث",
+      "reference_url": "docs/data.pdf#page=7",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 8066,
+     "output": 374
+    }
+   },
+   "secs": 48.8
+  },
+  {
+   "id": "b-07",
+   "input": "هل الإسلام دين عنف وإرهاب؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": true,
+   "answer_excerpt": "إن الإسلام دين السلام والرفق والرحمة، وليس دين عنف أو إرهاب [1][2]. من المقاصد الأساسية للإسلام المحافظة على حق الحياة وحرمة الدماء [1].\n\n﴿وَمَآ أُمِرُوٓاْ إِلَّا لِيَعۡبُدُواْ ٱللَّهَ مُخۡلِصِينَ لَهُ ٱلدِّينَ حُنَفَآءَ وَيُقِيمُواْ ٱلصَّلَوٰةَ وَيُؤۡتُواْ ٱلزَّكَوٰةَۚ وَذَٰلِكَ دِينُ ٱلۡقَيِّمَةِ﴾ [البَيِّنَةِ: 5]\n\nيوضح القرآن الكريم أن الهدف من الأوامر الإلهية هو عبادة الله بخلُص النية والتوج",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:3:19",
+     "quran:2:193",
+     "quran:98:5",
+     "quran:1:4",
+     "hadith:hadeethenc:5795",
+     "hadith:hadeethenc:64633",
+     "hadith:hadeethenc:66368",
+     "hadith:hadeethenc:8965",
+     "qa:bayyinat:230",
+     "qa:bayyinat:201",
+     "qa:icadb:36112",
+     "qa:bayyinat:196",
+     "tafsir:muyassar:2:132",
+     "tafsir:muyassar:23:73",
+     "term:glossary:1",
+     "term:glossary:10",
+     "quran:2:132",
+     "quran:23:73"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "إن الإسلام دين السلام والرفق والرحمة، وليس دين عنف أو إرهاب [[qa:bayyinat:230, qa:bayyinat:201]]. من المقاصد الأساسية للإسلام المحافظة على حق الحياة وحرمة الدماء [[qa:bayyinat:230]].\n\n{{quran:98:5}}\n\nيوضح القرآن الكريم أن الهدف من الأوامر الإلهية هو عبادة الله بخلُص النية والتوجه إلى الحق، وهو دين القيم [[quran:98:5, tafsir:muyassar:23:73]].\n\n{{hadith:hadeethenc:5795}}\n\nأكد النبي ﷺ أن الدين يُسر، وأنه لا يمكن لأحد أن يغلب الدين بالتشدد [[hadith:hadeethenc:5795]]. كما يتميز الإسلام بأنه دين الاعتدال والعدل والنجاة في الدنيا والآخرة [[qa:bayyinat:201]].\n\n{{note:no_ruling}}\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "إن الإسلام دين السلام والرفق والرحمة، وليس دين عنف أو إرهاب . من المقاصد الأساسية للإسلام المحافظة على حق الحياة وحرمة الدماء .",
+        "cites": [
+         "qa:bayyinat:230",
+         "qa:bayyinat:201",
+         "qa:bayyinat:230"
+        ],
+        "best_id": "qa:bayyinat:230",
+        "score": 0.7918
+       },
+       {
+        "text": "يوضح القرآن الكريم أن الهدف من الأوامر الإلهية هو عبادة الله بخلُص النية والتوجه إلى الحق، وهو دين القيم .",
+        "cites": [
+         "quran:98:5",
+         "tafsir:muyassar:23:73"
+        ],
+        "best_id": "quran:98:5",
+        "score": 0.6522
+       },
+       {
+        "text": "أكد النبي ﷺ أن الدين يُسر، وأنه لا يمكن لأحد أن يغلب الدين بالتشدد . كما يتميز الإسلام بأنه دين الاعتدال والعدل والنجاة في الدنيا والآخرة .",
+        "cites": [
+         "hadith:hadeethenc:5795",
+         "qa:bayyinat:201"
+        ],
+        "best_id": "hadith:hadeethenc:5795",
+        "score": 0.7568
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "هل الإسلام دين عنف وإرهاب؟",
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "هل الإسلام دين عنف وإرهاب؟",
+     "claim": null
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "إن الإسلام دين السلام والرفق والرحمة، وليس دين عنف أو إرهاب [1][2]. من المقاصد الأساسية للإسلام المحافظة على حق الحياة وحرمة الدماء [1].\n\n﴿وَمَآ أُمِرُوٓاْ إِلَّا لِيَعۡبُدُواْ ٱللَّهَ مُخۡلِصِينَ لَهُ ٱلدِّينَ حُنَفَآءَ وَيُقِيمُواْ ٱلصَّلَوٰةَ وَيُؤۡتُواْ ٱلزَّكَوٰةَۚ وَذَٰلِكَ دِينُ ٱلۡقَيِّمَةِ﴾ [البَيِّنَةِ: 5]\n\nيوضح القرآن الكريم أن الهدف من الأوامر الإلهية هو عبادة الله بخلُص النية والتوجه إلى الحق، وهو دين القيم [3][4].\n\n«عَنْ أَبِي هُرَيْرَةَ رضي الله عنه عَنِ النَّبِيِّ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ قَالَ: «إِنَّ الدِّينَ يُسْرٌ، وَلَنْ يُشَادَّ الدِّينَ أَحَدٌ إِلَّا غَلَبَهُ، فَسَدِّدُوا وَقَارِبُوا، وَأَبْشِرُوا، وَاسْتَعِينُوا بِالْغَدْوَةِ وَالرَّوْحَةِ وَشَيْءٍ مِنَ الدُّلْجَةِ».» (رواه البخاري — الدرجة: صحيح)\n\nأكد النبي ﷺ أن الدين يُسر، وأنه لا يمكن لأحد أن يغلب الدين بالتشدد [5]. كما يتميز الإسلام بأنه دين الاعتدال والعدل والنجاة في الدنيا والآخرة [2].\n\nملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "إن الإسلام دين السلام والرفق والرحمة، وليس دين عنف أو إرهاب [1][2]. من المقاصد الأساسية للإسلام المحافظة على حق الحياة وحرمة الدماء [1]."
+     },
+     {
+      "kind": "quran",
+      "ref": "98:5",
+      "surah_name_ar": "البَيِّنَةِ",
+      "text_ar": "وَمَآ أُمِرُوٓاْ إِلَّا لِيَعۡبُدُواْ ٱللَّهَ مُخۡلِصِينَ لَهُ ٱلدِّينَ حُنَفَآءَ وَيُقِيمُواْ ٱلصَّلَوٰةَ وَيُؤۡتُواْ ٱلزَّكَوٰةَۚ وَذَٰلِكَ دِينُ ٱلۡقَيِّمَةِ",
+      "text_en": "And they were not commanded except to worship Allāh, [being] sincere to Him in religion, inclining to truth, and to establish prayer and to give zakāh. And that is the correct religion.",
+      "translation_source": "QuranEnc english_saheeh (Noor International Center)",
+      "ids": [
+       "quran:98:5"
+      ],
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/98#5"
+     },
+     {
+      "kind": "explanation",
+      "text": "يوضح القرآن الكريم أن الهدف من الأوامر الإلهية هو عبادة الله بخلُص النية والتوجه إلى الحق، وهو دين القيم [3][4]."
+     },
+     {
+      "kind": "hadith",
+      "id": "hadith:hadeethenc:5795",
+      "text_ar": "عَنْ أَبِي هُرَيْرَةَ رضي الله عنه عَنِ النَّبِيِّ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ قَالَ: «إِنَّ الدِّينَ يُسْرٌ، وَلَنْ يُشَادَّ الدِّينَ أَحَدٌ إِلَّا غَلَبَهُ، فَسَدِّدُوا وَقَارِبُوا، وَأَبْشِرُوا، وَاسْتَعِينُوا بِالْغَدْوَةِ وَالرَّوْحَةِ وَشَيْءٍ مِنَ الدُّلْجَةِ».",
+      "text_en": "Abu Hurayrah (may Allah be pleased with him) reported: The Prophet (may Allah's peace and blessings be upon him) said: \"Indeed, the religion is easy. No one overburdens himself in the religion except that he will be overwhelmed by it. So, seek uprightness (be moderate) and try to be close to it and receive the glad tidings. Seek help by worship in the Ghadwah (early morning), Rawhah (afternoon), and part of the Duljah (night).\"",
+      "grade": "صحيح",
+      "grade_source": "HadeethEnc.com",
+      "attribution": "رواه البخاري",
+      "reference": "صحيح البخاري (1/ 16) (39).\nبهجة الناظرين شرح رياض الصالحين، لسليم الهلالي (1/ 219).\nتطريز رياض الصالحين، لفيصل آل مبارك (ص115).",
+      "ids": [
+       "hadith:hadeethenc:5795"
+      ],
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/5795"
+     },
+     {
+      "kind": "explanation",
+      "text": "أكد النبي ﷺ أن الدين يُسر، وأنه لا يمكن لأحد أن يغلب الدين بالتشدد [5]. كما يتميز الإسلام بأنه دين الاعتدال والعدل والنجاة في الدنيا والآخرة [2]."
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+      "note": "no_ruling"
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:bayyinat:230",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "أليس الإسلامُ هو الذي يشجِّعُ على العُنْف؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:bayyinat:201",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "هل الإسلامُ دِينٌ متشدِّدٌ؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:98:5",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "البَيِّنَةِ 5",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/98#5",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "tafsir:muyassar:23:73",
+      "type": "tafsir",
+      "source": "muyassar",
+      "title": "التفسير الميسر 23:73",
+      "reference_url": "https://quranenc.com/ar/browse/arabic_moyassar/23#73",
+      "grade": null
+     },
+     {
+      "n": 5,
+      "id": "hadith:hadeethenc:5795",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "إن الدين يسر، ولن يشاد الدين أحد إلا غلبه، فسددوا وقاربوا",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/5795",
+      "grade": "صحيح"
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 7423,
+     "output": 293
+    }
+   },
+   "secs": 38.6
+  },
+  {
+   "id": "b-08",
+   "input": "ما هي مقاصد الشريعة الإسلامية؟",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ب",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": null,
+   "answer_excerpt": "تتمثل مقاصد الشريعة الإسلامية في تحقيق مصالح العباد في الدنيا والآخرة، حيث إن الهدف الأهم من التشريعات هو تحصيل المصالح المادية والاجتماعية والمدنية [1]. ومع ذلك، فإن فهم غايات الإسلام لا يقتصر على الجوانب الدنيوية فقط، بل يمتد ليشمل أولويات أخرى مثل تزكية النفوس بحب الله وخشيته، والإنابة إليه، وتقديم الآخرة على الدنيا [1].\n\nوقد وضعت الشريعة كمنهج محكم يصلح لكل العصور والأزمنة، لأن الله تعالى يعلم",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:45:18",
+     "quran:3:108",
+     "quran:4:26",
+     "quran:5:16",
+     "hadith:hadeethenc:5369",
+     "hadith:hadeethenc:4563",
+     "hadith:hadeethenc:64656",
+     "hadith:hadeethenc:4193",
+     "qa:bayyinat:232",
+     "qa:bayyinat:194",
+     "qa:bayyinat:260",
+     "qa:bayyinat:256",
+     "tafsir:muyassar:37:28",
+     "tafsir:muyassar:2:82",
+     "term:glossary:6",
+     "term:glossary:1",
+     "quran:37:28",
+     "quran:2:82"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "تتمثل مقاصد الشريعة الإسلامية في تحقيق مصالح العباد في الدنيا والآخرة، حيث إن الهدف الأهم من التشريعات هو تحصيل المصالح المادية والاجتماعية والمدنية [[qa:bayyinat:256]]. ومع ذلك، فإن فهم غايات الإسلام لا يقتصر على الجوانب الدنيوية فقط، بل يمتد ليشمل أولويات أخرى مثل تزكية النفوس بحب الله وخشيته، والإنابة إليه، وتقديم الآخرة على الدنيا [[qa:bayyinat:256]].\n\nوقد وضعت الشريعة كمنهج محكم يصلح لكل العصور والأزمنة، لأن الله تعالى يعلم ما يصلح للناس في كل وقت ومكان [[qa:bayyinat:194]]. وتُبنى معرفة المقاصد الكلية من خلال استقراء الأحكام الجزئية وتتبعها، حيث تُعد التشريعات التفصيلية وسائل مقصودة لتحقيق تلك المقاصد العليا [[qa:bayyinat:232]].\n\n{{note:no_ruling}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "تتمثل مقاصد الشريعة الإسلامية في تحقيق مصالح العباد في الدنيا والآخرة، حيث إن الهدف الأهم من التشريعات هو تحصيل المصالح المادية والاجتماعية والمدنية . ومع ذلك، فإن فهم غايات الإسلام لا يقتصر على الجوانب الدنيوية فقط، بل يمتد ليشمل أولويات أخرى مثل تزكية النفوس بحب الله وخشيته، والإنابة إليه، وتقديم الآخرة على الدنيا .",
+        "cites": [
+         "qa:bayyinat:256",
+         "qa:bayyinat:256"
+        ],
+        "best_id": "qa:bayyinat:256",
+        "score": 0.8429
+       },
+       {
+        "text": "وقد وضعت الشريعة كمنهج محكم يصلح لكل العصور والأزمنة، لأن الله تعالى يعلم ما يصلح للناس في كل وقت ومكان . وتُبنى معرفة المقاصد الكلية من خلال استقراء الأحكام الجزئية وتتبعها، حيث تُعد التشريعات التفصيلية وسائل مقصودة لتحقيق تلك المقاصد العليا .",
+        "cites": [
+         "qa:bayyinat:194",
+         "qa:bayyinat:232"
+        ],
+        "best_id": "qa:bayyinat:194",
+        "score": 0.75
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "ما هي مقاصد الشريعة الإسلامية؟",
+    "route": {
+     "level": "ب",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما هي مقاصد الشريعة الإسلامية؟",
+     "claim": null
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ب",
+    "answer_text": "تتمثل مقاصد الشريعة الإسلامية في تحقيق مصالح العباد في الدنيا والآخرة، حيث إن الهدف الأهم من التشريعات هو تحصيل المصالح المادية والاجتماعية والمدنية [1]. ومع ذلك، فإن فهم غايات الإسلام لا يقتصر على الجوانب الدنيوية فقط، بل يمتد ليشمل أولويات أخرى مثل تزكية النفوس بحب الله وخشيته، والإنابة إليه، وتقديم الآخرة على الدنيا [1].\n\nوقد وضعت الشريعة كمنهج محكم يصلح لكل العصور والأزمنة، لأن الله تعالى يعلم ما يصلح للناس في كل وقت ومكان [2]. وتُبنى معرفة المقاصد الكلية من خلال استقراء الأحكام الجزئية وتتبعها، حيث تُعد التشريعات التفصيلية وسائل مقصودة لتحقيق تلك المقاصد العليا [3].\n\nملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "تتمثل مقاصد الشريعة الإسلامية في تحقيق مصالح العباد في الدنيا والآخرة، حيث إن الهدف الأهم من التشريعات هو تحصيل المصالح المادية والاجتماعية والمدنية [1]. ومع ذلك، فإن فهم غايات الإسلام لا يقتصر على الجوانب الدنيوية فقط، بل يمتد ليشمل أولويات أخرى مثل تزكية النفوس بحب الله وخشيته، والإنابة إليه، وتقديم الآخرة على الدنيا [1].\n\nوقد وضعت الشريعة كمنهج محكم يصلح لكل العصور والأزمنة، لأن الله تعالى يعلم ما يصلح للناس في كل وقت ومكان [2]. وتُبنى معرفة المقاصد الكلية من خلال استقراء الأحكام الجزئية وتتبعها، حيث تُعد التشريعات التفصيلية وسائل مقصودة لتحقيق تلك المقاصد العليا [3]."
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: لم أجد في المصادر المعتمدة المتاحة لي نصًّا يبيّن الحكم الدقيق في هذه النقطة (كالوجوب أو الاستحباب)، وما سبق هو ما ورد فيها؛ فيُرجى سؤال عالم أو جهة إفتاء مؤهلة.",
+      "note": "no_ruling"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:bayyinat:256",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "هل الغاياتُ المادِّيَّةُ والاجتماعيَّةُ هي الغاياتُ العظمى مِن الإسلام؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:bayyinat:194",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "هل أحكامُ الإسلامِ تن اسِبُ العصرَ؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "qa:bayyinat:232",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "هل رُوحُ الشريعةِ أَوْلى مِن النصوص؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 7060,
+     "output": 297
+    }
+   },
+   "secs": 34.1
+  },
+  {
+   "id": "c-01",
+   "input": "ما حكم الموسيقى والغناء في الإسلام؟ وهل فيه اختلاف بين العلماء؟",
+   "expected": {
+    "expected_level": "ج",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ج",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": null,
+   "answer_excerpt": "يرى عامة العلماء عبر التاريخ، باختلاف عصورهم وبلدانهم ومذاهبهم، تحريم آلات الطرب والموسيقى والمعازف [1]. وقد حُكي عن هؤلاء العلماء الإجماع على هذا القول، بينما يُعتبر الخلاف في المسألة خلافاً شاذاً [1].\n\nويستند هذا الإجماع إلى نصوص صحيحة متنوعة الدلالة على التحريم [1]. ويُعد هذا الحكم مبدأً دينياً تبناه المسلمون في مختلف بيئاتهم وعقلياتهم، حيث عاشوا حياة طبيعية بكل تفاصيلها بناءً على هذا المبدأ [1",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 1,
+   "trace": {
+    "retrieved_ids": [
+     "quran:12:40",
+     "quran:6:92",
+     "quran:3:19",
+     "quran:40:48",
+     "hadith:hadeethenc:65093",
+     "hadith:hadeethenc:65362",
+     "hadith:hadeethenc:6370",
+     "hadith:hadeethenc:65129",
+     "qa:bayyinat:202",
+     "qa:bayyinat:68",
+     "qa:bayyinat:39",
+     "qa:bayyinat:201",
+     "tafsir:muyassar:35:28",
+     "tafsir:muyassar:9:34",
+     "term:glossary:10",
+     "term:glossary:1",
+     "quran:35:28",
+     "quran:9:34",
+     "quran:20:9",
+     "hadith:hadeethenc:66259",
+     "qa:bayyinat:125"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "يرى عامة العلماء عبر التاريخ، باختلاف عصورهم وبلدانهم ومذاهبهم، تحريم آلات الطرب والموسيقى والمعازف [[qa:bayyinat:202]]. وقد حُكي عن هؤلاء العلماء الإجماع على هذا القول، بينما يُعتبر الخلاف في المسألة خلافاً شاذاً [[qa:bayyinat:202]].\n\nويستند هذا الإجماع إلى نصوص صحيحة متنوعة الدلالة على التحريم [[qa:bayyinat:202]]. ويُعد هذا الحكم مبدأً دينياً تبناه المسلمون في مختلف بيئاتهم وعقلياتهم، حيث عاشوا حياة طبيعية بكل تفاصيلها بناءً على هذا المبدأ [[qa:bayyinat:202]].\n\nوإن لم تُعرف الحكمة من التحريم، فإن مجرد تحريم الإسلام كافٍ للاستجابة له؛ كونه عبادة يختارها الرب الذي يكفي حكمه حتى لو غابت عن الإنسان حكمته [[qa:bayyinat:202]].\n\n{{note:partial}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "يرى عامة العلماء عبر التاريخ، باختلاف عصورهم وبلدانهم ومذاهبهم، تحريم آلات الطرب والموسيقى والمعازف . وقد حُكي عن هؤلاء العلماء الإجماع على هذا القول، بينما يُعتبر الخلاف في المسألة خلافاً شاذاً .",
+        "cites": [
+         "qa:bayyinat:202",
+         "qa:bayyinat:202"
+        ],
+        "best_id": "qa:bayyinat:202",
+        "score": 0.8112
+       },
+       {
+        "text": "ويستند هذا الإجماع إلى نصوص صحيحة متنوعة الدلالة على التحريم . ويُعد هذا الحكم مبدأً دينياً تبناه المسلمون في مختلف بيئاتهم وعقلياتهم، حيث عاشوا حياة طبيعية بكل تفاصيلها بناءً على هذا المبدأ .",
+        "cites": [
+         "qa:bayyinat:202",
+         "qa:bayyinat:202"
+        ],
+        "best_id": "qa:bayyinat:202",
+        "score": 0.9298
+       },
+       {
+        "text": "وإن لم تُعرف الحكمة من التحريم، فإن مجرد تحريم الإسلام كافٍ للاستجابة له؛ كونه عبادة يختارها الرب الذي يكفي حكمه حتى لو غابت عن الإنسان حكمته .",
+        "cites": [
+         "qa:bayyinat:202"
+        ],
+        "best_id": "qa:bayyinat:202",
+        "score": 0.7536
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "ما حكم الموسيقى والغناء في الإسلام، وهل هناك اختلاف بين العلماء حولها؟",
+    "route": {
+     "level": "ج",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما حكم الموسيقى والغناء في الإسلام، وهل هناك اختلاف بين العلماء حولها؟",
+     "claim": null,
+     "original": "ما حكم الموسيقى والغناء في الإسلام؟ وهل فيه اختلاف بين العلماء؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ج",
+    "answer_text": "يرى عامة العلماء عبر التاريخ، باختلاف عصورهم وبلدانهم ومذاهبهم، تحريم آلات الطرب والموسيقى والمعازف [1]. وقد حُكي عن هؤلاء العلماء الإجماع على هذا القول، بينما يُعتبر الخلاف في المسألة خلافاً شاذاً [1].\n\nويستند هذا الإجماع إلى نصوص صحيحة متنوعة الدلالة على التحريم [1]. ويُعد هذا الحكم مبدأً دينياً تبناه المسلمون في مختلف بيئاتهم وعقلياتهم، حيث عاشوا حياة طبيعية بكل تفاصيلها بناءً على هذا المبدأ [1].\n\nوإن لم تُعرف الحكمة من التحريم، فإن مجرد تحريم الإسلام كافٍ للاستجابة له؛ كونه عبادة يختارها الرب الذي يكفي حكمه حتى لو غابت عن الإنسان حكمته [1].\n\nملاحظة: هذه الإجابة تقتصر على ما ورد في المصادر المعتمدة المتاحة لبصيرة، وليست حصرًا شاملًا للمسألة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "يرى عامة العلماء عبر التاريخ، باختلاف عصورهم وبلدانهم ومذاهبهم، تحريم آلات الطرب والموسيقى والمعازف [1]. وقد حُكي عن هؤلاء العلماء الإجماع على هذا القول، بينما يُعتبر الخلاف في المسألة خلافاً شاذاً [1].\n\nويستند هذا الإجماع إلى نصوص صحيحة متنوعة الدلالة على التحريم [1]. ويُعد هذا الحكم مبدأً دينياً تبناه المسلمون في مختلف بيئاتهم وعقلياتهم، حيث عاشوا حياة طبيعية بكل تفاصيلها بناءً على هذا المبدأ [1].\n\nوإن لم تُعرف الحكمة من التحريم، فإن مجرد تحريم الإسلام كافٍ للاستجابة له؛ كونه عبادة يختارها الرب الذي يكفي حكمه حتى لو غابت عن الإنسان حكمته [1]."
+     },
+     {
+      "kind": "notice",
+      "text": "ملاحظة: هذه الإجابة تقتصر على ما ورد في المصادر المعتمدة المتاحة لبصيرة، وليست حصرًا شاملًا للمسألة.",
+      "note": "partial"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:bayyinat:202",
+      "type": "qa",
+      "source": "bayyinat",
+      "title": "هل الإسلامُ يحرِّمُ الفرَحَ، ويدعو للاكتئ ابِ؛ بتحريمِهِ للموسيقا والمعازِف؟",
+      "reference_url": "https://dawa.center/file/7937",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 3,
+     "input": 7561,
+     "output": 309
+    }
+   },
+   "secs": 44.0
+  },
+  {
+   "id": "c-03",
+   "input": "ما الفرق بين السنة والشيعة في العقيدة وأيهما على حق؟",
+   "expected": {
+    "expected_level": "ج",
+    "expected_intent": "ask",
+    "expected_behavior": "answer_or_abstain"
+   },
+   "provisional": false,
+   "route": {
+    "level": "ج",
+    "intent": "ask",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "answered",
+   "behavior_ok": true,
+   "citation_ok": true,
+   "fidelity_ok": true,
+   "hierarchy_ok": null,
+   "answer_excerpt": "يُعرف أهل السنة والجماعة بأنهم الذين اتبعوا نهج النبي ﷺ وأصحابه في عقيدتهم وأقوالهم وأعمالهم [1]. وسموا بالسنة لالتزامهم بسنة الرسول ﷺ وترك الابتداع، وبالجماعة لاتفاقهم على الحق [1].\n\nأما الشيعة، فهم فرقة انشقت عن النهج الذي يسلكه عامة المسلمين [2]. وقد ذكرت النصوص أن الدين عند الله هو الإسلام [3]، وأن الاختلافات التي وقعت بين أصحاب الكتاب كانت بسبب البغي بينهم بعد مجيء العلم إليهم [3].\n\nوقد بيّن ",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 2,
+   "trace": {
+    "retrieved_ids": [
+     "quran:3:3",
+     "quran:19:69",
+     "quran:3:19",
+     "quran:9:66",
+     "hadith:hadeethenc:11262",
+     "hadith:hadeethenc:66230",
+     "hadith:hadeethenc:3506",
+     "hadith:hadeethenc:65356",
+     "qa:icadb:36196",
+     "qa:icadb:26052",
+     "qa:bayyinat:125",
+     "qa:bayyinat:142",
+     "tafsir:muyassar:7:165",
+     "tafsir:muyassar:33:13",
+     "term:glossary:8",
+     "term:icadb:1694",
+     "quran:7:165",
+     "quran:33:13",
+     "quran:2:213",
+     "quran:5:48",
+     "hadith:hadeethenc:65712"
+    ],
+    "attempts": [
+     {
+      "n": 1,
+      "raw": "يُعرف أهل السنة والجماعة بأنهم الذين اتبعوا نهج النبي ﷺ وأصحابه في عقيدتهم وأقوالهم وأعمالهم [[qa:icadb:26052]]. وسموا بالسنة لالتزامهم بسنة الرسول ﷺ وترك الابتداع، وبالجماعة لاتفاقهم على الحق [[qa:icadb:26052]].\n\nأما الشيعة، فهم فرقة انشقت عن النهج الذي يسلكه عامة المسلمين [[qa:icadb:36196]]. وقد ذكرت النصوص أن الدين عند الله هو الإسلام [[quran:3:19]]، وأن الاختلافات التي وقعت بين أصحاب الكتاب كانت بسبب البغي بينهم بعد مجيء العلم إليهم [[quran:3:19]].\n\nوقد بيّن النبي ﷺ في أحد الأحاديث أن من أطاعه واتبع ما جاء به من الحق فإنه ينجو، بينما من كذّبه وعصاه فإنه يهلك [[hadith:hadeethenc:65356]]. كما تشير النصوص إلى أن الله ينبئ الطوائف بما كانوا يفعلون [[quran:19:69]]، وأن الذين فرّقوا دينهم وكانوا شيعاً ليس منهم في شيء [[qa:icadb:36196]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [
+       "Text resembling a Quran verse written by the model (use a placeholder): وأن الذين فرّقوا دينهم وكانوا شيعاً ليس منهم في شيء"
+      ],
+      "ok": false,
+      "support": null
+     },
+     {
+      "n": 2,
+      "raw": "يُعرف أهل السنة والجماعة بأنهم الذين اتبعوا نهج النبي ﷺ وأصحابه في عقيدتهم وأقوالهم وأعمالهم [[qa:icadb:26052]]. وسموا بالسنة لالتزامهم بسنة الرسول ﷺ وترك الابتداع، وبالجماعة لاتفاقهم على الحق [[qa:icadb:26052]].\n\nأما الشيعة، فهم فرقة انشقت عن النهج الذي يسلكه عامة المسلمين [[qa:icadb:36196]]. وقد ذكرت النصوص أن الدين عند الله هو الإسلام [[quran:3:19]]، وأن الاختلافات التي وقعت بين أصحاب الكتاب كانت بسبب البغي بينهم بعد مجيء العلم إليهم [[quran:3:19]].\n\nوقد بيّن النبي ﷺ في أحد الأحاديث أن من أطاعه واتبع ما جاء به من الحق فإنه ينجو، بينما من كذّبه وعصاه فإنه يهلك [[hadith:hadeethenc:65356]]. كما تشير النصوص إلى أن الله ينبئ الطوائف بما كانوا يفعلون [[quran:19:69]]، وأن الذين فرّقوا دينهم وكانوا شيعاً ليس لهم في الدين شيء وفقاً لما ورد في الآيات [[qa:icadb:36196]].\n\n{{note:refer}}",
+      "normalized": false,
+      "errors": [],
+      "ok": true,
+      "support": [
+       {
+        "text": "يُعرف أهل السنة والجماعة بأنهم الذين اتبعوا نهج النبي ﷺ وأصحابه في عقيدتهم وأقوالهم وأعمالهم . وسموا بالسنة لالتزامهم بسنة الرسول ﷺ وترك الابتداع، وبالجماعة لاتفاقهم على الحق .",
+        "cites": [
+         "qa:icadb:26052",
+         "qa:icadb:26052"
+        ],
+        "best_id": "qa:icadb:26052",
+        "score": 0.8167
+       },
+       {
+        "text": "أما الشيعة، فهم فرقة انشقت عن النهج الذي يسلكه عامة المسلمين . وقد ذكرت النصوص أن الدين عند الله هو الإسلام ، وأن الاختلافات التي وقعت بين أصحاب الكتاب كانت بسبب البغي بينهم بعد مجيء العلم إليهم .",
+        "cites": [
+         "qa:icadb:36196",
+         "quran:3:19",
+         "quran:3:19"
+        ],
+        "best_id": "qa:icadb:36196",
+        "score": 0.7442
+       },
+       {
+        "text": "وقد بيّن النبي ﷺ في أحد الأحاديث أن من أطاعه واتبع ما جاء به من الحق فإنه ينجو، بينما من كذّبه وعصاه فإنه يهلك . كما تشير النصوص إلى أن الله ينبئ الطوائف بما كانوا يفعلون ، وأن الذين فرّقوا دينهم وكانوا شيعاً ليس لهم في الدين شيء وفقاً لما ورد في الآيات .",
+        "cites": [
+         "hadith:hadeethenc:65356",
+         "quran:19:69",
+         "qa:icadb:36196"
+        ],
+        "best_id": "qa:icadb:36196",
+        "score": 0.6978
+       }
+      ],
+      "relevance": {
+       "verdict": "answers",
+       "action": "keep"
+      }
+     }
+    ],
+    "canonical_question": "ما هي الفروقات العقدية بين السنة والشيعة، ومن هي الطائفة التي على حق؟",
+    "route": {
+     "level": "ج",
+     "intent": "ask",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما هي الفروقات العقدية بين السنة والشيعة، ومن هي الطائفة التي على حق؟",
+     "claim": null,
+     "original": "ما الفرق بين السنة والشيعة في العقيدة وأيهما على حق؟"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "answered",
+    "level": "ج",
+    "answer_text": "يُعرف أهل السنة والجماعة بأنهم الذين اتبعوا نهج النبي ﷺ وأصحابه في عقيدتهم وأقوالهم وأعمالهم [1]. وسموا بالسنة لالتزامهم بسنة الرسول ﷺ وترك الابتداع، وبالجماعة لاتفاقهم على الحق [1].\n\nأما الشيعة، فهم فرقة انشقت عن النهج الذي يسلكه عامة المسلمين [2]. وقد ذكرت النصوص أن الدين عند الله هو الإسلام [3]، وأن الاختلافات التي وقعت بين أصحاب الكتاب كانت بسبب البغي بينهم بعد مجيء العلم إليهم [3].\n\nوقد بيّن النبي ﷺ في أحد الأحاديث أن من أطاعه واتبع ما جاء به من الحق فإنه ينجو، بينما من كذّبه وعصاه فإنه يهلك [4]. كما تشير النصوص إلى أن الله ينبئ الطوائف بما كانوا يفعلون [5]، وأن الذين فرّقوا دينهم وكانوا شيعاً ليس لهم في الدين شيء وفقاً لما ورد في الآيات [2].\n\nللتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+    "blocks": [
+     {
+      "kind": "explanation",
+      "text": "يُعرف أهل السنة والجماعة بأنهم الذين اتبعوا نهج النبي ﷺ وأصحابه في عقيدتهم وأقوالهم وأعمالهم [1]. وسموا بالسنة لالتزامهم بسنة الرسول ﷺ وترك الابتداع، وبالجماعة لاتفاقهم على الحق [1].\n\nأما الشيعة، فهم فرقة انشقت عن النهج الذي يسلكه عامة المسلمين [2]. وقد ذكرت النصوص أن الدين عند الله هو الإسلام [3]، وأن الاختلافات التي وقعت بين أصحاب الكتاب كانت بسبب البغي بينهم بعد مجيء العلم إليهم [3].\n\nوقد بيّن النبي ﷺ في أحد الأحاديث أن من أطاعه واتبع ما جاء به من الحق فإنه ينجو، بينما من كذّبه وعصاه فإنه يهلك [4]. كما تشير النصوص إلى أن الله ينبئ الطوائف بما كانوا يفعلون [5]، وأن الذين فرّقوا دينهم وكانوا شيعاً ليس لهم في الدين شيء وفقاً لما ورد في الآيات [2]."
+     },
+     {
+      "kind": "notice",
+      "text": "للتفصيل في أحكام هذه المسألة يُرجى الرجوع إلى عالم أو جهة إفتاء مؤهلة.",
+      "note": "refer"
+     }
+    ],
+    "sources": [
+     {
+      "n": 1,
+      "id": "qa:icadb:26052",
+      "type": "qa",
+      "source": "icadb",
+      "title": "من هم أهل السنة والجماعة؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/26052/version/1.1/sentences/",
+      "grade": null
+     },
+     {
+      "n": 2,
+      "id": "qa:icadb:36196",
+      "type": "qa",
+      "source": "icadb",
+      "title": "ما الفرق بين الشيعة والسنة؟",
+      "reference_url": "https://icadb.com/api/encyclopedias/cards/36196/version/1.0/sentences/",
+      "grade": null
+     },
+     {
+      "n": 3,
+      "id": "quran:3:19",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "آلِ عِمۡرَانَ 19",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/3#19",
+      "grade": null
+     },
+     {
+      "n": 4,
+      "id": "hadith:hadeethenc:65356",
+      "type": "hadith",
+      "source": "hadeethenc",
+      "title": "إنما مثلي ومثل ما بعثني الله به كمثل رجل أتى قومًا فقال: يا قوم، إني رأيت الجيش بعيني",
+      "reference_url": "https://hadeethenc.com/ar/browse/hadith/65356",
+      "grade": "صحيح"
+     },
+     {
+      "n": 5,
+      "id": "quran:19:69",
+      "type": "quran",
+      "source": "kfgqpc",
+      "title": "مَرۡيَمَ 69",
+      "reference_url": "https://quranenc.com/en/browse/english_saheeh/19#69",
+      "grade": null
+     }
+    ],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 4,
+     "input": 15711,
+     "output": 676
+    }
+   },
+   "secs": 62.5
+  },
+  {
+   "id": "v-02",
+   "input": "انشر هذا الحديث: قال رسول الله ﷺ: «حب الوطن من الإيمان»",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "verify",
+    "expected_behavior": "verify"
+   },
+   "provisional": true,
+   "route": {
+    "level": "أ",
+    "intent": "verify",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "verified",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "hierarchy_ok": null,
+   "answer_excerpt": "",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 0,
+   "trace": {
+    "retrieved_ids": [],
+    "attempts": [],
+    "route": {
+     "level": "أ",
+     "intent": "verify",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما صحة حديث «حب الوطن من الإيمان»؟",
+     "claim": "قال رسول الله ﷺ: «حب الوطن من الإيمان»"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "verified",
+    "level": "أ",
+    "answer_text": "",
+    "blocks": [],
+    "sources": [],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "extraction": "llm",
+   "verdicts": [
+    "fabricated"
+   ],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 2,
+     "input": 912,
+     "output": 120
+    }
+   },
+   "secs": 5.5
+  },
+  {
+   "id": "v-04",
+   "input": "قال رسول الله ﷺ: «من عرف نفسه فقد عرف ربه» تحقق من الحديث",
+   "expected": {
+    "expected_level": "ب",
+    "expected_intent": "verify",
+    "expected_behavior": "verify"
+   },
+   "provisional": true,
+   "route": {
+    "level": "أ",
+    "intent": "verify",
+    "source": "llm",
+    "router_error": null
+   },
+   "router_level_ok": true,
+   "router_intent_ok": true,
+   "router_ok": true,
+   "retrieval_ok": null,
+   "status": "verified",
+   "behavior_ok": true,
+   "citation_ok": null,
+   "fidelity_ok": null,
+   "hierarchy_ok": null,
+   "answer_excerpt": "",
+   "lang": "ar",
+   "abstain_reason": null,
+   "attempts": 0,
+   "trace": {
+    "retrieved_ids": [],
+    "attempts": [],
+    "route": {
+     "level": "أ",
+     "intent": "verify",
+     "language": "ar",
+     "term": null,
+     "source": "llm",
+     "canonical_question": "ما صحة حديث «من عرف نفسه فقد عرف ربه»؟",
+     "claim": "من عرف نفسه فقد عرف ربه"
+    },
+    "abstain_reason": null
+   },
+   "_resp": {
+    "status": "verified",
+    "level": "أ",
+    "answer_text": "",
+    "blocks": [],
+    "sources": [],
+    "ai_disclosure": "بصيرة أداة مدعومة بالذكاء الاصطناعي وليست عالمًا ولا مفتيًا؛ تجيب من مصادر معتمدة وتعرض مراجعها. لا نخزّن أي بيانات شخصية.",
+    "referrals": [],
+    "abstain_reason": null,
+    "language": "ar"
+   },
+   "verification_errors": [],
+   "extraction": "llm",
+   "verdicts": [
+    "mixed"
+   ],
+   "tokens": {
+    "gemma-4-12b-it": {
+     "calls": 2,
+     "input": 912,
+     "output": 119
+    }
+   },
+   "secs": 5.2
+  }
+ ]
+}

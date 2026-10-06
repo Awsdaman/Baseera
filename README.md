@@ -9,6 +9,20 @@ Two modes:
 1. **Ask** — a question in Arabic or English → a sourced answer with source cards.
 2. **Verify** — paste a viral message → every verse and hadith in it is checked: verified verse / misquoted verse (correct text + word diff) / hadith graded by scholars / not found in approved sources.
 
+## Live demo (for judges)
+
+**Link:** see `LIVE_DEMO_URL` below (nothing to install, no account, free, works on a phone).
+
+> LIVE_DEMO_URL: _to be filled in at submission_
+
+- Runs the **local open model** (Gemma 12B through LM Studio, on one desktop GPU) behind a Cloudflare tunnel. No paid API is used for answers.
+- Example questions on the home page and the quick tools answer in a few seconds (pre-computed with the same model); a **new** question takes about 20-60 seconds. Two questions are answered at a time, and if you are waiting the page shows your place in line.
+- Try: the **Verify** tab with the "viral message" example, then ask about the pillars of Islam, or ask a personal-case question to see the referral behaviour.
+- Privacy: no accounts, questions are not stored or logged (the answer cache is read-only while the demo runs), and Baseera says clearly that it is an AI tool.
+- If the link is down, contact the team; running it yourself is documented in `docs/QUICKSTART.md`.
+
+Operator notes: `start_demo.ps1` (settings in `.env.demo`, see `.env.demo.example`) starts the model server, the app and the tunnel and restarts them if they stop; `tools/prewarm_cache.py` fills the cache after the last change.
+
 ## The design rule that matters
 
 > **The LLM never types a verse or a hadith.** It emits placeholders (`{{quran:2:255}}`, `{{hadith:hadeethenc:4560}}`, `{{tafsir:2:255}}`) and `[[passage-id]]` citations. Plain code (`core/verify.py`, no LLM) checks them and substitutes the exact stored text.
@@ -64,7 +78,10 @@ flowchart TD
 | KFGQPC *Tafseer Muyassar* | Arabic concise tafsir, verse level (kept separate from Quran text) | local zip |
 | HadeethEnc.com | 3,574 authenticated hadiths with explanations, grades (Arabic + English). *Credit to HadeethEnc.com is shown; content is never modified.* | API → SQLite |
 | Bayyinat (dawa.center/file/7937) | 263 Q&As on doubts and objections (PDF parsed; Arabic ligature corruption repaired) | local PDF |
-| icadb.com | 543 approved Q&A cards, 58 approved terminology cards | API → SQLite |
+| icadb.com (Q&A, terminology) | 543 approved Q&A cards, 58 approved terminology cards | API → SQLite |
+| icadb.com books | about 335 of the organizers' 345 books (fiqh, hajj and umrah, funerals, women's rulings, prayer, creed...), about 40,000 distinct passages; keyword search | API → SQLite |
+| icadb.com encyclopedias | 2,632 Quranic word meanings, 291 notable people, 78 places, 58 sects and religions, 104 Names of Allah, 82 particles of meaning (icadb hadith cards are deliberately not used: hadith text and grades come only from HadeethEnc and Dorar) | API → SQLite |
+| Dorar Fiqh Encyclopedia (dorar.net/feqhia) | 2,489 articles (4,595 passages): positions of the schools with references; each passage links to its page | polite crawl → SQLite |
 | Glossary (docs/data.pdf p.7) | approved English equivalents; override machine translation | code |
 | Dorar `dorar_api.json` | scholars' hadith grades (live, cached, polite throttling) | API |
 | mp3quran.net | optional recitation audio on verse cards | API |
@@ -119,7 +136,7 @@ Pages: `/` main UI · `/retrieval` raw hybrid-retrieval debug view · `/docs` AP
 
 ## Evaluation
 
-`evals/golden.jsonl` has the 12 challenge test cases (data.pdf p.6) + 40 more (15 level أ, 10 ب, 5 ج, 5 د, 5 viral messages). The 4 viral entries marked `provisional` are well-known weak/fabricated hadiths — replace them with real examples from Dorar's *widespread hadiths* section.
+`evals/golden.jsonl` has the 12 challenge test cases (data pack p.6) + 43 more (55 cases in total: levels أ/ب/ج/د, viral messages, question-understanding and hadith-wording cases). The 4 viral entries marked `provisional` are well-known weak/fabricated hadiths — replace them with real examples from Dorar's *widespread hadiths* section.
 
 ### Results (live run, 52 cases, router `gpt-5.4-mini`, generator `gpt-5.6-sol`, judge `gpt-5.5`)
 
@@ -219,7 +236,7 @@ Without an opt-in report: no accounts, no analytics, no database of questions: r
 
 ## Assumptions and limits (read these)
 
-- **Live LLM path is unverified end to end** (no API key was available): the Anthropic wrapper is tested against a stubbed SDK and follows the current API rules for `claude-sonnet-5-5` (no `temperature`, `output_config.effort`, thinking-aware `max_tokens`, refusal = fail closed). Fallback-model (`fallbacks`) routing is not enabled.
+- **Live LLM paths:** the local Gemma 4 12B path and the OpenAI path were run live end to end (results above). The Anthropic path follows the current API rules for `claude-sonnet-5-5` and is covered by stubbed-SDK tests, but it was not run live (no credit).
 
 - **Tafsir vectors are not embedded** (6,236 long passages are too slow on CPU); tafsir stays keyword-searchable and any retrieved tafsir pulls in its verse. Quran verses, hadiths, Q&A and terms are embedded with `BAAI/bge-m3`.
 - **Quran text** comes from the KFGQPC `v30` JSON (real Unicode, 6,236 verses). The `hafs_smart_v8` JSON is *not* used: its main field is private-use font glyphs.

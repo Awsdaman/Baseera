@@ -91,11 +91,12 @@ def build_rows(books: list[dict]) -> list[dict]:
             if h in seen:
                 continue
             seen.add(h)
-            title = f"{b['title'].strip()} — {c['chapter'].strip()}" if c["chapter"].strip() else b["title"].strip()
+            btitle = (b.get("title") or "").strip() or (b.get("name") or "").strip()      # 145 of the 345 books have an empty `title` but a `name`
+            title = f"{btitle} — {c['chapter'].strip()}" if c["chapter"].strip() and c["chapter"].strip() != btitle else btitle
             rows.append({"id": f"qa:icadb-book:{b['project_id']}:{c['n']}", "type": "qa", "source": "icadb-books", "title": title[:160],
                          "text_ar": c["text"], "search_text": search_form(f"{title} {c['text']}"),
                          "reference_url": f"{I}/api/books/{b['project_id']}/arabic-phrases/",
-                         "meta": {"book": b["title"].strip(), "chapter": c["chapter"], "project_id": b["project_id"], "version": c["version"],
+                         "meta": {"book": btitle, "chapter": c["chapter"], "project_id": b["project_id"], "version": c["version"],
                                   "kind": "book"}})
     return rows
 

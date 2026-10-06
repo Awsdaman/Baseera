@@ -1,6 +1,6 @@
 # Baseera quick start (working copy)
 
-Baseera is an Arabic-first Islamic Q&A and verification assistant that answers only from approved sources. This copy includes the ready-built sources database (`data/db`), so nothing needs to be downloaded or ingested except the retrieval model on first run.
+Baseera is an Arabic-first Islamic Q&A and verification assistant that answers only from approved sources. This copy includes the ready-built sources database (`data/db`, about 300 MB: Quran, tafsir, hadith, Q&A, 40,000 passages of the organizers' books and the Dorar fiqh encyclopedia) and the cached Dorar hadith answers, so nothing needs to be ingested; only the retrieval model is downloaded on the first run (about 2.3 GB, internet needed). Open http://127.0.0.1:8000/api/health: `vectors_ready: true` means that model has loaded.
 
 ## 1. Install (Python 3.11-3.13)
 
@@ -34,7 +34,7 @@ Open http://127.0.0.1:8000 : the **Ask** tab answers with citation cards; the **
 ## 4. Check it
 
 ```bash
-python -m pytest -q                       # 265 tests
+python -m pytest -q                       # about 280 tests
 python evals/run_evals.py --offline       # the part of the golden set that needs no model
 ```
 
