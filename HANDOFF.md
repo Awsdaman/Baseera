@@ -1,6 +1,6 @@
 # HANDOFF — where we stopped (2026-10-03)
 
-Read this first in a new session, then CLAUDE.md and README.md.
+Read this first in a new session, then CLAUDE.md and README.md. Voice input ("ask by voice"): `docs/VOICE_HANDOFF.md`.
 
 ## State of the project
 - All 5 phases built and committed. Tests: **142 pass** (`python -m pytest -q`). DB + Chroma vectors exist locally in `data/db/` (git-ignored; rebuild with `python ingest/build_all.py`).

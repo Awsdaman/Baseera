@@ -1,5 +1,6 @@
 """Phase 1 API: raw retrieval results. (Phase 2 adds /api/ask, Phase 3 /api/verify.)"""
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -34,6 +35,9 @@ async def lifespan(_app):
         reports.purge()  # retention: reports older than REPORT_RETENTION_DAYS are deleted at every start
     except Exception:
         pass
+    if os.environ.get("SPEECH_PRELOAD") == "1":
+        from core import speech
+        speech.preload()  # load the voice model in the background so the first recording does not wait for it
     yield
 
 
@@ -46,7 +50,12 @@ def health():
     con = connect()
     counts = {r[0]: r[1] for r in con.execute("SELECT type, count(*) FROM passages GROUP BY type")}
     from core import llm as L
-    return {"ok": True, "llm": L.describe() | {"configured": L.llm_available()}, "passages": counts, "verses": con.execute("SELECT count(*) FROM quran").fetchone()[0]}
+    return {"ok": True, "llm": L.describe() | {"configured": L.llm_available()}, "speech": _speech_status(), "passages": counts, "verses": con.execute("SELECT count(*) FROM quran").fetchone()[0]}
+
+
+def _speech_status() -> dict:
+    from core import speech
+    return speech.describe()
 
 
 @app.get("/api/retrieve")
