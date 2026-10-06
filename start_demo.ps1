@@ -37,12 +37,22 @@ lms ps
 
 # 4. supervised children: each restarts 5 s after it exits
 function Start-Supervised($name, $cmd) {
-  $loop = "while (`$true) { $cmd; `"`$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') $name exited`" | Add-Content logs\demo.log; Start-Sleep 5 }"
-  Start-Process powershell -ArgumentList "-NoProfile", "-Command", "`$host.UI.RawUI.WindowTitle='baseera-$name'; $loop"
+  # one small script per service (quoting a long command through Start-Process breaks on spaces)
+  $f = Join-Path $PSScriptRoot ("logs" + [char]92 + "run_$name.ps1")
+  @"
+`$host.UI.RawUI.WindowTitle = 'baseera-$name'
+Set-Location '$PSScriptRoot'
+while (`$true) {
+  $cmd
+  "`$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') $name exited" | Add-Content logs\demo.log
+  Start-Sleep 5
+}
+"@ | Set-Content -Encoding UTF8 $f
+  Start-Process powershell -ArgumentList "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$f`""
 }
 Start-Supervised "app" "& '$py' -m uvicorn api.main:app --host 127.0.0.1 --port $Port --workers 1 --no-access-log"
 Remove-Item logs\cloudflared.log -ErrorAction SilentlyContinue
-Start-Supervised "tunnel" "$cf tunnel --no-autoupdate --loglevel warn --url http://127.0.0.1:$Port 2>&1 | Tee-Object -FilePath logs\cloudflared.log -Append"
+Start-Supervised "tunnel" "$cf tunnel --no-autoupdate --url http://127.0.0.1:$Port 2>&1 | Tee-Object -FilePath logs\cloudflared.log -Append"
 Log "app and tunnel started"
 
 # 5. watchdog: report the public URL (it changes if the tunnel restarts) and restart a hung app

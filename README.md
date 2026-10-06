@@ -11,9 +11,7 @@ Two modes:
 
 ## Live demo (for judges)
 
-**Link:** see `LIVE_DEMO_URL` below (nothing to install, no account, free, works on a phone).
-
-> LIVE_DEMO_URL: _to be filled in at submission_
+**Link:** https://visiting-tropical-servers-assembly.trycloudflare.com (nothing to install, no account, free, works on a phone).
 
 - Runs the **local open model** (Gemma 12B through LM Studio, on one desktop GPU) behind a Cloudflare tunnel. No paid API is used for answers.
 - Example questions on the home page and the quick tools answer in a few seconds (pre-computed with the same model); a **new** question takes about 20-60 seconds. Two questions are answered at a time, and if you are waiting the page shows your place in line.
