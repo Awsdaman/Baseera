@@ -55,8 +55,16 @@ Remove-Item logs\cloudflared.log -ErrorAction SilentlyContinue
 Start-Supervised "tunnel" "$cf tunnel --no-autoupdate --url http://127.0.0.1:$Port 2>&1 | Tee-Object -FilePath logs\cloudflared.log -Append"
 Log "app and tunnel started"
 
-# 5. watchdog: report the public URL (it changes if the tunnel restarts) and restart a hung app
-$fails = 0; $lastUrl = ""
+# 5. watchdog: report the public URL (it changes if the tunnel restarts), restart a hung app, bring the model back if LM Studio lost it
+$fails = 0; $llmFails = 0; $lastUrl = ""; $started = Get-Date
+function Reload-Model {
+  Log "model server not reachable: restarting LM Studio server and reloading $model"
+  lms server start --port 1234 2>&1 | Out-Null; Start-Sleep 5
+  if (((lms ps) -join "`n") -notmatch [regex]::Escape($model)) {
+    lms load $model --gpu max --context-length 16384 --parallel 2 --identifier $model -y 2>&1 | Out-Null
+  }
+  Log "model reload done"
+}
 while ($true) {
   Start-Sleep 20
   $url = $null
@@ -74,10 +82,13 @@ while ($true) {
   try {
     $h = Invoke-RestMethod "http://127.0.0.1:$Port/api/health" -TimeoutSec 15
     $fails = 0
-    Log ("health OK vectors=$($h.vectors_ready) llm_warm=$($h.llm_warm) queue=$($h.queue.active)/$($h.queue.waiting)")
+    Log ("health OK vectors=$($h.vectors_ready) llm_warm=$($h.llm_warm) reachable=$($h.llm.reachable) queue=$($h.queue.active)/$($h.queue.waiting)")
+    if ($h.llm.reachable -eq $false) { $llmFails++ } else { $llmFails = 0 }
+    if ($llmFails -ge 2) { Reload-Model; $llmFails = 0 }
   } catch {
     $fails++; Log "health FAIL ($fails)"
-    if ($fails -ge 3) {
+    # no kill during the first 4 minutes (cold start loads the retrieval and voice models) and only after 5 failures in a row
+    if ($fails -ge 5 -and ((Get-Date) - $started).TotalSeconds -gt 240) {
       Get-CimInstance Win32_Process -Filter "Name like 'python%'" | Where-Object { $_.CommandLine -match 'api.main:app' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
       $fails = 0; Log "app killed; its supervisor restarts it"
     }
