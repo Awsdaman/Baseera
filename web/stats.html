@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Baseera usage</title>
+<style>
+body{font:15px/1.5 system-ui,sans-serif;background:#faf8f3;color:#1c2b25;margin:0;padding:24px;max-width:760px;margin-inline:auto}
+h1{color:#1f4f40;font-size:22px;margin:0 0 4px}small{color:#6b7a73}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:18px 0}
+.card{background:#fff;border:1px solid #e3ddd0;border-radius:10px;padding:12px}
+.card b{display:block;font-size:26px;color:#2f6b57}
+table{border-collapse:collapse;width:100%;background:#fff;border:1px solid #e3ddd0;border-radius:10px}
+td,th{padding:6px 10px;border-bottom:1px solid #eee;text-align:start}
+.live{color:#b8975a;font-weight:600}
+</style>
+<h1>Baseera usage <small>(operator only, aggregate numbers, no questions or addresses)</small></h1>
+<p id="meta"><small>loading…</small></p>
+<div class="grid" id="cards"></div>
+<h3>Outcomes</h3><table id="outcomes"></table>
+<h3>Questions started per hour</h3><table id="hours"></table>
+<script>
+const $ = id => document.getElementById(id);
+async function load() {
+  try {
+    const d = await (await fetch('/api/stats')).json();
+    $('meta').innerHTML = `<small>since ${d.since} · last request: ${d.last_request || 'none yet'} · refreshed ${new Date().toLocaleTimeString()}</small>`;
+    const c = [['Questions', d.questions], ['Verifications', d.verifications], ['Errors', d.errors], ['Avg time (s)', d.avg_secs], ['Slowest (s)', d.max_secs],
+               ['Running now', `<span class="live">${d.queue.active}</span>`], ['Waiting', `<span class="live">${d.queue.waiting}</span>`]];
+    $('cards').innerHTML = c.map(x => `<div class="card">${x[0]}<b>${x[1]}</b></div>`).join('');
+    $('outcomes').innerHTML = Object.entries(d.outcomes).map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('') || '<tr><td>nothing yet</td></tr>';
+    $('hours').innerHTML = Object.entries(d.per_hour).reverse().map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('') || '<tr><td>nothing yet</td></tr>';
+  } catch (e) { $('meta').textContent = 'could not load (open this page on the PC that runs the demo)'; }
+}
+load(); setInterval(load, 15000);
+</script>

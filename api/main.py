@@ -15,6 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from core import pipeline
 from core import reports
 from core import retrieve as R
+from core import usage_stats
 from core import verifier_mode
 from core.db import connect
 
@@ -122,7 +123,9 @@ async def lifespan(_app):
     if os.environ.get("SPEECH_PRELOAD") == "1":
         from core import speech
         speech.preload()  # load the voice model in the background so the first recording does not wait for it
+    threading.Thread(target=usage_stats.snapshot_loop, daemon=True).start()  # aggregate numbers to logs/stats.jsonl every 12 h
     yield
+    usage_stats.write_snapshot()
 
 
 app = FastAPI(title="Baseera", lifespan=lifespan)
@@ -176,6 +179,18 @@ class VerifyBody(BaseModel):
     text: str = Field(..., min_length=1, max_length=6000)
 
 
+def _counted(kind, fn, *args):
+    """Aggregate usage numbers only (core/usage_stats.py): no text, no address, no identifiers."""
+    t0 = time.time()
+    try:
+        res = fn(*args)
+    except Exception:
+        usage_stats.record(kind, None, time.time() - t0, error=True)
+        raise
+    usage_stats.record(kind, res.get("status") or ("verify" if kind == "verify" else None), time.time() - t0)
+    return res
+
+
 def _run_ask(question, language):
     resp = pipeline.ask(question, language)  # never debug=True here
     for internal in ("verification_errors", "debug"):  # may contain model-written text / raw outputs: dev and eval use only
@@ -214,7 +229,7 @@ def _job_main(jid: str, kind: str, payload: str, language):
         seq = _jobs[jid]["seq"]
     try:
         with L.request_seq(seq):
-            res = _run_ask(payload, language) if kind == "ask" else _run_verify(payload)
+            res = _counted("ask", _run_ask, payload, language) if kind == "ask" else _counted("verify", _run_verify, payload)
         out = {"state": "done", "result": res}
     except Exception as e:  # never log the text; the class name is enough
         logging.getLogger("uvicorn.error").warning("job failed: %s", type(e).__name__)
@@ -270,6 +285,26 @@ async def job_status(jid: str):
         return {"state": j["state"], "position": pos, "est_wait_s": int(avg * (pos / _capacity() + 0.5)) if pos else 0}
 
 
+def _operator_only(request: Request):
+    """Usage numbers are for the operator: only requests made directly on this PC (not through the tunnel)."""
+    local = request.client and request.client.host in ("127.0.0.1", "::1")
+    if not local or request.headers.get("cf-connecting-ip") or request.headers.get("x-forwarded-for"):
+        raise HTTPException(404, "not found")
+
+
+@app.get("/api/stats")
+async def stats(request: Request):
+    _operator_only(request)
+    from core import llm as L
+    return {**usage_stats.snapshot(), "queue": L.queue_stats()}
+
+
+@app.get("/stats")
+async def stats_page(request: Request):
+    _operator_only(request)
+    return FileResponse(ROOT / "web" / "stats.html", headers=NO_CACHE)
+
+
 @app.get("/api/queue")
 async def queue():
     from core import llm as L
@@ -279,7 +314,7 @@ async def queue():
 @app.post("/api/ask")
 def ask(body: AskBody, request: Request):
     rate_limit(request, "ask", 30)
-    return _run_ask(body.question, body.language)
+    return _counted("ask", _run_ask, body.question, body.language)
 
 
 @app.post("/api/report")
@@ -304,7 +339,7 @@ def privacy():
 @app.post("/api/verify")
 def verify(body: VerifyBody, request: Request):
     rate_limit(request, "verify", 30)
-    return _run_verify(body.text)
+    return _counted("verify", _run_verify, body.text)
 
 
 _stt_slot = asyncio.Semaphore(1)

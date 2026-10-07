@@ -115,3 +115,15 @@ def test_rate_limit_uses_the_real_client_address_behind_the_tunnel(monkeypatch):
     post = lambda ip: client.post("/api/ask", json={"question": "س"}, headers={"cf-connecting-ip": ip}).status_code
     assert [post("1.1.1.1"), post("1.1.1.1"), post("1.1.1.1")] == [200, 200, 429]
     assert post("2.2.2.2") == 200                    # another judge is not affected
+
+
+def test_usage_stats_count_without_storing_text_and_are_operator_only(monkeypatch):
+    from core import usage_stats
+    usage_stats.reset()
+    monkeypatch.setenv("RATE_LIMIT_PER_MINUTE", "0")
+    monkeypatch.setattr(pipeline, "ask", lambda q, lang=None, debug=False: {"status": "abstained", "blocks": []})
+    client.post("/api/ask", json={"question": "نص سري"})
+    snap = usage_stats.snapshot()
+    assert snap["questions"] == 1 and snap["outcomes"] == {"abstained": 1} and "سري" not in str(snap)
+    assert client.get("/api/stats").status_code in (200, 404)             # TestClient host is not 127.0.0.1
+    assert client.get("/api/stats", headers={"cf-connecting-ip": "1.2.3.4"}).status_code == 404   # never through the tunnel
