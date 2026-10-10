@@ -52,7 +52,7 @@ while (`$true) {
 }
 Start-Supervised "app" "& '$py' -m uvicorn api.main:app --host 127.0.0.1 --port $Port --workers 1 --no-access-log"
 Remove-Item logs\cloudflared.log -ErrorAction SilentlyContinue
-Start-Supervised "tunnel" "$cf tunnel --no-autoupdate --url http://127.0.0.1:$Port 2>&1 | Tee-Object -FilePath logs\cloudflared.log -Append"
+Start-Supervised "tunnel" "$cf tunnel --no-autoupdate --protocol http2 --url http://127.0.0.1:$Port 2>&1 | Tee-Object -FilePath logs\cloudflared.log -Append"
 Log "app and tunnel started"
 
 # 5. watchdog: report the public URL (it changes if the tunnel restarts), restart a hung app, bring the model back if LM Studio lost it
